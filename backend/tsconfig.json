@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
+    "module": "ES2022",
     "esModuleInterop": true,
     "moduleResolution": "node",
     "outDir": "./dist",
@@ -20,7 +20,7 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "src/types/types.ts", "global.d.ts"],
+  "include": ["src/**/*", "global.d.ts"],
   "exclude": ["./node_modules"],
   "ts-node": {
     "files": true,
