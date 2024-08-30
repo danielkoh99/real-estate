@@ -1,9 +1,13 @@
 import { Router } from "express";
+import {
+  getProperties,
+  updatePropertyById,
+} from "../../controllers/property.controller";
 
-const propertiesRouter = Router();
-propertiesRouter.get("/", () => {});
-propertiesRouter.put("/:id", () => {});
-propertiesRouter.delete("/:id", () => {});
-propertiesRouter.post("/", () => {});
+const propertyRouter = Router();
+propertyRouter.get("/", getProperties);
+propertyRouter.put("/:id", updatePropertyById);
+propertyRouter.delete("/:id", () => {});
+propertyRouter.post("/", () => {});
 
-export default propertiesRouter;
+export default propertyRouter;

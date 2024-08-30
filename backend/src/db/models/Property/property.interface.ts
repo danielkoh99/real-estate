@@ -1,3 +1,5 @@
+import { PropertyImageAttributes } from "../Image/image.interface";
+
 interface PropertyAttributes {
   id: string;
   createdAt?: Date;
@@ -9,6 +11,7 @@ interface PropertyAttributes {
   type: PropertyType;
   savedByUserId?: number[];
   listedByUserId?: number;
+  images?: PropertyImageAttributes[];
 }
 enum PropertyType {
   APARTMENT = "apartment",

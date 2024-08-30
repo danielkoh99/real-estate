@@ -1,11 +1,11 @@
 import Property from "../db/models/Property/Property";
 import User from "../db/models/User/User";
 
-const createUser = async (data: any) => {
+const createOne = async (data: any) => {
   const user = await User.create(data, { include: [Property] });
   return user;
 };
-const updateUser = async (id: number, data: any) => {
+const updateOne = async (id: number, data: any) => {
   const user = await User.findByPk(id);
   if (!user) {
     throw new Error("not found");
@@ -17,11 +17,11 @@ const updateUser = async (id: number, data: any) => {
   });
   return updatedUser;
 };
-const getUserById = async (id: any) => {
+const getOne = async (id: any) => {
   const user = await User.findByPk(id);
   return user;
 };
-const getUsers = async () => {
+const getAll = async () => {
   const users = await User.findAll({
     include: [
       {
@@ -36,7 +36,7 @@ const getUsers = async () => {
   });
   return users;
 };
-const deleteUserById = async (data: any) => {
+const deleteOne = async (data: any) => {
   const user = await User.destroy({
     where: {
       id: data.id,
@@ -44,4 +44,4 @@ const deleteUserById = async (data: any) => {
   });
   return user;
 };
-export { createUser, updateUser, deleteUserById, getUserById, getUsers };
+export { getOne, createOne, updateOne, getAll, deleteOne };

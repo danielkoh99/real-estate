@@ -1,6 +1,7 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes, HasManyGetAssociationsMixin } from "sequelize";
 import { PropertyAttributes, PropertyType } from "./property.interface";
 import db from "../../config";
+import PropertyImage from "../Image/Image";
 
 export interface PropertyOutput extends Required<PropertyAttributes> {}
 class Property
@@ -17,6 +18,9 @@ class Property
   public type!: PropertyType;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+  public readonly images?: PropertyImage[];
+  // Association method to get images for a property
+  public getImages!: HasManyGetAssociationsMixin<PropertyImage>; // Gets all associated images
 }
 Property.init(
   {
@@ -31,11 +35,11 @@ Property.init(
       allowNull: false,
     },
     title: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     address: {
-      type: new DataTypes.STRING(256),
+      type: DataTypes.STRING(256),
       allowNull: false,
     },
     price: {
@@ -49,5 +53,14 @@ Property.init(
   },
   { tableName: "properties", timestamps: true, sequelize: db, paranoid: true }
 );
+// One-to-Many association: Property has many Images
+Property.hasMany(PropertyImage, {
+  foreignKey: "propertyId",
+  as: "images", // Alias for association
+});
 
+PropertyImage.belongsTo(Property, {
+  foreignKey: "propertyId",
+  as: "property",
+});
 export default Property;

@@ -1,35 +1,57 @@
+import PropertyImage from "../db/models/Image/Image";
 import Property from "../db/models/Property/Property";
 import User from "../db/models/User/User";
+import logger from "../logger/logger";
 
-const createProperty = async (data: any) => {
-  const user = await Property.create(data);
-  return user;
+const createOne = async (data: any) => {
+  const property = await Property.create(data);
+  return property;
 };
-const updateProperty = async (id: number, data: any) => {
-  const user = await User.findByPk(id);
+const updateOne = async (id: number, data: any) => {
+  const user = await Property.findByPk(id);
   if (!user) {
     throw new Error("not found");
   }
-  const updatedUser = await User.update(data, {
+  const updatedProperty = await Property.update(data, {
     where: {
       id: data.id,
     },
   });
-  return updatedUser;
+  return updatedProperty;
 };
-const getPropertybyId = async (id: any) => {
-  const user = await User.findByPk(id);
-  return user;
+const getAll = async () => {
+  const property = await Property.findAll({
+    include: [
+      {
+        model: PropertyImage,
+        as: "images",
+        attributes: ["id", "url"],
+      },
+    ],
+  });
+  return property;
 };
-const deletePropertybyId = async (data: any) => {
-  const user = await User.destroy({
+const getOne = async (id: any) => {
+  const property = await Property.findByPk(id, {
+    include: [
+      {
+        model: User,
+        as: "user",
+        attributes: ["username", "email"], // Adjust attributes as needed
+      },
+    ],
+  });
+  return property;
+};
+const deleteOne = async (id: string) => {
+  const property = await Property.destroy({
     where: {
-      id: data.id,
+      id: id,
     },
   });
-  return user;
+  return property;
 };
-async function getPropertiesByUserId(userId: number) {
+async function getByUserId(userId: number) {
   try {
     const properties = await Property.findAll({
       where: { listedByUserId: userId },
@@ -37,7 +59,7 @@ async function getPropertiesByUserId(userId: number) {
       attributes: ["id", "title", "address", "price", "createdAt"],
       include: [
         {
-          model: User,
+          model: Property,
           as: "user",
           attributes: ["id", "username", "email"], // Adjust attributes as needed
         },
@@ -45,22 +67,8 @@ async function getPropertiesByUserId(userId: number) {
     });
     return properties;
   } catch (error) {
-    console.error("Error fetching properties:", error);
+    logger.error("Error fetching properties:", error);
     throw error;
   }
 }
-getPropertiesByUserId(1)
-  .then((properties) => {
-    console.log("Properties for user:", properties);
-  })
-
-  .catch((error) => {
-    console.error("Error:", error);
-  });
-export default {
-  createProperty,
-  updateProperty,
-  deletePropertybyId,
-  getPropertybyId,
-  getPropertiesByUserId,
-};
+export { createOne, updateOne, getOne, deleteOne, getByUserId, getAll };

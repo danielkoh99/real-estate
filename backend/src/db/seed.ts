@@ -8,9 +8,29 @@ import {
 } from "./models/Property/property.interface";
 import { Roles, UserAttributes } from "./models/User/user.interface";
 import { hashPassword } from "../utils/auth.utils";
+import logger from "../logger/logger";
+import PropertyImage from "./models/Image/Image";
 
 function generateRandomSize(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Function to create random images for a property
+async function generateRandomImages(propertyId: string) {
+  const images = [];
+  for (let i = 0; i < 3; i++) {
+    // Create 3 random images
+    images.push({
+      id: faker.string.uuid(),
+      url: faker.image.urlLoremFlickr({
+        category: faker.helpers.arrayElement(["apartment", "house"]),
+        width: 200,
+        height: 200,
+      }),
+      propertyId, // Associate with propertyId
+    });
+  }
+  return await PropertyImage.bulkCreate(images); // Create images in bulk
 }
 
 async function seed() {
@@ -56,6 +76,10 @@ async function seed() {
       returning: true,
     });
 
+    // Create random images for each property
+    for (const property of createdProperties) {
+      await generateRandomImages(property.id); // Generate and associate images
+    }
     // Assign listed properties to users
     for (const user of createdUsers) {
       const userProperties = createdProperties.filter(
@@ -75,7 +99,7 @@ async function seed() {
     console.log("Database synced and data seeded!");
     process.exit();
   } catch (error) {
-    console.error("Error seeding data:", error);
+    logger.error("Error seeding data:", error);
     process.exit(1);
   }
 }
