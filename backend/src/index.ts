@@ -6,6 +6,16 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import logger from "./logger/logger";
+import { errorMiddleware } from "./middlewares/error.middleware";
+import rateLimit from "express-rate-limit";
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes window
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again after 15 minutes",
+  headers: true, // Send rate limit info back in the response headers
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -15,6 +25,8 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(limiter);
+app.use(errorMiddleware);
 app.use("/api", router);
 
 app.get("/", (req: Request, res: Response) => {

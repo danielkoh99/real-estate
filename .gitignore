@@ -25,3 +25,6 @@ dist-ssr
 
 # backend
 database.sqlite
+
+#local image uploads
+backend/uploads

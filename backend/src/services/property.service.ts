@@ -1,8 +1,84 @@
+import multer from "multer";
 import PropertyImage from "../db/models/Image/Image";
 import Property from "../db/models/Property/Property";
+import { PropertyAttributes } from "../db/models/Property/property.interface";
 import User from "../db/models/User/User";
 import logger from "../logger/logger";
+import { uploadImageToS3 } from "../utils/s3Upload";
 
+export const createPropertyWithImages = async (
+  data: PropertyAttributes,
+  f: Express.Multer.File[]
+) => {
+  console.log(data);
+  if (!f || (f as Express.Multer.File[]).length === 0) {
+    return { message: "Please upload at least one image" };
+  }
+
+  const files = f as Express.Multer.File[];
+
+  try {
+    const { title, address, price, type, listedByUserId } = data;
+
+    // Create property
+    const property = await Property.create({
+      title,
+      address,
+      price,
+      type,
+      listedByUserId,
+    });
+
+    // Upload each image to S3 and store the URL in the database
+    const imageUploadPromises = files.map((file) => {
+      // Save the image URL in the PropertyImage model
+      return PropertyImage.create({
+        url: file.path,
+        propertyId: property.id,
+      });
+    });
+
+    await Promise.all(imageUploadPromises);
+    return property;
+  } catch (error) {
+    logger.error("Error creating property with images:", error);
+    return;
+  }
+};
+// export const createPropertyWithImages = async (
+//   data: PropertyAttributes,
+//   files: Express.Multer.File[]
+// ) => {
+//   try {
+//     const { title, address, price, type, listedByUserId } = data;
+
+//     // Create property
+//     const property = await Property.create({
+//       title,
+//       address,
+//       price,
+//       type,
+//       listedByUserId,
+//     });
+
+//     // Upload each image to S3 and store the URL in the database
+//     const imageUploadPromises = files.map(async (file) => {
+//       const imageUrl = await uploadImageToS3(file);
+
+//       // Save the image URL in the PropertyImage model
+//       return PropertyImage.create({
+//         url: imageUrl,
+//         propertyId: property.id,
+//       });
+//     });
+
+//     await Promise.all(imageUploadPromises);
+//     return property;
+//   } catch (error) {
+//     logger.error("Error creating property with images:", error);
+//     return;
+//   }
+// };
 const createOne = async (data: any) => {
   const property = await Property.create(data);
   return property;

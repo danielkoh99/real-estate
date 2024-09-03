@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import logger from "../logger/logger";
 const SECRET_KEY = process.env.JWT_SECRET || "secret";
 interface JwtPayload {
   userId: number;
@@ -9,6 +10,7 @@ const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
     req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
   if (token) {
     const payload = verifyToken(token);
+    console.log(payload);
     if (payload) {
       (req as any).userId = payload.userId;
       return next();

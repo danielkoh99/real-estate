@@ -5,13 +5,19 @@ import {
   deleteOne,
   updateOne,
   createOne,
+  createPropertyWithImages,
 } from "../services/property.service";
 import logger from "../logger/logger";
-const createSavedProperty = async (req: Request, res: Response) => {
+import { CustomRequest } from "../types/types";
+import { PropertyAttributes } from "../db/models/Property/property.interface";
+const createProperty = async (req: CustomRequest, res: Response) => {
   try {
-    const data = req.body;
-    const property = await createOne(data);
-    return res.status(200).send(property);
+    const data = req.body as PropertyAttributes;
+    const files = req.files as Express.Multer.File[];
+    data.listedByUserId = req.userId;
+    logger.info(files);
+    const response = await createPropertyWithImages(data, files);
+    return res.status(200).send(response);
   } catch (err) {
     logger.error(err);
     return res.status(500).send(err);
@@ -41,6 +47,7 @@ const updatePropertyById = async (req: Request, res: Response) => {};
 const deletePropertyById = async (req: Request, res: Response) => {};
 
 export {
+  createProperty,
   getProperties,
   getPropertyById,
   updatePropertyById,

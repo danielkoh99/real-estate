@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { Roles } from "../db/models/User/user.interface";
 
 interface UserRequestBody {
@@ -12,11 +13,15 @@ interface UserResponseBody {
   accessToken: string;
 }
 
-// Define the type for the error response
-interface ErrorResponse {
-  error_message: string;
-}
-
 // Define the union type for the response body
 type UResponseBody = UserResponseBody | ErrorResponse;
-export { UserRequestBody, UResponseBody };
+
+interface ErrorResponse {
+  status: number;
+  message: string;
+  details?: any;
+}
+interface CustomRequest extends Request {
+  userId?: number;
+}
+export { UserRequestBody, UResponseBody, ErrorResponse, CustomRequest };

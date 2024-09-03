@@ -7,7 +7,7 @@ import {
 } from "../../controllers/auth.controller";
 
 const authRouter = Router();
-authRouter.post("/register", registerUser);
+authRouter.post("/signup", registerUser);
 authRouter.post("/login", signInUser);
 authRouter.put("/logout", authenticateJWT, signOutUser);
 

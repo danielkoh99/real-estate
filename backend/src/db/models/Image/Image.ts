@@ -1,8 +1,11 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes, Optional } from "sequelize";
 import db from "../../config";
 import { PropertyImageAttributes } from "./image.interface";
+interface PropertyImageCreationAttributes
+  extends Optional<PropertyImageAttributes, "id"> {}
+
 class PropertyImage
-  extends Model<PropertyImageAttributes>
+  extends Model<PropertyImageAttributes, PropertyImageCreationAttributes>
   implements PropertyImageAttributes
 {
   public id!: string;
@@ -14,6 +17,7 @@ PropertyImage.init(
   {
     id: {
       type: DataTypes.STRING,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     url: {

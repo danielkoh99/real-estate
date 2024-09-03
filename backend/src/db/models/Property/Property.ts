@@ -1,11 +1,18 @@
-import { Model, DataTypes, HasManyGetAssociationsMixin } from "sequelize";
+import {
+  Model,
+  DataTypes,
+  HasManyGetAssociationsMixin,
+  Optional,
+} from "sequelize";
 import { PropertyAttributes, PropertyType } from "./property.interface";
 import db from "../../config";
 import PropertyImage from "../Image/Image";
+interface PropertyCreationAttributes
+  extends Optional<PropertyAttributes, "id"> {}
 
 export interface PropertyOutput extends Required<PropertyAttributes> {}
 class Property
-  extends Model<PropertyAttributes, PropertyAttributes>
+  extends Model<PropertyAttributes, PropertyCreationAttributes>
   implements PropertyAttributes
 {
   public size?: number | undefined;
