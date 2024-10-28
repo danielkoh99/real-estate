@@ -4,16 +4,45 @@ import { NextUIProvider } from "@nextui-org/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useRouter } from "next/router";
 
-import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
+import { SessionProvider } from "next-auth/react";
+import { Toaster } from "react-hot-toast";
 
-export default function App({ Component, pageProps }: AppProps) {
+import { fontSans, fontMono } from "@/config/fonts";
+import SessionManager from "@/components/SessionManager";
+
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   const router = useRouter();
 
   return (
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider>
-        <Component {...pageProps} />
+        <SessionProvider session={session}>
+          <SessionManager />
+          <Component {...pageProps} />
+          <Toaster
+            gutter={8}
+            position="top-center"
+            reverseOrder={false}
+            toastOptions={{
+              // Define default options
+              className: "",
+              duration: 5000,
+              style: {
+                background: "#363636",
+                color: "#fff",
+              },
+
+              // Default options for specific types
+              success: {
+                duration: 3000,
+              },
+            }}
+          />
+        </SessionProvider>
       </NextThemesProvider>
     </NextUIProvider>
   );

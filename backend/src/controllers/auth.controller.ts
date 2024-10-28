@@ -9,7 +9,7 @@ const registerUser = async (
   res: Response<UResponseBody>
 ) => {
   try {
-    const { email, password, role } = req.body;
+    const { firstName, lastName, email, password, role } = req.body;
     // Check if the email exists
     const userExists = await User.findOne({
       where: { email },
@@ -17,18 +17,19 @@ const registerUser = async (
     if (userExists) {
       return res
         .status(400)
-        .send({ error_message: "Email is already associated with an account" });
+        .send({ message: "Email is already associated with an account" });
     }
     const hashedPassword = hashPassword(password);
     await User.create({
       role: Roles[role],
-      username: email,
-      email,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
       password: hashedPassword,
     });
-    return res.status(200).send({ error_message: "Registration successful" });
+    return res.status(200).send({ message: "Registration successful" });
   } catch (err) {
-    return res.status(500).send({ error_message: "Error in registering user" });
+    return res.status(500).send({ message: "Error in registering user" });
   }
 };
 
@@ -42,7 +43,7 @@ const signInUser = async (
       where: { email },
     });
     if (!user) {
-      return res.status(404).json({ error_message: "Email not found" });
+      return res.status(404).json({ message: "Email not found" });
     }
 
     // Verify password
@@ -50,7 +51,7 @@ const signInUser = async (
     if (!passwordValid) {
       return res
         .status(404)
-        .json({ error_message: "Incorrect email and password combination" });
+        .json({ message: "Incorrect email and password combination" });
     }
     // Authenticate user with jwt
     const token = signToken({ userId: user.id });
@@ -59,10 +60,12 @@ const signInUser = async (
     return res.status(200).send({
       id: user.id,
       email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       accessToken: token,
     });
   } catch (err) {
-    return res.status(500).send({ error_message: "Sign in error" });
+    return res.status(500).send({ message: "Sign in error" });
   }
 };
 const signOutUser = async (

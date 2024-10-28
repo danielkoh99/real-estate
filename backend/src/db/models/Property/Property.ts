@@ -53,6 +53,10 @@ Property.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    size: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     listedByUserId: {
       type: DataTypes.INTEGER,
       allowNull: true,

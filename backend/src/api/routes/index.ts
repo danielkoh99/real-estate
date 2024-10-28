@@ -6,8 +6,8 @@ import { authenticateJWT } from "../../middlewares/auth.middleware";
 
 const router = Router();
 
-router.use("/user", userRouter);
-router.use("/property", authenticateJWT, propertyRouter);
+router.use("/user", authenticateJWT, userRouter);
+router.use("/property", propertyRouter);
 router.use("/auth", authRouter);
 
 export default router;

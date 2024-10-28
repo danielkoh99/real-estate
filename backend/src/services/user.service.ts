@@ -17,8 +17,23 @@ const updateOne = async (id: number, data: any) => {
   });
   return updatedUser;
 };
-const getOne = async (id: any) => {
-  const user = await User.findByPk(id);
+const getOne = async (id: number) => {
+  const user = await User.findByPk(id, {
+    attributes: { exclude: ["password"] },
+    include: [
+      {
+        model: Property,
+        as: "listedProperties",
+      },
+      // {
+      //   model: Property,
+      //   as: "savedProperties",
+      //   through: {
+      //     attributes: [],
+      //   }
+      // },
+    ],
+  });
   return user;
 };
 const getAll = async () => {
@@ -36,10 +51,10 @@ const getAll = async () => {
   });
   return users;
 };
-const deleteOne = async (data: any) => {
+const deleteOne = async (id: number) => {
   const user = await User.destroy({
     where: {
-      id: data.id,
+      id: id,
     },
   });
   return user;

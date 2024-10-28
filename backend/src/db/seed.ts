@@ -24,8 +24,8 @@ async function generateRandomImages(propertyId: string) {
       id: faker.string.uuid(),
       url: faker.image.urlLoremFlickr({
         category: faker.helpers.arrayElement(["apartment", "house"]),
-        width: 200,
-        height: 200,
+        width: 400,
+        height: 400,
       }),
       propertyId, // Associate with propertyId
     });
@@ -45,13 +45,21 @@ async function seed() {
     for (let i = 0; i < 10; i++) {
       users.push({
         id: i + 1,
-        username: faker.internet.userName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         email: faker.internet.email(),
         password: hashedPassword,
         role: faker.helpers.arrayElement<Roles>([Roles.agent, Roles.user]),
       });
     }
-
+    users.push({
+      id: 11,
+      firstName: "John",
+      lastName: "Doe",
+      email: "admin@admin.com",
+      password: hashedPassword,
+      role: Roles.user,
+    });
     // Create users and store references
     const createdUsers = await User.bulkCreate(users, { returning: true });
 

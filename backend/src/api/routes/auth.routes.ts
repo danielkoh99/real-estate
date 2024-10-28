@@ -9,6 +9,6 @@ import {
 const authRouter = Router();
 authRouter.post("/signup", registerUser);
 authRouter.post("/login", signInUser);
-authRouter.put("/logout", authenticateJWT, signOutUser);
+authRouter.post("/logout", authenticateJWT, signOutUser);
 
 export default authRouter;

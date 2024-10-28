@@ -17,12 +17,13 @@ import db from "../../config";
 import Property from "../Property/Property";
 import { UserAttributes, Roles } from "./user.interface";
 // Define creation attributes for the User model
-interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+interface UserCreationAttributes extends Optional<UserAttributes, "id"> { }
 class User extends Model<UserAttributes, UserCreationAttributes> {
   public id!: number;
   public password!: string;
+  public firstName!: string;
+  public lastName!: string;
   public email!: string;
-  public username!: string;
   public role!: Roles;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -88,12 +89,13 @@ User.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    firstName: DataTypes.STRING,
+    lastName: DataTypes.STRING,
     role: {
       type: DataTypes.ENUM,
       values: ["agent", "user"],
       allowNull: false,
     },
-    username: DataTypes.STRING,
     password: DataTypes.STRING,
     email: {
       type: DataTypes.STRING,

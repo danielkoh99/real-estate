@@ -8,6 +8,11 @@ import { dirname } from "path";
 import logger from "./logger/logger";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import rateLimit from "express-rate-limit";
+import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import { logRequest } from "./middlewares/logRequest.middleware";
+import session from "express-session";
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes window
   max: 100, // Limit each IP to 100 requests per windowMs
@@ -22,19 +27,36 @@ const __dirname = dirname(__filename);
 const app: Express = express();
 const port = process.env.PORT || 3000;
 //middleware
+app.use(cors());
+app.use(logRequest);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(limiter);
 app.use(errorMiddleware);
+app.use(session({
+  secret:  process.env.SESSION_SECRET || 'fallbackSecret',  // Replace with your secret key
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set secure: true if using HTTPS
+}));
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(undefined, {
+    swaggerOptions: {
+      url: "/swagger.json",
+    },
+  })
+);
 app.use("/api", router);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running");
 });
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+// });
 
 app.listen(port, async () => {
   try {
