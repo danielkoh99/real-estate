@@ -15,7 +15,6 @@ import { useSession } from "next-auth/react";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
-import SearchInput from "./SearchInput";
 import UserAvatar from "./UserAvatar";
 
 import { siteConfig } from "@/config/site";
@@ -25,11 +24,6 @@ import { Logo } from "@/components/icons";
 export const Navbar = () => {
   const router = useRouter();
   const { data: session } = useSession();
-
-  if (session) {
-    console.log(session);
-    // Do something with the session
-  }
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">

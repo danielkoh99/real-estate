@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { getSession } from "next-auth/react";
+
+import apiRequest from "@/helpers/customFetch"; // Import your custom Axios function
 
 type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
@@ -32,7 +34,6 @@ const useApi = <T = any>({
 
     try {
       const axiosConfig: AxiosRequestConfig = {
-        baseURL: process.env.NEXT_PUBLIC_API_URL,
         method,
         url,
         timeout,
@@ -44,12 +45,19 @@ const useApi = <T = any>({
         ...(data && { data }), // Include `data` only for non-GET requests
       };
 
-      const result = await axios(axiosConfig);
+      // Use the custom Axios function instead of directly calling Axios
+      const result = await apiRequest<T>({
+        url,
+        method,
+        data,
+        config: { ...config, headers: axiosConfig.headers },
+        timeout,
+      });
 
-      setResponse(result);
+      setResponse(result.response); // Assuming `result` contains a `response` object
       setLoading(false);
     } catch (err: { message: string } | any) {
-      setError(err); // ndle any error thrown during the request
+      setError(err); // Handle any error thrown during the request
       setLoading(false);
     } finally {
       setLoading(false);
@@ -58,7 +66,7 @@ const useApi = <T = any>({
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]); // Add fetchData as a dependency
 
   return { response, error, loading, refetch: fetchData };
 };

@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import { Pagination } from "@nextui-org/react";
 
+import usePropertyStore from "@/stores/appStore";
+
 export default function PaginationComponent() {
-  const [currentPage, setCurrentPage] = useState(1);
+  const { totalPages, page, setPage } = usePropertyStore();
+  const handlePageChange = (page: number) => {
+    setPage(page);
+  };
 
   return (
     <div className="flex justify-center">
       <Pagination
         showControls
         color="primary"
-        page={currentPage}
-        total={10}
-        onChange={setCurrentPage}
+        page={page}
+        total={totalPages}
+        onChange={handlePageChange}
       />
     </div>
   );

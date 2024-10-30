@@ -7,19 +7,24 @@ import Link from "next/link";
 
 import { Property } from "@/types";
 
-const SingleRealEstate: React.FC<{ property: Property }> = ({ property }) => {
+const SingleRealEstate: React.FC<{ property: Property; loading: boolean }> = ({
+  property,
+  loading,
+}) => {
   return (
     <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
       <Link href={`/property/${property.id}`}>
-        <Card className="shadow-sm rounded-lg overflow-hidden hover:shadow-lg border border-slate-200 transition-all">
+        <Card className="shadow-sm rounded-lg overflow-hidden border border-slate-200 transition-all transform hover:translate-y-[-5px]">
           <CardHeader className="p-0">
-            <Swiper
-              loop
-              navigation
-              className="h-56 relative"
-              modules={[Navigation]}
-            >
-              <Skeleton className="rounded-lg">
+            {loading ? (
+              <Skeleton className="rounded-lg h-56 w-full" />
+            ) : (
+              <Swiper
+                loop
+                navigation
+                className="h-56 relative"
+                modules={[Navigation]}
+              >
                 {property.images?.map((image) => (
                   <SwiperSlide key={image.id} className="relative h-full">
                     <Image
@@ -32,14 +37,20 @@ const SingleRealEstate: React.FC<{ property: Property }> = ({ property }) => {
                     />
                   </SwiperSlide>
                 ))}
-              </Skeleton>
-            </Swiper>
+              </Swiper>
+            )}
           </CardHeader>
           <CardBody>
-            <div className="p-4 flex flex-col">
-              <p className="text-large mb-2">{property.title}</p>
-              <p className="text-gray-600">{property.size}</p>
-              <p className="text-gray-600">{property.price}</p>
+            <div className="p-4 flex flex-col space-y-5">
+              <Skeleton className="rounded-lg" isLoaded={!loading}>
+                <p className="text-large mb-2">{property.title}</p>
+              </Skeleton>
+              <Skeleton className="rounded-lg" isLoaded={!loading}>
+                <p className="text-gray-600">{property.size}</p>
+              </Skeleton>
+              <Skeleton className="rounded-lg" isLoaded={!loading}>
+                <p className="text-gray-600">{property.price}</p>
+              </Skeleton>
             </div>
           </CardBody>
         </Card>
