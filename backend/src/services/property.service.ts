@@ -128,6 +128,7 @@ const getOne = async (id: any) => {
   });
   return property;
 };
+
 const deleteOne = async (id: string) => {
   const property = await Property.destroy({
     where: {
@@ -136,6 +137,7 @@ const deleteOne = async (id: string) => {
   });
   return property;
 };
+
 async function getByUserId(userId: number) {
   try {
     const properties = await Property.findAll({
@@ -146,7 +148,7 @@ async function getByUserId(userId: number) {
         {
           model: Property,
           as: "user",
-          attributes: ["id", "firstName", "lastName", "email"], // Adjust attributes as needed
+          attributes: ["id", "firstName", "lastName", "email"],
         },
       ],
     });
@@ -157,20 +159,18 @@ async function getByUserId(userId: number) {
   }
 }
 
-
-
 const isFiltering = (filters: PropertyFilter): boolean => {
   return filters.priceMin !== undefined ||
     filters.priceMax !== undefined ||
     filters.sizeMin !== undefined ||
     filters.sizeMax !== undefined ||
-    filters.type !== undefined ||
-    filters.listedByUserId !== undefined;
+    filters.type !== undefined
 };
+
 export const getPropertiesByFilter = async (filters: PropertyFilter) => {
-  const limit = filters.limit || 10; // Default to 10 items per page
+  const limit = filters.limit || 10;
   const page = filters.page || 1;
-  const offset = (page - 1) * limit; // Calculate the offset
+  const offset = (page - 1) * limit;
   const whereClause: any = {};
 
   if (isFiltering(filters)) {
@@ -197,30 +197,33 @@ export const getPropertiesByFilter = async (filters: PropertyFilter) => {
     if (filters.type) {
       whereClause.type = filters.type;
     }
-
-    if (filters.listedByUserId) {
-      whereClause.listedByUserId = filters.listedByUserId;
-    }
   }
-  // Query the Property model with pagination and filters
+
   const properties = await Property.findAndCountAll({
     where: whereClause,
     include: [
       {
         model: PropertyImage,
-        as: "images", // Include associated images
+        as: "images",
+        required: false,
       },
     ],
-    limit,   // Limit the number of results per page
-    offset,  // Skip the number of records defined by the offset
+    distinct: true,
+    limit,
+    offset,
   });
 
-  // Return the results along with pagination info
+  const totalItems = properties.count;
+  const totalPages = Math.ceil(totalItems / limit);
+
+  const currentPage = page > totalPages ? totalPages : page;
+  const rows = page > totalPages ? [] : properties.rows;
+
   return {
-    properties: properties.rows,
-    totalItems: properties.count,
-    totalPages: Math.ceil(properties.count / limit),
-    currentPage: page,
+    properties: rows,
+    totalItems,
+    totalPages,
+    currentPage,
   };
 };
 export { createOne, updateOne, getOne, deleteOne, getByUserId, getAll };

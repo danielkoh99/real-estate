@@ -28,7 +28,7 @@ export interface Property {
   };
   images: PropertyImageAttributes[];
 }
-enum PropertyType {
+export enum PropertyType {
   APARTMENT = "apartment",
   HOUSE = "house",
 }

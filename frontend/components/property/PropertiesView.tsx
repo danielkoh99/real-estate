@@ -29,9 +29,9 @@ const PropertiesView: React.FC<{
     <Card className="flex flex-col p-4">
       {!properties?.length && <NotFound />}
       <Select
+        defaultSelectedKeys={[getLimit()]}
         label="Number of listings per page"
         placeholder="10"
-        defaultSelectedKeys={[getLimit()]}
         onChange={handleSelectChange}
       >
         <SelectItem key="10">10</SelectItem>

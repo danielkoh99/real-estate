@@ -11,7 +11,7 @@ const authenticateJWT = (req: Request<{}, {}, JwtPayload>, res: Response, next: 
   if (token) {
     const payload = verifyToken(token);
     if (payload) {
-       req.session.userId = payload.userId;
+      req.session.userId = payload.userId;
       return next();
     }
   }

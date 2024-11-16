@@ -7,7 +7,7 @@ import { Thumbs, FreeMode, Navigation } from "swiper/modules";
 import "swiper/css/bundle";
 
 import { Property } from "@/types";
-import { formatDateTime } from "@/helpers/formatDateTime";
+import { formatDateTime } from "@/utils/formatDateTime";
 
 const PropertyPage: React.FC<{ property: Property }> = ({ property }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass>();

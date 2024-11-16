@@ -11,7 +11,7 @@ import DefaultLayout from "@/layouts/default";
 import useApi from "@/hooks/useApi";
 import { UserInfoResponse } from "@/types";
 import Error from "@/components/Error";
-import { formatDateTime } from "@/helpers/formatDateTime";
+import { formatDateTime } from "@/utils/formatDateTime";
 
 export default function UserProfilePage() {
   const { response, error, loading } = useApi<UserInfoResponse>({

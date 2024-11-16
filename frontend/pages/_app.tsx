@@ -1,8 +1,8 @@
 import type { AppProps } from "next/app";
 
+import { useRouter } from "next/router";
 import { NextUIProvider } from "@nextui-org/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { useRouter } from "next/router";
 
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -28,15 +28,12 @@ export default function App({
             position="top-center"
             reverseOrder={false}
             toastOptions={{
-              // Define default options
               className: "",
               duration: 5000,
               style: {
                 background: "#363636",
                 color: "#fff",
               },
-
-              // Default options for specific types
               success: {
                 duration: 3000,
               },

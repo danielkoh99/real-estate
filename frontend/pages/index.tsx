@@ -24,7 +24,9 @@ export default function IndexPage() {
 
   return (
     <DefaultLayout>
-      <div className="flex flex-col gap-4 h-full justify-between">
+      <div
+        className={`flex flex-col gap-4 h-full ${error ? "" : "justify-between"}`}
+      >
         <SearchFilter />
 
         <PropertiesView

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { getSession } from "next-auth/react";
 
-import apiRequest from "@/helpers/customFetch"; // Import your custom Axios function
+import apiRequest from "@/utils/customFetch";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 

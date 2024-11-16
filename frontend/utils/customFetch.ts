@@ -1,7 +1,7 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { getSession } from "next-auth/react";
 
-import api from "@/helpers/axiosInstance";
+import api from "@/utils/axiosInstance";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
