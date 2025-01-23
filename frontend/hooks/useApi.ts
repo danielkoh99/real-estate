@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { getSession } from "next-auth/react";
 
-import apiRequest from "@/utils/customFetch";
+import { apiRequest } from "@/utils/index";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
@@ -21,11 +21,13 @@ const useApi = <T = any>({
   config = {},
   timeout = 5000,
 }: UseApiProps) => {
-  const [response, setResponse] = useState<AxiosResponse<T> | null>(null);
+  const [response, setResponse] = useState<AxiosResponse<T>>();
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchData = useCallback(async () => {
+    if (response) return; // Skip the fetch if data is already available
+
     const session = await getSession();
 
     setLoading(true);
@@ -54,19 +56,24 @@ const useApi = <T = any>({
         timeout,
       });
 
-      setResponse(result.response); // Assuming `result` contains a `response` object
+      if (!result.response) {
+        // Explicitly set error if response is null
+        setError("No data found");
+      } else {
+        setResponse(result.response); // Assuming `result` contains a `response` object
+      }
       setLoading(false);
     } catch (err: { message: string } | any) {
       setError(err); // Handle any error thrown during the request
       setLoading(false);
-    } finally {
-      setLoading(false);
     }
-  }, [url, method, data, config, timeout]);
+  }, [url, method, data, config, timeout, response]); // Added response to avoid re-fetching
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]); // Add fetchData as a dependency
+    if (!response && !loading) {
+      fetchData(); // Only fetch if the response is null and not loading
+    }
+  }, [response, loading, fetchData]); // Fetch data only if response is null
 
   return { response, error, loading, refetch: fetchData };
 };

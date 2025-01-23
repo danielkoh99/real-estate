@@ -19,7 +19,7 @@ interface ApiResponse<T> {
   loading: boolean;
 }
 
-const apiRequest = async <T = any>({
+export const apiRequest = async <T = any>({
   url,
   method = "GET",
   data = null,
@@ -56,5 +56,3 @@ const apiRequest = async <T = any>({
 
   return { response, error, loading };
 };
-
-export default apiRequest;

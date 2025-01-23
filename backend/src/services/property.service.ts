@@ -19,13 +19,18 @@ export const createPropertyWithImages = async (
   const files = f as Express.Multer.File[];
 
   try {
-    const { title, address, price, type, listedByUserId } = data;
+    const { title, address, price, type, listedByUserId, size, bedrooms, bathrooms, yearBuilt, category } = data;
 
     // Create property
     const property = await Property.create({
       title,
       address,
       price,
+      bedrooms,
+      bathrooms,
+      yearBuilt,
+      category,
+      size,
       type,
       listedByUserId,
     });
@@ -226,4 +231,46 @@ export const getPropertiesByFilter = async (filters: PropertyFilter) => {
     currentPage,
   };
 };
-export { createOne, updateOne, getOne, deleteOne, getByUserId, getAll };
+const getRelatedProperties = async (propertyId: string) => {
+  // Fetch the main property
+  const mainProperty = await Property.findByPk(propertyId);
+  console.log(mainProperty?.type, "type");
+  if (!mainProperty) {
+    throw new Error("Property not found");
+  }
+
+  // Find related properties based on price range and type
+  const relatedProperties = await Property.findAll({
+    where: {
+      id: { [Op.ne]: propertyId }, // Exclude the current property
+      type: mainProperty.type, // Match the same type
+      [Op.or]: [
+        {
+          price: {
+            [Op.between]: [
+              mainProperty.price * 0.8, // 20% below the price
+              mainProperty.price * 1.2, // 20% above the price
+            ],
+          },
+        },
+        {
+          size: {
+            [Op.between]: [
+              mainProperty.size * 0.8, // 20% below the size
+              mainProperty.size * 1.2, // 20% above the size
+            ],
+          },
+        },
+      ],
+    },
+    limit: 5,
+    include: [
+      {
+        model: PropertyImage,
+        as: "images",
+      },
+    ],
+  });
+  return relatedProperties;
+};
+export { createOne, updateOne, getOne, deleteOne, getByUserId, getAll, getRelatedProperties };

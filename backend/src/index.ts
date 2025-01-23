@@ -35,7 +35,7 @@ app.use(cookieParser());
 app.use(limiter);
 app.use(errorMiddleware);
 app.use(session({
-  secret:  process.env.SESSION_SECRET || 'fallbackSecret',  // Replace with your secret key
+  secret: process.env.SESSION_SECRET || 'fallbackSecret',  // Replace with your secret key
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // Set secure: true if using HTTPS

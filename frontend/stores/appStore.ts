@@ -1,7 +1,8 @@
 import { create } from "zustand";
+import Router from "next/router";
 
 import { Property, PropertyRes } from "@/types";
-import apiRequest from "@/utils/customFetch";
+import { apiRequest } from "@/utils/index";
 
 interface Filter {
   [key: string]: string | number; // Define filter criteria as needed
@@ -26,6 +27,7 @@ interface Store {
   getLoading: () => boolean;
   getError: () => string | null;
   getFilters: () => Filter;
+  getPage: () => number;
 }
 
 const usePropertyStore = create<Store>((set, get) => ({
@@ -41,7 +43,7 @@ const usePropertyStore = create<Store>((set, get) => ({
   fetchProperties: async () => {
     const { limit, page, filters } = get();
 
-    set({ loading: true, error: null }); // Set loading to true before fetching
+    set({ loading: true, error: null });
 
     const { response, error } = await apiRequest<PropertyRes>({
       url: "/property",
@@ -50,7 +52,7 @@ const usePropertyStore = create<Store>((set, get) => ({
         params: {
           limit,
           page,
-          ...filters, // Apply filters dynamically
+          ...filters,
         },
       },
     });
@@ -79,7 +81,7 @@ const usePropertyStore = create<Store>((set, get) => ({
       set({ error: error.message, loading: false });
     } else if (response) {
       set({
-        properties: response.data.properties, // Assuming response has `properties` array
+        properties: response.data.properties,
         loading: false,
       });
     }
@@ -89,21 +91,45 @@ const usePropertyStore = create<Store>((set, get) => ({
     set({ filters });
     get().fetchProperties();
   },
+
   setPage: (page) => {
-    set({ page }); // Update the page state
-    get().fetchProperties(); // Call fetchProperties whenever the page changes
-  },
-  setLimit: async (limit) => {
-    set({ limit }); // Update the limit state
-    get().fetchProperties(); // Call fetchProperties whenever the limit changes
+    set({ page });
+    const { query } = Router;
+
+    // Update URL
+    Router.push(
+      {
+        pathname: Router.pathname,
+        query: { ...query, page }, // Update page in the query params
+      },
+      undefined,
+      { shallow: true },
+    );
   },
 
-  // Selectors to get current state
+  setLimit: (limit) => {
+    set({ limit });
+    const { query } = Router;
+
+    // Update URL
+    Router.push(
+      {
+        pathname: Router.pathname,
+        query: { ...query, limit }, // Update limit in the query params
+      },
+      undefined,
+      { shallow: true },
+    );
+
+    get().fetchProperties();
+  },
+
   getProperties: () => get().properties,
   getLoading: () => get().loading,
   getError: () => get().error,
   getFilters: () => get().filters,
   getLimit: () => get().limit.toString(),
+  getPage: () => get().page,
 }));
 
 export default usePropertyStore;

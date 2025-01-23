@@ -129,7 +129,9 @@ const LoginForm = () => {
             isInvalid={errors.password ? true : false}
           />
 
-          <Button type="submit">Login</Button>
+          <Button color="primary" type="submit">
+            Login
+          </Button>
         </form>
       </CardBody>
     </Card>

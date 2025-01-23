@@ -21,7 +21,6 @@ FROM node:18-slim AS runner
 
 # Set working directory
 WORKDIR /app
-
 # Copy only the build files from the builder stage
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public

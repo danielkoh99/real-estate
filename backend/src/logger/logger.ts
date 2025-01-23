@@ -29,9 +29,8 @@ const options = {
           level,
           `[${level.toUpperCase()}]`
         );
-        return `${timestamp} ${coloredLevel}: ${message} ${
-          Object.keys(args).length > 0 ? JSON.stringify(args, null, 2) : ""
-        }`;
+        return `${timestamp} ${coloredLevel}: ${message} ${Object.keys(args).length > 0 ? JSON.stringify(args, null, 2) : ""
+          }`;
       })
     ),
   },

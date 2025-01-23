@@ -4,6 +4,7 @@ import Property from "./models/Property/Property";
 import User from "./models/User/User";
 import {
   PropertyAttributes,
+  PropertyCategory,
   PropertyType,
 } from "./models/Property/property.interface";
 import { Roles, UserAttributes } from "./models/User/user.interface";
@@ -11,14 +12,14 @@ import { hashPassword } from "../utils/auth.utils";
 import logger from "../logger/logger";
 import PropertyImage from "./models/Image/Image";
 
-function generateRandomSize(min: number, max: number): number {
+function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // Function to create random images for a property
 async function generateRandomImages(propertyId: string) {
   const images = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < randomInt(3, 10); i++) {
     // Create 3 random images
     images.push({
       id: faker.string.uuid(),
@@ -65,14 +66,22 @@ async function seed() {
 
     // Generate random properties
     const properties: PropertyAttributes[] = [];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 200; i++) {
+      const price = parseFloat(faker.commerce.price())
+      const size = randomInt(15, 200)
       properties.push({
         id: faker.string.uuid(),
         listedByUserId: faker.helpers.arrayElement(createdUsers).id,
-        size: generateRandomSize(15, 200),
+        size: size,
         title: faker.location.street(),
-        address: faker.location.streetAddress(),
-        price: parseFloat(faker.commerce.price()),
+        address: faker.location.streetAddress({ useFullAddress: true }),
+        bedrooms: faker.number.int({ min: 1, max: 6 }),
+        bathrooms: faker.number.int({ min: 1, max: 3 }),
+        yearBuilt: faker.number.int({ min: 1900, max: 2024 }),
+        description: faker.lorem.paragraph(5),
+        squarMeterPrice: price / size,
+        category: faker.helpers.arrayElement(Object.values(PropertyCategory)),
+        price: price,
         type: faker.helpers.arrayElement<PropertyType>([
           PropertyType.APARTMENT,
           PropertyType.HOUSE,

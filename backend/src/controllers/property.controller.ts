@@ -1,12 +1,10 @@
 import { Request, Response } from "express";
 import {
-  getAll,
   getOne,
   deleteOne,
-  updateOne,
-  createOne,
   createPropertyWithImages,
   getPropertiesByFilter,
+  getRelatedProperties,
 } from "../services/property.service";
 import logger from "../logger/logger";
 import { CustomRequest, PropertyQueryParams, PropertyType } from "../types/types";
@@ -67,10 +65,29 @@ const deletePropertyById = async (req: Request, res: Response) => {
   }
 };
 
+const relatedProperties = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const relatedProperties = await getRelatedProperties(id);
+    res.status(200).send(relatedProperties);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+export const savePropertyListing = async (req: Request<{}, {}, { propertyId: number; userId: number }>, res: Response) => {
+  try {
+    const { propertyId, userId } = req.body;
+    res.status(200).json({ message: "Property saved successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to save property", error });
+  }
+};
 export {
   createProperty,
   getProperties,
   getPropertyById,
   updatePropertyById,
   deletePropertyById,
+  relatedProperties
 };

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getAll, getOne, deleteOne, updateOne } from "../services/user.service";
 import logger from "../logger/logger";
+import Property from "../db/models/Property/Property";
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await getAll();
@@ -13,7 +14,13 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getUserById = async (req: Request<{ id: number }>, res: Response) => {
   const { id } = req.params;
   try {
-    const user = await getOne(id);
+    const user = await getOne(id,
+      ['password'],
+      [{
+        model: Property,
+        as: "listedProperties",
+      }]
+    );
     if (!user) return res.status(404).json({ message: "User not found" });
     return res.status(200).send(user);
   } catch (err) {
@@ -25,7 +32,10 @@ const getSessionUser = async (req: Request, res: Response) => {
   const { userId } = req.session;
   if (!userId) return res.status(404).json({ message: "User not found" });
   try {
-    const user = await getOne(userId);
+    const user = await getOne(userId, ['password'], [{
+      model: Property,
+      as: "listedProperties",
+    }]);
     return res.status(200).send(user);
   } catch (err) {
     logger.error(err);
@@ -57,4 +67,21 @@ const deleteUserById = async (req: Request<{ id: number }>, res: Response) => {
   }
 };
 
-export { getAllUsers, deleteUserById, getUserById, updateUserById, getSessionUser };
+const getSavedProperties = async (req: Request<{ id: number }>, res: Response) => {
+  const { id } = req.params;
+  try {
+    const user = await getOne(id,
+      ['password'],
+      [{
+        model: Property,
+        as: "listedProperties",
+      }]
+    );
+    if (!user) return res.status(404).json({ message: "User not found" });
+    return res.status(200).send(user);
+  } catch (err) {
+    logger.error(err);
+    return res.status(500).send(err);
+  }
+}
+export { getAllUsers, deleteUserById, getUserById, updateUserById, getSessionUser, getSavedProperties };

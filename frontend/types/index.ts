@@ -20,6 +20,12 @@ export interface Property {
   size: number;
   address: string;
   type: PropertyType;
+  category: PropertyCategory;
+  bedrooms: number;
+  bathrooms: number;
+  yearBuilt?: number;
+  description: string;
+  squarMeterPrice: number;
   savedByUserId?: number[];
   listedByUserId?: number;
   listedByUser: {
@@ -31,6 +37,17 @@ export interface Property {
 export enum PropertyType {
   APARTMENT = "apartment",
   HOUSE = "house",
+}
+enum PropertyCategory {
+  USED = "Used",
+  NEWLY_BUILT = "Newly Built",
+  UNDER_CONSTRUCTION = "Under Construction",
+  RENOVATED = "Renovated",
+  LUXURY = "Luxury",
+  COMMERCIAL = "Commercial",
+  INDUSTRIAL = "Industrial",
+  VACATION_HOME = "Vacation Home",
+  OTHER = "Other",
 }
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;

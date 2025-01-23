@@ -7,6 +7,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
+import { NuqsAdapter } from "nuqs/adapters/next/pages";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import SessionManager from "@/components/SessionManager";
@@ -22,7 +23,9 @@ export default function App({
       <NextThemesProvider>
         <SessionProvider session={session}>
           <SessionManager />
-          <Component {...pageProps} />
+          <NuqsAdapter>
+            <Component {...pageProps} />
+          </NuqsAdapter>
           <Toaster
             gutter={8}
             position="top-center"

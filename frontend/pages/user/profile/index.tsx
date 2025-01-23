@@ -10,7 +10,7 @@ import {
 import DefaultLayout from "@/layouts/default";
 import useApi from "@/hooks/useApi";
 import { UserInfoResponse } from "@/types";
-import Error from "@/components/Error";
+import Error from "@/components/global/Error";
 import { formatDateTime } from "@/utils/formatDateTime";
 
 export default function UserProfilePage() {
@@ -21,6 +21,7 @@ export default function UserProfilePage() {
 
   if (loading || !response) return <div>Loading...</div>;
   if (error) return <Error error_message={error.message} />;
+
   const { firstName, lastName, email, createdAt } = response.data;
   const formattedDate = formatDateTime(createdAt);
 

@@ -6,12 +6,13 @@ import {
   getUserById,
   updateUserById,
 } from "../../controllers/user.controller";
+import { auth } from "../../middlewares/auth.middleware";
 
 const userRouter = Router();
-userRouter.get("/profile", getSessionUser);
+userRouter.get("/profile", [auth], getSessionUser);
 userRouter.get("/:id", getUserById);
-userRouter.get("/", getAllUsers);
-userRouter.put("/:id", updateUserById);
-userRouter.delete("/:id", deleteUserById);
+userRouter.get("/", [auth], getAllUsers);
+userRouter.put("/:id", [auth], updateUserById);
+userRouter.delete("/:id", [auth], deleteUserById);
 
 export default userRouter;

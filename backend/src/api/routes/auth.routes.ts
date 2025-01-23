@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticateJWT } from "../../middlewares/auth.middleware";
+import { auth } from "../../middlewares/auth.middleware";
 import {
   registerUser,
   signInUser,
@@ -9,6 +9,6 @@ import {
 const authRouter = Router();
 authRouter.post("/signup", registerUser);
 authRouter.post("/login", signInUser);
-authRouter.post("/logout", authenticateJWT, signOutUser);
+authRouter.post("/logout", auth, signOutUser);
 
 export default authRouter;

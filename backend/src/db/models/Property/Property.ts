@@ -4,18 +4,17 @@ import {
   HasManyGetAssociationsMixin,
   Optional,
 } from "sequelize";
-import { PropertyAttributes, PropertyType } from "./property.interface";
+import { PropertyAttributes, PropertyCategory, PropertyType } from "./property.interface";
 import db from "../../config";
 import PropertyImage from "../Image/Image";
 interface PropertyCreationAttributes
-  extends Optional<PropertyAttributes, "id"> {}
+  extends Optional<PropertyAttributes, "id"> { }
 
-export interface PropertyOutput extends Required<PropertyAttributes> {}
+export interface PropertyOutput extends Required<PropertyAttributes> { }
 class Property
   extends Model<PropertyAttributes, PropertyCreationAttributes>
-  implements PropertyAttributes
-{
-  public size?: number | undefined;
+  implements PropertyAttributes {
+  public size!: number;
   public id!: string;
   public listedByUserId?: number;
   public savedByUserId?: number[];
@@ -23,6 +22,12 @@ class Property
   public address!: string;
   public price!: number;
   public type!: PropertyType;
+  public bedrooms!: number;
+  public bathrooms!: number;
+  public squarMeterPrice?: number;
+  public category!: PropertyCategory;
+  public description?: string;
+  public yearBuilt!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly images?: PropertyImage[];
@@ -48,6 +53,31 @@ Property.init(
     address: {
       type: DataTypes.STRING(256),
       allowNull: false,
+    },
+    bedrooms: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    squarMeterPrice: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING(256),
+      allowNull: false
+    },
+    bathrooms: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    category: {
+      type: DataTypes.ENUM,
+      values: Object.values(PropertyCategory),
+      allowNull: false,
+    },
+    yearBuilt: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     price: {
       type: DataTypes.INTEGER,
