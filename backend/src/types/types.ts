@@ -1,5 +1,6 @@
 import { Request } from "express";
 import { Roles } from "../db/models/User/user.interface";
+import { BPDistricts } from "../db/models/Property/property.interface";
 
 interface UserRequestBody {
   firstName: string;
@@ -44,7 +45,11 @@ interface PropertyFilter {
   priceMax?: number;
   sizeMin?: number;
   sizeMax?: number;
+  yearBuilt?: number;
+  districts?: BPDistricts[];
   type?: PropertyType;
+  sortBy?: string;
+  sortDirection?: string;
   listedByUserId?: number;
   page?: number;
   limit?: number;

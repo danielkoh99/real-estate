@@ -4,6 +4,7 @@ import { hashPassword, verifyPassword } from "../utils/auth.utils";
 import { UserRequestBody, UResponseBody } from "../types/types";
 import { Roles } from "../db/models/User/user.interface";
 import { signToken } from "../middlewares/auth.middleware";
+import logger from "../logger/logger";
 const registerUser = async (
   req: Request<{}, {}, UserRequestBody>,
   res: Response<UResponseBody>

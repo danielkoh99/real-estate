@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import Property from "./models/Property/Property";
 import User from "./models/User/User";
 import {
+  BPDistricts,
   PropertyAttributes,
   PropertyCategory,
   PropertyType,
@@ -15,7 +16,10 @@ import PropertyImage from "./models/Image/Image";
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
+function getRandomCityOrBudapest() {
+  const options = [faker.location.city(), "Budapest"];
+  return faker.helpers.arrayElement(options);
+}
 // Function to create random images for a property
 async function generateRandomImages(propertyId: string) {
   const images = [];
@@ -69,11 +73,17 @@ async function seed() {
     for (let i = 0; i < 200; i++) {
       const price = parseFloat(faker.commerce.price())
       const size = randomInt(15, 200)
+      const randomCity = getRandomCityOrBudapest()
+      const district =
+        randomCity === "Budapest"
+          ? faker.helpers.arrayElement(Object.values(BPDistricts))
+          : undefined;
       properties.push({
         id: faker.string.uuid(),
         listedByUserId: faker.helpers.arrayElement(createdUsers).id,
         size: size,
-        title: faker.location.street(),
+        city: randomCity,
+        district: district,
         address: faker.location.streetAddress({ useFullAddress: true }),
         bedrooms: faker.number.int({ min: 1, max: 6 }),
         bathrooms: faker.number.int({ min: 1, max: 3 }),

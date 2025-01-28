@@ -1,4 +1,4 @@
-import { Kbd, Input } from "@nextui-org/react";
+import { Kbd, Input } from "@heroui/react";
 import { useState } from "react";
 import { useUpdateEffect } from "react-use";
 

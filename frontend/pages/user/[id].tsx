@@ -26,12 +26,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   );
 };
 
-// Fetch user data based on ID
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params as { id: string };
 
-  // Simulate fetching user data by ID
-  const user = await fetchUserById(id); // Replace with actual API call
+  const user = await fetchUserById(id);
 
   if (!user) {
     return {
@@ -48,7 +46,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default UserProfile;
 
-// Mock API function (replace with your backend call)
 async function fetchUserById(id: string) {
   const users = [
     {

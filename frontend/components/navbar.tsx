@@ -6,13 +6,13 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
-} from "@nextui-org/navbar";
-import { Link } from "@nextui-org/link";
-import { link as linkStyles } from "@nextui-org/theme";
+} from "@heroui/navbar";
+import { Link } from "@heroui/link";
+import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import UserAvatar from "./UserAvatar";
@@ -63,7 +63,7 @@ export const Navbar = () => {
         <Button
           color="primary"
           variant="ghost"
-          onClick={() => router.push("/login")}
+          onPress={() => router.push("/login")}
         >
           Login
         </Button>

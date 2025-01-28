@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { getSession } from "next-auth/react";
 
@@ -12,6 +12,7 @@ interface UseApiProps {
   data?: any;
   config?: AxiosRequestConfig;
   timeout?: number; // Optional timeout in milliseconds
+  autoFetch?: boolean; // Flag to determine automatic fetching on mount
 }
 
 const useApi = <T = any>({
@@ -20,14 +21,13 @@ const useApi = <T = any>({
   data = null,
   config = {},
   timeout = 5000,
+  autoFetch = false, // Default to manual fetching
 }: UseApiProps) => {
   const [response, setResponse] = useState<AxiosResponse<T>>();
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchData = useCallback(async () => {
-    if (response) return; // Skip the fetch if data is already available
-
+  const fetch = useCallback(async () => {
     const session = await getSession();
 
     setLoading(true);
@@ -41,13 +41,12 @@ const useApi = <T = any>({
         timeout,
         headers: {
           "Content-Type": "application/json",
-          ...config.headers, // Preserve existing headers from config
-          Authorization: token ? `Bearer ${token}` : "", // Add Authorization header
+          ...config.headers,
+          Authorization: token ? `Bearer ${token}` : "",
         },
-        ...(data && { data }), // Include `data` only for non-GET requests
+        ...(data && { data }),
       };
 
-      // Use the custom Axios function instead of directly calling Axios
       const result = await apiRequest<T>({
         url,
         method,
@@ -57,25 +56,25 @@ const useApi = <T = any>({
       });
 
       if (!result.response) {
-        // Explicitly set error if response is null
         setError("No data found");
       } else {
-        setResponse(result.response); // Assuming `result` contains a `response` object
+        setResponse(result.response);
       }
-      setLoading(false);
-    } catch (err: { message: string } | any) {
-      setError(err); // Handle any error thrown during the request
+    } catch (err: any) {
+      setError(err);
+    } finally {
       setLoading(false);
     }
-  }, [url, method, data, config, timeout, response]); // Added response to avoid re-fetching
+  }, [url, method, data, config, timeout]);
 
+  // Automatically fetch data on mount if `autoFetch` is true
   useEffect(() => {
-    if (!response && !loading) {
-      fetchData(); // Only fetch if the response is null and not loading
+    if (autoFetch) {
+      fetch();
     }
-  }, [response, loading, fetchData]); // Fetch data only if response is null
+  }, [autoFetch, fetch]);
 
-  return { response, error, loading, refetch: fetchData };
+  return { response, error, loading, fetch };
 };
 
 export default useApi;

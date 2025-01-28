@@ -9,8 +9,8 @@ interface ApiRequestProps {
   url: string;
   method?: Method;
   data?: any;
-  config?: AxiosRequestConfig; // Configuration object for Axios
-  timeout?: number; // Optional timeout in milliseconds
+  config?: AxiosRequestConfig;
+  timeout?: number;
 }
 
 interface ApiResponse<T> {
@@ -40,16 +40,16 @@ export const apiRequest = async <T = any>({
       timeout,
       headers: {
         "Content-Type": "application/json",
-        ...config.headers, // Preserve existing headers from config
-        Authorization: token ? `Bearer ${token}` : "", // Add Authorization header
+        ...config.headers,
+        Authorization: token ? `Bearer ${token}` : "",
       },
-      ...(data && { data }), // Include `data` only for non-GET requests
-      ...(config.params && { params: config.params }), // Include params if provided
+      ...(data && { data }),
+      ...(config.params && { params: config.params }),
     };
 
     response = await api(axiosConfig);
   } catch (err) {
-    error = err; // Capture any error thrown during the request
+    error = err;
   } finally {
     loading = false;
   }

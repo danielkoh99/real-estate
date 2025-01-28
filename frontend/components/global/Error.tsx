@@ -1,4 +1,4 @@
-import { Card } from "@nextui-org/react";
+import { Card } from "@heroui/react";
 
 function Error({ error_message }: { error_message: string }) {
   return (

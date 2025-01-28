@@ -67,21 +67,5 @@ const deleteUserById = async (req: Request<{ id: number }>, res: Response) => {
   }
 };
 
-const getSavedProperties = async (req: Request<{ id: number }>, res: Response) => {
-  const { id } = req.params;
-  try {
-    const user = await getOne(id,
-      ['password'],
-      [{
-        model: Property,
-        as: "listedProperties",
-      }]
-    );
-    if (!user) return res.status(404).json({ message: "User not found" });
-    return res.status(200).send(user);
-  } catch (err) {
-    logger.error(err);
-    return res.status(500).send(err);
-  }
-}
-export { getAllUsers, deleteUserById, getUserById, updateUserById, getSessionUser, getSavedProperties };
+
+export { getAllUsers, deleteUserById, getUserById, updateUserById, getSessionUser };

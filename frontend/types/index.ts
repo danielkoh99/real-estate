@@ -52,14 +52,15 @@ enum PropertyCategory {
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
-interface User {
-  id: string;
+export interface User {
+  id: number;
   email: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
   savedProperties?: Property[];
   listedProperties?: Property[];
-  createdAt: string;
+  createdAt?: string;
 }
 export interface LoginResponse extends User, ErrorResponse {
   accessToken: string;

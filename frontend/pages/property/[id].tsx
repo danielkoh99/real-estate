@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { GetServerSideProps } from "next/types";
 import Image from "next/image";
-import { Avatar, Card } from "@nextui-org/react";
+import { Avatar, Card } from "@heroui/react";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import { Thumbs, FreeMode, Navigation } from "swiper/modules";
 import "swiper/css/bundle";
@@ -50,7 +50,7 @@ const PropertyPage: React.FC<{
               <SwiperSlide key={image.url + index}>
                 <Image
                   fill
-                  alt={property.title}
+                  alt={property.description}
                   className="object-cover h-full w-full relative"
                   priority={true}
                   src={image.url}
@@ -73,7 +73,7 @@ const PropertyPage: React.FC<{
               <SwiperSlide key={image.url + index}>
                 <Image
                   fill
-                  alt={property.title}
+                  alt={property.description}
                   className="object-cover h-full w-full relative rounded-md"
                   priority={true}
                   src={image.url}

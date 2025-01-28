@@ -1,18 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable unused-imports/no-unused-imports */
 import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
-  // Extend session to hold the access_token
-  interface Session {
-    user: {
-      accessToken: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-    };
+  interface User extends DefaultUser {
+    accessToken: string;
+    id: number;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    savedProperties?: Property[];
+    listedProperties?: Property[];
+    createdAt?: string;
   }
 
-  // Extend token to hold the access_token before it gets put into session
+  interface Session {
+    user: User;
+  }
   interface JWT {
     accessToken: string;
   }

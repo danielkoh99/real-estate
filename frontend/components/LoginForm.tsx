@@ -1,5 +1,5 @@
 "use client";
-import { Input, Button, Card, CardBody } from "@nextui-org/react";
+import { Input, Button, Card, CardBody } from "@heroui/react";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,66 +9,6 @@ import toast from "react-hot-toast";
 
 import { signinScheme } from "@/schemes";
 
-// const LoginForm = () => {
-//   const [formdata, setFormdata] = useState({ email: "", password: "" });
-//   const {
-//     register,
-//     handleSubmit,
-//     formState: { errors },
-//   } = useForm({
-//     resolver: zodResolver(signinScheme),
-//   });
-
-//   const router = useRouter();
-//   const handleLogin = async () => {
-//     const { email, password } = await signinScheme.parseAsync(formdata);
-
-//     console.log(email, password);
-//     // const response = await signIn("credentials", {
-//     //   email: formdata.email,
-//     //   password: formdata.password,
-//     //   redirect: false,
-//     // });
-
-//     // if (response?.ok) {
-//     //   router.push("/");
-//     // }
-//     // if (response?.error) {
-//     //   toast.error(response.error);
-//     // }
-//     setFormdata({ email: "", password: "" });
-//   };
-
-//   return (
-//     <Card>
-//       <CardBody>
-//         <div className="flex w-full flex-col gap-5">
-//           <h3>Login</h3>
-//           <Input
-//             fullWidth
-//             placeholder="Email"
-//             value={formdata.email}
-//             onChange={(e) =>
-//               setFormdata({ ...formdata, email: e.target.value })
-//             }
-//           />
-//           <Input
-//             fullWidth
-//             placeholder="Password"
-//             type="password"
-//             value={formdata.password}
-//             onChange={(e) =>
-//               setFormdata({ ...formdata, password: e.target.value })
-//             }
-//           />
-//           <Button color="primary" variant="ghost" onClick={handleLogin}>
-//             Login
-//           </Button>
-//         </div>
-//       </CardBody>
-//     </Card>
-//   );
-// };
 type Schema = z.infer<typeof signinScheme>;
 
 const LoginForm = () => {

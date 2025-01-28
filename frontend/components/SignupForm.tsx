@@ -1,4 +1,4 @@
-import { Card, Input, Button, CardBody } from "@nextui-org/react";
+import { Card, Input, Button, CardBody } from "@heroui/react";
 
 const SignupForm = () => {
   return (

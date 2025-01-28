@@ -19,16 +19,17 @@ export const createPropertyWithImages = async (
   const files = f as Express.Multer.File[];
 
   try {
-    const { title, address, price, type, listedByUserId, size, bedrooms, bathrooms, yearBuilt, category } = data;
+    const { address, price, type, listedByUserId, size, bedrooms, bathrooms, yearBuilt, category, city, district } = data;
 
     // Create property
     const property = await Property.create({
-      title,
       address,
       price,
       bedrooms,
       bathrooms,
       yearBuilt,
+      city,
+      district,
       category,
       size,
       type,
@@ -202,6 +203,11 @@ export const getPropertiesByFilter = async (filters: PropertyFilter) => {
     if (filters.type) {
       whereClause.type = filters.type;
     }
+    const order: any = [];
+
+    if (filters.sortBy) {
+      order.push([filters.sortBy, filters.sortDirection || "ASC"]);
+    }
   }
 
   const properties = await Property.findAndCountAll({
@@ -234,7 +240,6 @@ export const getPropertiesByFilter = async (filters: PropertyFilter) => {
 const getRelatedProperties = async (propertyId: string) => {
   // Fetch the main property
   const mainProperty = await Property.findByPk(propertyId);
-  console.log(mainProperty?.type, "type");
   if (!mainProperty) {
     throw new Error("Property not found");
   }

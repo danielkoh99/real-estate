@@ -18,7 +18,6 @@ interface Store {
   totalPages: number;
   totalItems: number;
   fetchProperties: () => Promise<void>;
-  fetchUserProperties: () => Promise<void>;
   setFilters: (filters: Filter) => void;
   setPage: (page: number) => void;
   setLimit: (limit: number) => void;
@@ -79,7 +78,7 @@ const usePropertyStore = create<Store>((set, get) => ({
 
     if (error) {
       set({ error: error.message, loading: false });
-    } else if (response) {
+    } else if (response?.data) {
       set({
         properties: response.data.properties,
         loading: false,
@@ -96,11 +95,10 @@ const usePropertyStore = create<Store>((set, get) => ({
     set({ page });
     const { query } = Router;
 
-    // Update URL
     Router.push(
       {
         pathname: Router.pathname,
-        query: { ...query, page }, // Update page in the query params
+        query: { ...query, page },
       },
       undefined,
       { shallow: true },
@@ -111,11 +109,10 @@ const usePropertyStore = create<Store>((set, get) => ({
     set({ limit });
     const { query } = Router;
 
-    // Update URL
     Router.push(
       {
         pathname: Router.pathname,
-        query: { ...query, limit }, // Update limit in the query params
+        query: { ...query, limit },
       },
       undefined,
       { shallow: true },

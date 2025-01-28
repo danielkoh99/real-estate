@@ -1,12 +1,26 @@
 import { useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 
+import useUserStore from "@/stores/userStore";
+
 export default function SessionManager() {
   const { data: session, status } = useSession();
 
+  const { setCurrentUser, clearUser, currentUser } = useUserStore();
+
+  useEffect(() => {
+    if (session) {
+      setCurrentUser({
+        id: session.user.id,
+        name: `${session.user.firstName} ${session.user.lastName}`,
+        email: session.user.email,
+      });
+    } else {
+      clearUser();
+    }
+  }, [session, setCurrentUser, clearUser]);
   useEffect(() => {
     if (status === "authenticated" && session?.expires) {
-      console.log(session, status);
       // Calculate the time remaining until the session expires
       const expirationTime = new Date(session.expires).getTime();
       const currentTime = new Date().getTime();
@@ -19,7 +33,7 @@ export default function SessionManager() {
 
         return () => clearTimeout(timer);
       } else {
-        // signOut();
+        signOut();
       }
     }
   }, [session, status]);

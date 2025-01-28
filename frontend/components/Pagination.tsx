@@ -1,5 +1,5 @@
 import React from "react";
-import { Pagination } from "@nextui-org/react";
+import { Pagination } from "@heroui/react";
 
 import usePropertyStore from "@/stores/appStore";
 

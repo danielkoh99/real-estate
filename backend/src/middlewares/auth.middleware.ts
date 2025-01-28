@@ -6,6 +6,7 @@ interface JwtPayload {
   userId: number;
 }
 const auth = (req: Request<{}, {}, JwtPayload>, res: Response, next: NextFunction) => {
+  logger.info("auth middleware");
   const token =
     req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
   if (token) {

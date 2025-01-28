@@ -19,7 +19,11 @@ const options = {
     ),
   },
   console: {
-    level: "info",
+    level: "debug", // Capture all log levels from debug upwards
+    consoleWarnLevels: ["info", "warn", "error"], // Warn and error go to stderr
+    stderrLevels: ["error"], // Only errors routed to stderr
+    debugStdout: true, // Ensure debug logs appear on stdout
+    eol: "\n", // Standard line ending
     handleExceptions: true,
     format: format.combine(
       format.splat(),

@@ -6,9 +6,13 @@ import {
   getPropertiesByFilter,
   getRelatedProperties,
 } from "../services/property.service";
+import {
+  getOne as getUser,
+} from "../services/user.service";
 import logger from "../logger/logger";
 import { CustomRequest, PropertyQueryParams, PropertyType } from "../types/types";
 import { PropertyAttributes } from "../db/models/Property/property.interface";
+import Property from "../db/models/Property/Property";
 const createProperty = async (req: CustomRequest, res: Response) => {
   try {
     const data = req.body as PropertyAttributes;
@@ -32,6 +36,7 @@ const getProperties = async (req: Request<{}, {}, {}, PropertyQueryParams>, res:
       sizeMin: sizeMin ? Number(sizeMin) : undefined,
       sizeMax: sizeMax ? Number(sizeMax) : undefined,
       type: type ? type as PropertyType : undefined,
+
       listedByUserId: listedByUserId ? Number(listedByUserId) : undefined,
       page: page ? Number(page) : 1,  // Page number
       limit: limit ? Number(limit) : 10, // Number of items per page
@@ -75,19 +80,64 @@ const relatedProperties = async (req: Request, res: Response) => {
   }
 };
 
-export const savePropertyListing = async (req: Request<{}, {}, { propertyId: number; userId: number }>, res: Response) => {
+const savePropertyListing = async (req: CustomRequest, res: Response) => {
+  const userId = req.session.userId;
+  logger.info(userId)
   try {
     const { propertyId, userId } = req.body;
-    res.status(200).json({ message: "Property saved successfully" });
+    const user = await getUser(userId)
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const isSaved = await user.hasSavedProperty(propertyId);
+    if (isSaved) {
+      await user.removeSavedProperty(propertyId);
+      return res.status(200).json({ message: "Property unsaved successfully" });
+    }
+    await user.addSavedProperty(propertyId);
+    return res.status(200).json({ message: "Property saved successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to save property", error });
+    return res.status(500).json({ message: "Failed to save property", error });
   }
 };
+
+const getSavedProperties = async (req: Request, res: Response) => {
+  const userId = req.session.userId;
+  if (!userId) return res.status(404).json({ message: "User not found" });
+  try {
+    const user = await getUser(userId)
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const userSavedProperties = await user.getSavedProperties()
+    const mappedToId = userSavedProperties.map(property => property.id)
+    return res.status(200).send(mappedToId);
+  } catch (err) {
+    logger.error(err);
+    return res.status(500).send(err);
+  }
+}
+const getListedProperties = async (req: Request<{ userId: number }>, res: Response) => {
+  const { userId } = req.params;
+  try {
+    const user = await getUser(userId,
+      ['password'],
+      [{
+        model: Property,
+        as: "listedProperties",
+      }]
+    );
+    if (!user) return res.status(404).json({ message: "User not found" });
+    return res.status(200).send(user);
+  } catch (err) {
+    logger.error(err);
+    return res.status(500).send(err);
+  }
+}
 export {
   createProperty,
   getProperties,
   getPropertyById,
   updatePropertyById,
   deletePropertyById,
-  relatedProperties
+  relatedProperties,
+  savePropertyListing,
+  getSavedProperties,
+  getListedProperties
 };

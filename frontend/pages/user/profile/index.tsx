@@ -5,7 +5,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import DefaultLayout from "@/layouts/default";
 import useApi from "@/hooks/useApi";

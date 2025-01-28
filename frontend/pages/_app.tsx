@@ -1,16 +1,29 @@
 import type { AppProps } from "next/app";
 
 import { useRouter } from "next/router";
-import { NextUIProvider } from "@nextui-org/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { HeroUIProvider } from "@heroui/react";
 
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import SessionManager from "@/components/SessionManager";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      retry: 1,
+      staleTime: 5 * 1000,
+    },
+  },
+});
 
 export default function App({
   Component,
@@ -19,32 +32,34 @@ export default function App({
   const router = useRouter();
 
   return (
-    <NextUIProvider navigate={router.push}>
-      <NextThemesProvider>
-        <SessionProvider session={session}>
-          <SessionManager />
-          <NuqsAdapter>
-            <Component {...pageProps} />
-          </NuqsAdapter>
-          <Toaster
-            gutter={8}
-            position="top-center"
-            reverseOrder={false}
-            toastOptions={{
-              className: "",
-              duration: 5000,
-              style: {
-                background: "#363636",
-                color: "#fff",
-              },
-              success: {
-                duration: 3000,
-              },
-            }}
-          />
-        </SessionProvider>
-      </NextThemesProvider>
-    </NextUIProvider>
+    <QueryClientProvider client={queryClient}>
+      <HeroUIProvider navigate={router.push}>
+        <NextThemesProvider>
+          <SessionProvider session={session}>
+            <SessionManager />
+            <NuqsAdapter>
+              <Component {...pageProps} />
+            </NuqsAdapter>
+            <Toaster
+              gutter={8}
+              position="top-center"
+              reverseOrder={false}
+              toastOptions={{
+                className: "",
+                duration: 5000,
+                style: {
+                  background: "#363636",
+                  color: "#fff",
+                },
+                success: {
+                  duration: 3000,
+                },
+              }}
+            />
+          </SessionProvider>
+        </NextThemesProvider>
+      </HeroUIProvider>
+    </QueryClientProvider>
   );
 }
 

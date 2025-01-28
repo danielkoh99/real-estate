@@ -6,7 +6,8 @@ import {
   updatePropertyById,
   deletePropertyById,
   relatedProperties,
-  savePropertyListing
+  savePropertyListing,
+  getSavedProperties
 } from "../../controllers/property.controller";
 import upload from "../../middlewares/upload.middleware";
 import schemaValidator from "../../middlewares/validation.middleware";
@@ -14,10 +15,7 @@ import { auth } from "../../middlewares/auth.middleware";
 
 const propertyRouter = Router();
 propertyRouter.get("/", getProperties);
-propertyRouter.get("/:id", getPropertyById);
-propertyRouter.get("/:id/related", relatedProperties);
-propertyRouter.put("/:id", [auth], updatePropertyById);
-propertyRouter.delete("/:id", [auth], deletePropertyById);
+propertyRouter.get("/saved", [auth], getSavedProperties);
 propertyRouter.post("/save", [auth], savePropertyListing);
 propertyRouter.post(
   "/",
@@ -28,5 +26,10 @@ propertyRouter.post(
   ],
   createProperty
 );
+propertyRouter.get("/:id", getPropertyById);
+propertyRouter.get("/:id/related", relatedProperties);
+propertyRouter.put("/:id", [auth], updatePropertyById);
+propertyRouter.delete("/:id", [auth], deletePropertyById);
+
 
 export default propertyRouter;

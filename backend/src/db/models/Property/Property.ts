@@ -4,7 +4,7 @@ import {
   HasManyGetAssociationsMixin,
   Optional,
 } from "sequelize";
-import { PropertyAttributes, PropertyCategory, PropertyType } from "./property.interface";
+import { BPDistricts, PropertyAttributes, PropertyCategory, PropertyType } from "./property.interface";
 import db from "../../config";
 import PropertyImage from "../Image/Image";
 interface PropertyCreationAttributes
@@ -18,12 +18,13 @@ class Property
   public id!: string;
   public listedByUserId?: number;
   public savedByUserId?: number[];
-  public title!: string;
   public address!: string;
   public price!: number;
   public type!: PropertyType;
   public bedrooms!: number;
   public bathrooms!: number;
+  public city!: string;
+  public district?: BPDistricts;
   public squarMeterPrice?: number;
   public category!: PropertyCategory;
   public description?: string;
@@ -46,11 +47,11 @@ Property.init(
       values: ["agent", "user"],
       allowNull: false,
     },
-    title: {
-      type: DataTypes.STRING(128),
+    address: {
+      type: DataTypes.STRING(256),
       allowNull: false,
     },
-    address: {
+    city: {
       type: DataTypes.STRING(256),
       allowNull: false,
     },
@@ -74,6 +75,11 @@ Property.init(
       type: DataTypes.ENUM,
       values: Object.values(PropertyCategory),
       allowNull: false,
+    },
+    district: {
+      type: DataTypes.ENUM,
+      values: Object.values(BPDistricts),
+      allowNull: true,
     },
     yearBuilt: {
       type: DataTypes.INTEGER,

@@ -6,7 +6,7 @@ import {
   DropdownMenu,
   DropdownItem,
   User,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 export default function UserAvatar() {

@@ -1,4 +1,4 @@
-import { Card, Input, Select, SelectItem } from "@nextui-org/react";
+import { Card, Input, Select, SelectItem } from "@heroui/react";
 import { ChangeEvent, useState } from "react";
 
 import { PropertyType } from "@/types";
