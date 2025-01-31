@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import useUserStore from "@/stores/userStore";
+import { useModal } from "@/contexts/ModalContext";
 
 const SaveListingBtn: React.FC<{ propertyId: string; isSaved: boolean }> = ({
   propertyId,
@@ -13,7 +14,8 @@ const SaveListingBtn: React.FC<{ propertyId: string; isSaved: boolean }> = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const { data: session } = useSession();
   const { saveProperty } = useUserStore();
-
+  const { openModal } = useModal();
+  const { currentUser } = useUserStore();
   const fetch = async () => {
     if (session?.user) await saveProperty(propertyId, session?.user.id);
   };
@@ -23,14 +25,15 @@ const SaveListingBtn: React.FC<{ propertyId: string; isSaved: boolean }> = ({
   ) => {
     event.preventDefault();
     event.stopPropagation();
-
-    await fetch();
-
-    setClicked((prev) => !prev);
-
-    if (!clicked) {
-      setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 1000);
+    if (!currentUser) {
+      openModal();
+    } else {
+      await fetch();
+      setClicked((prev) => !prev);
+      if (!clicked) {
+        setIsAnimating(true);
+        setTimeout(() => setIsAnimating(false), 1000);
+      }
     }
   };
 
@@ -44,7 +47,7 @@ const SaveListingBtn: React.FC<{ propertyId: string; isSaved: boolean }> = ({
         <HeartIcon
           className={`h-8 w-8 transition-all duration-500 ease-out transform hover:text-white hover:fill-red-600 ${
             clicked ? "fill-red-600" : "text-gray-500"
-          } ${isAnimating ? "scale-125 fill-yellow-500" : "scale-100"}`}
+          } ${isAnimating ? "scale-125 fill-red-600" : "scale-100"}`}
         />
       </button>
     </Tooltip>

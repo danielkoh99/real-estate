@@ -6,8 +6,9 @@ import PropertiesView from "@/components/property/PropertiesView";
 import SearchFilters from "@/components/search/SearchFilters";
 import DefaultLayout from "@/layouts/default";
 import usePropertyStore from "@/stores/appStore";
-import PaginationComponent from "@/components/Pagination";
+import PaginationComponent from "@/components/property/Pagination";
 import SortFilters from "@/components/search/SortFilters";
+import LoginRequiredModal from "@/components/auth/LoginRequiredModal";
 
 export default function IndexPage() {
   const { query, push } = useRouter();
@@ -55,6 +56,7 @@ export default function IndexPage() {
             <PaginationComponent />
           </Card>
         </div>
+        <LoginRequiredModal />
       </DefaultLayout>
     </>
   );

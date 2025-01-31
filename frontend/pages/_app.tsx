@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import SessionManager from "@/components/SessionManager";
+import { ModalProvider } from "@/contexts/ModalContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,7 +39,9 @@ export default function App({
           <SessionProvider session={session}>
             <SessionManager />
             <NuqsAdapter>
-              <Component {...pageProps} />
+              <ModalProvider>
+                <Component {...pageProps} />
+              </ModalProvider>
             </NuqsAdapter>
             <Toaster
               gutter={8}

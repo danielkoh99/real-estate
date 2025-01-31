@@ -1,23 +1,25 @@
-import React from "react";
+import type { FC, JSX } from "react";
+
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  useDisclosure,
   Button,
 } from "@heroui/react";
 
-const CustomModal: React.FC<{
-  title: any;
-  content: () => React.ReactNode;
-  actions: () => React.ReactNode;
+import { useModal } from "@/contexts/ModalContext";
+
+const CustomModal: FC<{
+  title: string;
+  content: () => JSX.Element;
+  actions: () => JSX.Element;
 }> = ({ content, actions, title }): JSX.Element => {
-  const { isOpen, onClose } = useDisclosure();
+  const { isOpen, closeModal } = useModal();
 
   return (
-    <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose}>
+    <Modal backdrop={"blur"} isOpen={isOpen} onClose={closeModal}>
       <ModalContent>
         {(onClose) => (
           <>

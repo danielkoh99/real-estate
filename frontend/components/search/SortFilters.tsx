@@ -20,7 +20,7 @@ const SortFilters = () => {
   return (
     <div className="flex justify-between items-center">
       <Select
-        className="w-1/4"
+        className="w-1/3"
         label="Number of listings per page"
         placeholder="10"
         selectedKeys={[queryLimit.toString()]}
@@ -32,15 +32,12 @@ const SortFilters = () => {
       </Select>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="bordered">Open Menu</Button>
+          <Button variant="bordered">Sort by</Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
-          <DropdownItem key="new">New file</DropdownItem>
-          <DropdownItem key="copy">Copy link</DropdownItem>
-          <DropdownItem key="edit">Edit file</DropdownItem>
-          <DropdownItem key="delete" className="text-danger" color="danger">
-            Delete file
-          </DropdownItem>
+          <DropdownItem key="new">Newest</DropdownItem>
+          <DropdownItem key="copy">Price increasing</DropdownItem>
+          <DropdownItem key="edit">Price decreasing</DropdownItem>
         </DropdownMenu>
       </Dropdown>
     </div>

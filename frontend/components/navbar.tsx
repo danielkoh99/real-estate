@@ -15,8 +15,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
-import UserAvatar from "./UserAvatar";
-
+import UserAvatar from "@/components/auth/UserAvatar";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
@@ -51,9 +50,9 @@ export const Navbar = () => {
         </div>
       </NavbarContent>
 
-      <NavbarContent className="lg:hidden" justify="end">
+      <NavbarContent justify="end">
         <ThemeSwitch />
-        <NavbarMenuToggle />
+        <NavbarMenuToggle className="lg:hidden" />
       </NavbarContent>
       {session ? (
         <NavbarContent className="hidden lg:flex" justify="end">

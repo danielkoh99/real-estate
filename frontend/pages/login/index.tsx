@@ -1,8 +1,8 @@
 import { Tab, Tabs } from "@heroui/react";
 
-import LoginForm from "@/components/LoginForm";
+import LoginForm from "@/components/auth/LoginForm";
 import { title } from "@/components/primitives";
-import SignupForm from "@/components/SignupForm";
+import SignupForm from "@/components/auth/SignupForm";
 import DefaultLayout from "@/layouts/default";
 
 export default function UserProfilePage() {

@@ -16,21 +16,19 @@ module.exports = {
     themes: {
       light: {
         layout: {
-          // Define any light theme layout tokens here if needed
+          // Define any additional layout settings if needed
         },
         colors: {
-          primary: "#4E9C81",       // Primary color (e.g., teal green)
-          primaryLight: "#75b69c",
-          primaryDark: "#366b5a",
-
-          secondary: "#FF6F61",     // Secondary color (coral red)
-          secondaryLight: "#ff9589",
-          secondaryDark: "#b24943",
-
-          background: "#f7f9fc",    // Light background
-          text: "#1f2937",          // Dark text color
-          border: "#e0e7ff",        // Border color
-          cardBackground: "#ffffff" // Background color for cards
+          primary: "#3A7DFF",        // Modern blue (main brand color)
+          primaryLight: "#72A1FF",   // Softer blue for hover effects
+          primaryDark: "#295ECF",    // Darker blue for contrast
+          secondary: "#FFB400",      // Warm golden accent
+          secondaryLight: "#FFD166", // Lighter gold for highlights
+          secondaryDark: "#CC8C00",  // Richer gold for depth
+          background: "#F9FAFB",     // Soft off-white background
+          text: "#1F2937",           // Dark gray for readability
+          border: "#E5E7EB",         // Subtle light gray borders
+          cardBackground: "#FFFFFF" // Crisp white card background
         }
       },
       dark: {
