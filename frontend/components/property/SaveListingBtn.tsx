@@ -45,8 +45,8 @@ const SaveListingBtn: React.FC<{ propertyId: string; isSaved: boolean }> = ({
         onClick={toggleSaveListing}
       >
         <HeartIcon
-          className={`h-8 w-8 transition-all duration-500 ease-out transform hover:text-white hover:fill-red-600 ${
-            clicked ? "fill-red-600" : "text-gray-500"
+          className={`h-8 w-8 transition-all duration-500 ease-out transform hover:fill-red-600 ${
+            clicked ? "fill-red-600" : "text-white"
           } ${isAnimating ? "scale-125 fill-red-600" : "scale-100"}`}
         />
       </button>

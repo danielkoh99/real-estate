@@ -8,7 +8,7 @@ import { useModal } from "@/contexts/ModalContext";
 const renderContent = () => {
   return (
     <div>
-      <h1>Logging in is required to save listing</h1>
+      <h1>Logging in is required to use this functionality</h1>
     </div>
   );
 };
@@ -23,7 +23,9 @@ const RenderActions = (): JSX.Element => {
 
   return (
     <div>
-      <Button onPress={handleReroute}>Log in</Button>
+      <Button color="primary" variant="ghost" onPress={handleReroute}>
+        Log in
+      </Button>
     </div>
   );
 };

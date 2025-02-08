@@ -4,16 +4,24 @@ import Error from "@/components/global/Error";
 import NotFound from "@/components/property/NotFound";
 import PropertyList from "@/components/property/PropertyList";
 import { Property } from "@/types";
+
 const PropertiesView: React.FC<{
   properties: Property[] | undefined;
   error: any;
   loading: boolean;
 }> = ({ properties, error, loading }): JSX.Element => {
-  const [delayedLoading, setDelayedLoading] = useState(true);
+  const [delayedLoading, setDelayedLoading] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setDelayedLoading(false), 2000);
-  }, [loading]);
+    if (loading) {
+      setDelayedLoading(true);
+    } else {
+      const timer = setTimeout(() => setDelayedLoading(false), 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading, properties]);
+
   if (error) return <Error error_message={error.message} />;
 
   return (

@@ -6,7 +6,7 @@ import logger from "../logger/logger";
 import { uploadImageToS3 } from "../utils/s3Upload";
 import User from "../db/models/User/User";
 import { Op } from "sequelize";
-import { PropertyFilter } from "../types/types";
+import { PropertyParams } from "../types/types";
 
 export const createPropertyWithImages = async (
   data: PropertyAttributes,
@@ -165,19 +165,22 @@ async function getByUserId(userId: number) {
   }
 }
 
-const isFiltering = (filters: PropertyFilter): boolean => {
-  return filters.priceMin !== undefined ||
-    filters.priceMax !== undefined ||
-    filters.sizeMin !== undefined ||
-    filters.sizeMax !== undefined ||
-    filters.type !== undefined
+const isFiltering = (filters: PropertyParams): boolean => {
+  return Object.entries(filters).some(([key, value]) => {
+    if (value == null) return false;
+    if (typeof value === "string") return value.trim() !== "";
+    return true;
+  });
 };
 
-export const getPropertiesByFilter = async (filters: PropertyFilter) => {
+export const getPropertiesByFilter = async (filters: PropertyParams) => {
   const limit = filters.limit || 10;
   const page = filters.page || 1;
+
   const offset = (page - 1) * limit;
   const whereClause: any = {};
+  const order: any = [];
+  console.log(filters)
 
   if (isFiltering(filters)) {
     if (filters.priceMin || filters.priceMax) {
@@ -203,13 +206,14 @@ export const getPropertiesByFilter = async (filters: PropertyFilter) => {
     if (filters.type) {
       whereClause.type = filters.type;
     }
-    const order: any = [];
+    if (filters.districts && filters.districts.length > 0) {
+      whereClause.district = { [Op.in]: filters.districts };
+    }
 
     if (filters.sortBy) {
-      order.push([filters.sortBy, filters.sortDirection || "ASC"]);
+      order.push([filters.sortBy || "createdAt", filters.sortDirection || "ASC"]);
     }
   }
-
   const properties = await Property.findAndCountAll({
     where: whereClause,
     include: [
@@ -222,6 +226,7 @@ export const getPropertiesByFilter = async (filters: PropertyFilter) => {
     distinct: true,
     limit,
     offset,
+    order
   });
 
   const totalItems = properties.count;

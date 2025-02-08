@@ -10,8 +10,8 @@ import {
   getOne as getUser,
 } from "../services/user.service";
 import logger from "../logger/logger";
-import { CustomRequest, PropertyQueryParams, PropertyType } from "../types/types";
-import { PropertyAttributes } from "../db/models/Property/property.interface";
+import { CustomRequest, PropertyParams, PropertyType } from "../types/types";
+import { BPDistricts, PropertyAttributes } from "../db/models/Property/property.interface";
 import Property from "../db/models/Property/Property";
 const createProperty = async (req: CustomRequest, res: Response) => {
   try {
@@ -26,9 +26,9 @@ const createProperty = async (req: CustomRequest, res: Response) => {
   }
 };
 
-const getProperties = async (req: Request<{}, {}, {}, PropertyQueryParams>, res: Response) => {
+const getProperties = async (req: Request<{}, {}, {}, PropertyParams>, res: Response) => {
   try {
-    const { priceMax, priceMin, sizeMax, sizeMin, type, listedByUserId, page, limit } = req.query;
+    const { priceMax, priceMin, sizeMax, sizeMin, type, listedByUserId, page, limit, sortBy, sortDirection, districts } = req.query;
 
     const properties = await getPropertiesByFilter({
       priceMin: priceMin ? Number(priceMin) : undefined,
@@ -36,10 +36,14 @@ const getProperties = async (req: Request<{}, {}, {}, PropertyQueryParams>, res:
       sizeMin: sizeMin ? Number(sizeMin) : undefined,
       sizeMax: sizeMax ? Number(sizeMax) : undefined,
       type: type ? type as PropertyType : undefined,
-
       listedByUserId: listedByUserId ? Number(listedByUserId) : undefined,
       page: page ? Number(page) : 1,  // Page number
       limit: limit ? Number(limit) : 10, // Number of items per page
+      sortBy: sortBy ? sortBy as string : undefined,
+      sortDirection: sortDirection ? sortDirection as string : undefined,
+      districts: typeof districts === "string"
+        ? (districts.split(",") as BPDistricts[])
+        : undefined
     });
     return res.status(200).send(properties);
   } catch (err) {

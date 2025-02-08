@@ -22,7 +22,6 @@ const PropertyPage: React.FC<{
 }> = ({ property, lastUpdated, relatedProperties }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass>();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  // const formattedDate = formatDateTime(property.updatedAt);
   const listedByUserName = useMemo(
     () =>
       property.listedByUser.firstName + " " + property.listedByUser.lastName,
@@ -52,7 +51,6 @@ const PropertyPage: React.FC<{
                   fill
                   alt={property.description}
                   className="object-cover h-full w-full relative"
-                  priority={true}
                   src={image.url}
                 />
               </SwiperSlide>
@@ -75,7 +73,6 @@ const PropertyPage: React.FC<{
                   fill
                   alt={property.description}
                   className="object-cover h-full w-full relative rounded-md"
-                  priority={true}
                   src={image.url}
                 />
               </SwiperSlide>

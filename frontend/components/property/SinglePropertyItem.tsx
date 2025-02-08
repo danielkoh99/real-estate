@@ -38,11 +38,11 @@ const SingleRealEstate: React.FC<{
 
   return (
     <Link
-      className="w-full text-white text-center py-2 rounded-lg transition h-full"
+      className="w-full text-white text-center py-2 rounded-lg  h-full"
       href={`/property/${property.id}`}
     >
       <div className={twMerge("w-full h-full", classes)}>
-        <Card className="shadow-sm rounded-lg overflow-hidden border border-slate-200 transition-all duration-200 transform hover:shadow-md h-full">
+        <Card className="shadow-sm rounded-lg overflow-hidden border border-slate-200 transition-all duration-300 transform hover:shadow-lg h-full">
           <CardHeader className={`p-0 relative ${small ? "h-[150px]" : ""}`}>
             {!loading && (
               <>
@@ -65,7 +65,6 @@ const SingleRealEstate: React.FC<{
                 alt={property.description}
                 className="object-cover w-full h-full relative"
                 height={300}
-                priority={true}
                 src={property.images[0].url}
                 width={300}
               />
@@ -100,8 +99,18 @@ const SingleRealEstate: React.FC<{
                       </p>
                     </button>
                   </Tooltip>
+                  {/* Added City and District */}
+                  {property.city && (
+                    <p className="text-sm text-gray-500">{property.city}</p>
+                  )}
+                  {property.district && (
+                    <p className="text-sm text-gray-500">
+                      District: {property.district}
+                    </p>
+                  )}
                 </div>
               </Skeleton>
+
               {!small && (
                 <Skeleton className="rounded-lg" isLoaded={!loading}>
                   <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">

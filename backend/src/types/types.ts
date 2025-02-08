@@ -18,7 +18,6 @@ interface UserResponseBody {
   accessToken: string;
 }
 
-// Define the union type for the response body
 type UResponseBody = UserResponseBody | ErrorResponse;
 
 interface ErrorResponse {
@@ -30,32 +29,23 @@ interface CustomRequest extends Request {
   userId?: number;
 }
 
-interface PropertyQueryParams {
-  priceMin?: number;
-  priceMax?: number;
-  sizeMin?: number;
-  sizeMax?: number;
-  type?: PropertyType;
-  listedByUserId?: number;
-  page?: number;
-  limit?: number;
-}
-interface PropertyFilter {
+interface PropertyParams {
   priceMin?: number;
   priceMax?: number;
   sizeMin?: number;
   sizeMax?: number;
   yearBuilt?: number;
-  districts?: BPDistricts[];
+  districts?: string | BPDistricts[];
   type?: PropertyType;
-  sortBy?: string;
-  sortDirection?: string;
   listedByUserId?: number;
   page?: number;
   limit?: number;
+  sortBy?: string;
+  sortDirection?: string;
 }
 enum PropertyType {
   APARTMENT = "apartment",
   HOUSE = "house",
 }
-export { UserRequestBody, UResponseBody, ErrorResponse, CustomRequest, PropertyFilter, PropertyType, PropertyQueryParams };
+
+export { UserRequestBody, UResponseBody, ErrorResponse, CustomRequest, PropertyType, PropertyParams };

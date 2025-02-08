@@ -6,7 +6,7 @@ import useUserStore from "@/stores/userStore";
 export default function SessionManager() {
   const { data: session, status } = useSession();
 
-  const { setCurrentUser, clearUser, currentUser } = useUserStore();
+  const { setCurrentUser, clearUser } = useUserStore();
 
   useEffect(() => {
     if (session) {
@@ -21,22 +21,23 @@ export default function SessionManager() {
   }, [session, setCurrentUser, clearUser]);
   useEffect(() => {
     if (status === "authenticated" && session?.expires) {
-      // Calculate the time remaining until the session expires
       const expirationTime = new Date(session.expires).getTime();
-      const currentTime = new Date().getTime();
+      const currentTime = Date.now();
       const timeRemaining = expirationTime - currentTime;
 
-      if (timeRemaining > 0) {
+      console.log("Session expires in:", timeRemaining / 1000, "seconds");
+
+      if (timeRemaining > 1000) {
+        // Ensures it's not logging out immediately
         const timer = setTimeout(() => {
-          //   signOut();
+          console.log("Session expired, logging out...");
+          // signOut();
         }, timeRemaining);
 
         return () => clearTimeout(timer);
-      } else {
-        signOut();
       }
     }
   }, [session, status]);
 
-  return null; // This component only manages session expiration, no UI needed
+  return null;
 }

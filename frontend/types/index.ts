@@ -20,6 +20,8 @@ export interface Property {
   size: number;
   address: string;
   type: PropertyType;
+  city: string;
+  district?: BPDistricts;
   category: PropertyCategory;
   bedrooms: number;
   bathrooms: number;
@@ -37,6 +39,31 @@ export interface Property {
 export enum PropertyType {
   APARTMENT = "apartment",
   HOUSE = "house",
+}
+export enum BPDistricts {
+  I = "I",
+  II = "II",
+  III = "III",
+  IV = "IV",
+  V = "V",
+  VI = "VI",
+  VII = "VII",
+  VIII = "VIII",
+  IX = "IX",
+  X = "X",
+  XI = "XI",
+  XII = "XII",
+  XIII = "XIII",
+  XIV = "XIV",
+  XV = "XV",
+  XVI = "XVI",
+  XVII = "XVII",
+  XVIII = "XVIII",
+  XIX = "XIX",
+  XX = "XX",
+  XXI = "XXI",
+  XXII = "XXII",
+  XXIII = "XXIII",
 }
 enum PropertyCategory {
   USED = "Used",
@@ -69,4 +96,22 @@ export type UserInfoResponse = User;
 interface ErrorResponse {
   status: number;
   message?: string;
+}
+export enum SortDirection {
+  asc = "ASC",
+  desc = "DESC",
+}
+
+export interface PropertyFilters {
+  page: number;
+  limit: number;
+  priceMin: number | null;
+  priceMax: number | null;
+  sizeMin: number | null;
+  sizeMax: number | null;
+  type: PropertyType | null;
+  yearBuilt: number | null;
+  sortBy: string;
+  sortDirection: SortDirection;
+  districts: BPDistricts[] | null;
 }

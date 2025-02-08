@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import Router from "next/router";
+
+import { useQueryStore } from "./queryStore";
 
 import { Property, PropertyRes } from "@/types";
 import { apiRequest } from "@/utils/index";
@@ -18,15 +19,10 @@ interface Store {
   totalPages: number;
   totalItems: number;
   fetchProperties: () => Promise<void>;
-  setFilters: (filters: Filter) => void;
-  setPage: (page: number) => void;
-  setLimit: (limit: number) => void;
-  getLimit: () => string;
   getProperties: () => Property[];
   getLoading: () => boolean;
   getError: () => string | null;
-  getFilters: () => Filter;
-  getPage: () => number;
+  getTotalItems: () => number;
 }
 
 const usePropertyStore = create<Store>((set, get) => ({
@@ -40,18 +36,19 @@ const usePropertyStore = create<Store>((set, get) => ({
   totalItems: 0,
 
   fetchProperties: async () => {
-    const { limit, page, filters } = get();
+    const { filters } = useQueryStore.getState();
 
     set({ loading: true, error: null });
-
+    console.log(filters.districts);
     const { response, error } = await apiRequest<PropertyRes>({
       url: "/property",
       method: "GET",
       config: {
         params: {
-          limit,
-          page,
           ...filters,
+          ...(filters.districts?.length
+            ? { districts: filters.districts.join(",") }
+            : {}),
         },
       },
     });
@@ -86,47 +83,11 @@ const usePropertyStore = create<Store>((set, get) => ({
     }
   },
 
-  setFilters: (filters) => {
-    set({ filters });
-    get().fetchProperties();
-  },
-
-  setPage: (page) => {
-    set({ page });
-    const { query } = Router;
-
-    Router.push(
-      {
-        pathname: Router.pathname,
-        query: { ...query, page },
-      },
-      undefined,
-      { shallow: true },
-    );
-  },
-
-  setLimit: (limit) => {
-    set({ limit });
-    const { query } = Router;
-
-    Router.push(
-      {
-        pathname: Router.pathname,
-        query: { ...query, limit },
-      },
-      undefined,
-      { shallow: true },
-    );
-
-    get().fetchProperties();
-  },
-
   getProperties: () => get().properties,
   getLoading: () => get().loading,
   getError: () => get().error,
   getFilters: () => get().filters,
-  getLimit: () => get().limit.toString(),
-  getPage: () => get().page,
+  getTotalItems: () => get().totalItems,
 }));
 
 export default usePropertyStore;
