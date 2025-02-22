@@ -8,6 +8,7 @@ import { LoginResponse } from "@/types";
 export default NextAuth({
   session: {
     strategy: "jwt",
+    maxAge: 7 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
   providers: [

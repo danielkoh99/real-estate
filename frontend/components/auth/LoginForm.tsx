@@ -1,5 +1,5 @@
 "use client";
-import { Input, Button, Card, CardBody } from "@heroui/react";
+import { Input, Button } from "@heroui/react";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -45,36 +45,30 @@ const LoginForm = () => {
   };
 
   return (
-    <Card>
-      <CardBody>
-        <form
-          className="flex flex-col gap-5 w-full"
-          onSubmit={handleSubmit(handleLogin)}
-        >
-          <h3>Login</h3>
+    <form
+      className="flex flex-col gap-5 w-full"
+      onSubmit={handleSubmit(handleLogin)}
+    >
+      <Input
+        {...register("email")}
+        fullWidth
+        errorMessage={errors.email?.message}
+        isInvalid={errors.email ? true : false}
+        placeholder="Email"
+      />
 
-          <Input
-            {...register("email")}
-            fullWidth
-            errorMessage={errors.email?.message}
-            isInvalid={errors.email ? true : false}
-            placeholder="Email"
-          />
+      <Input
+        placeholder="Password"
+        type="password"
+        {...register("password")}
+        errorMessage={errors.password?.message}
+        isInvalid={errors.password ? true : false}
+      />
 
-          <Input
-            placeholder="Password"
-            type="password"
-            {...register("password")}
-            errorMessage={errors.password?.message}
-            isInvalid={errors.password ? true : false}
-          />
-
-          <Button color="primary" type="submit">
-            Login
-          </Button>
-        </form>
-      </CardBody>
-    </Card>
+      <Button color="primary" type="submit">
+        Login
+      </Button>
+    </form>
   );
 };
 

@@ -25,7 +25,7 @@ export interface Property {
   category: PropertyCategory;
   bedrooms: number;
   bathrooms: number;
-  yearBuilt?: number;
+  yearBuilt: number;
   description: string;
   squarMeterPrice: number;
   savedByUserId?: number[];
@@ -87,7 +87,7 @@ export interface User {
   name?: string;
   savedProperties?: Property[];
   listedProperties?: Property[];
-  createdAt?: string;
+  createdAt: string;
 }
 export interface LoginResponse extends User, ErrorResponse {
   accessToken: string;

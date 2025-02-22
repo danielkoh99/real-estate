@@ -38,13 +38,13 @@ const SimilarProperties: React.FC<{
       )}
       <div
         ref={scrollContainerRef}
-        className="flex flex-row overflow-x-auto p-4 gap-4"
+        className="flex flex-row overflow-x-auto p-4 gap-4 snap-x snap-proximity"
       >
         {relatedProperties.map((property) => (
           <SingleRealEstate
             key={property.id}
             small
-            classes="flex-shrink-0 w-64 h-80"
+            classes="flex-shrink-0 w-64 snap-center"
             property={property}
           />
         ))}

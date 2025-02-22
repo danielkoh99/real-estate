@@ -9,7 +9,7 @@ const PropertyList: React.FC<{
   properties: Property[] | undefined;
   delayedLoading?: boolean;
 }> = ({ properties, delayedLoading }) => {
-  const { currentUser, fetchSavedProperties, savedProperties } = useUserStore();
+  const { currentUser, fetchSavedProperties } = useUserStore();
 
   useEffect(() => {
     const fetchAndSetSavedProperties = async () => {
@@ -22,12 +22,11 @@ const PropertyList: React.FC<{
   }, [currentUser]);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full justify-center place-items-center">
       {properties &&
         properties.map((property) => (
           <SingleRealEstate
             key={property.id}
-            isSaved={savedProperties && savedProperties.includes(property.id)}
             loading={delayedLoading}
             property={property}
           />

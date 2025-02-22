@@ -14,7 +14,7 @@ const SaveListingBtn: React.FC<{ propertyId: string; isSaved: boolean }> = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const { data: session } = useSession();
   const { saveProperty } = useUserStore();
-  const { openModal } = useModal();
+  const { openModal, isOpen } = useModal();
   const { currentUser } = useUserStore();
   const fetch = async () => {
     if (session?.user) await saveProperty(propertyId, session?.user.id);
@@ -45,9 +45,10 @@ const SaveListingBtn: React.FC<{ propertyId: string; isSaved: boolean }> = ({
         onClick={toggleSaveListing}
       >
         <HeartIcon
-          className={`h-8 w-8 transition-all duration-500 ease-out transform hover:fill-red-600 ${
-            clicked ? "fill-red-600" : "text-white"
-          } ${isAnimating ? "scale-125 fill-red-600" : "scale-100"}`}
+          className={`h-8 w-8 transition-all duration-500 ease-out transform hover:fill
+              -re
+            d-600 ${clicked ? "fill-red-600" : "texthite"
+            } ${isAnimating ? "scale-125 fill-red-600" : "scale-100"}`}
         />
       </button>
     </Tooltip>

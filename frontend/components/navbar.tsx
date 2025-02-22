@@ -16,13 +16,15 @@ import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import UserAvatar from "@/components/auth/UserAvatar";
-import { siteConfig } from "@/config/site";
+import { siteConfig, useFilteredNavItems } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
 
 export const Navbar = () => {
   const router = useRouter();
   const { data: session } = useSession();
+
+  const { navItems, navMenuItems } = useFilteredNavItems();
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -33,7 +35,7 @@ export const Navbar = () => {
           </NextLink>
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
+          {navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
@@ -53,24 +55,22 @@ export const Navbar = () => {
       <NavbarContent justify="end">
         <ThemeSwitch />
         <NavbarMenuToggle className="lg:hidden" />
-      </NavbarContent>
-      {session ? (
-        <NavbarContent className="hidden lg:flex" justify="end">
+        {session ? (
           <UserAvatar />
-        </NavbarContent>
-      ) : (
-        <Button
-          color="primary"
-          variant="ghost"
-          onPress={() => router.push("/login")}
-        >
-          Login
-        </Button>
-      )}
+        ) : (
+          <Button
+            color="primary"
+            variant="ghost"
+            onPress={() => router.push("/login")}
+          >
+            Login
+          </Button>
+        )}
+      </NavbarContent>
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
+          {navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
                 color={

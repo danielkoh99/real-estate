@@ -1,18 +1,33 @@
-import { Tab, Tabs } from "@heroui/react";
+import { Card, CardBody, Tab, Tabs } from "@heroui/react";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import LoginForm from "@/components/auth/LoginForm";
-import { title } from "@/components/primitives";
 import SignupForm from "@/components/auth/SignupForm";
 import DefaultLayout from "@/layouts/default";
 
-export default function UserProfilePage() {
+export default function LoginPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session?.user) {
+      router.push("/");
+    }
+  }, [session]);
+
   return (
     <DefaultLayout>
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-        <div className="inline-block max-w-lg text-center justify-center">
-          <h1 className={title()}>login </h1>
-          <div className="flex w-full flex-col items-center">
-            <Tabs fullWidth aria-label="Options" size="md">
+      <div className="flex items-center justify-center h-full bg-gradient-to-br">
+        <Card className="w-full max-w-md shadow-xl rounded-2xl bg-white/90 backdrop-blur-lg">
+          <CardBody className="p-6">
+            <Tabs
+              fullWidth
+              aria-label="Auth Options"
+              className="w-full"
+              size="lg"
+            >
               <Tab key="login" title="Login">
                 <LoginForm />
               </Tab>
@@ -20,9 +35,9 @@ export default function UserProfilePage() {
                 <SignupForm />
               </Tab>
             </Tabs>
-          </div>
-        </div>
-      </section>
+          </CardBody>
+        </Card>
+      </div>
     </DefaultLayout>
   );
 }

@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 import { useQueryStore } from "./queryStore";
 
+import useUserStore from "./userStore";
 import { Property, PropertyRes } from "@/types";
 import { apiRequest } from "@/utils/index";
 
@@ -19,10 +20,13 @@ interface Store {
   totalPages: number;
   totalItems: number;
   fetchProperties: () => Promise<void>;
+  getAvalaibleCities: () => string[];
+  getAvailabelYearsBuilt: () => number[];
   getProperties: () => Property[];
   getLoading: () => boolean;
   getError: () => string | null;
   getTotalItems: () => number;
+  getIsSaved: (propertyId: string) => boolean;
 }
 
 const usePropertyStore = create<Store>((set, get) => ({
@@ -39,7 +43,6 @@ const usePropertyStore = create<Store>((set, get) => ({
     const { filters } = useQueryStore.getState();
 
     set({ loading: true, error: null });
-    console.log(filters.districts);
     const { response, error } = await apiRequest<PropertyRes>({
       url: "/property",
       method: "GET",
@@ -82,7 +85,23 @@ const usePropertyStore = create<Store>((set, get) => ({
       });
     }
   },
+  getAvalaibleCities: () => {
+    const cities = get().properties.map((property) => property.city);
 
+    return cities;
+  },
+  getAvailabelYearsBuilt: () => {
+    const years = get().properties.map((property) => property.yearBuilt);
+
+    return years;
+  },
+  getIsSaved(propertyId) {
+    const { getSavedProperties } = useUserStore.getState();
+
+    return getSavedProperties().some(
+      (savedPropertyId) => savedPropertyId === propertyId,
+    );
+  },
   getProperties: () => get().properties,
   getLoading: () => get().loading,
   getError: () => get().error,

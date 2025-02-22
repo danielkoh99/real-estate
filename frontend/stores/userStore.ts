@@ -31,7 +31,6 @@ const useUserStore = create<UserStore>((set, get) => ({
 
       if (response && response.data) {
         set({ savedProperties: response.data });
-        console.log("Saved Properties Fetched:", response.data);
       } else {
         console.warn("No properties found in API response.");
       }
@@ -50,8 +49,7 @@ const useUserStore = create<UserStore>((set, get) => ({
           userId: userId,
         },
       });
-
-      console.log(response);
+      console.log(response)
       if (error) throw error;
     } catch (error) {
       console.error("Error saving property:", error);

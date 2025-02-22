@@ -50,6 +50,7 @@ const SearchFilter = () => {
             <Select
               defaultSelectedKeys={[query.type || PropertyType.APARTMENT]}
               label="Select type"
+              labelPlacement="outside"
               value={query.type || PropertyType.APARTMENT}
               onChange={handleSelectChange}
             >
@@ -64,6 +65,7 @@ const SearchFilter = () => {
           <div className="flex-1">
             <Select
               label="Districts"
+              labelPlacement="outside"
               placeholder="Select districts"
               selectedKeys={query.districts ?? []}
               selectionMode="multiple"
@@ -80,11 +82,12 @@ const SearchFilter = () => {
 
         <div className="flex w-full flex-col md:flex-row gap-3">
           <div className="flex flex-col flex-1">
-            <span className="text-gray-700 font-medium mb-1">Price</span>
             <div className="flex items-center space-x-2">
               <div className="flex-1">
                 <Input
                   isClearable
+                  label="Minimum price"
+                  labelPlacement="outside"
                   placeholder="Start value"
                   type="number"
                   value={query.priceMin?.toString() || ""}
@@ -96,6 +99,8 @@ const SearchFilter = () => {
               <div className="flex-1">
                 <Input
                   isClearable
+                  label="Maximum price"
+                  labelPlacement="outside"
                   placeholder="End value"
                   type="number"
                   value={query.priceMax?.toString() || ""}
@@ -134,9 +139,9 @@ const SearchFilter = () => {
           </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end w-full">
           <Button
-            color="primary"
+            variant="ghost"
             onPress={() =>
               setQueryParams((prev) => ({
                 ...prev,

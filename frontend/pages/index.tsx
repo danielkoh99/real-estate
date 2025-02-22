@@ -6,7 +6,6 @@ import DefaultLayout from "@/layouts/default";
 import usePropertyStore from "@/stores/propertyStore";
 import PaginationComponent from "@/components/property/Pagination";
 import SortFilters from "@/components/search/SortFilters";
-import LoginRequiredModal from "@/components/auth/LoginRequiredModal";
 import TotalPropertiesCount from "@/components/property/TotalPropertiesCount";
 import useFilterParams from "@/hooks/useFilterParams";
 
@@ -33,7 +32,6 @@ export default function IndexPage() {
             <PaginationComponent />
           </Card>
         </div>
-        <LoginRequiredModal />
       </DefaultLayout>
     </>
   );

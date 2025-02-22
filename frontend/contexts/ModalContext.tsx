@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface ModalContextType {
   isOpen: boolean;
@@ -15,6 +15,12 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+
+  useEffect(() => {
+    console.log("ModalProvider mounted");
+
+    return () => console.log("ModalProvider unmounted");
+  }, []);
 
   return (
     <ModalContext.Provider value={{ isOpen, openModal, closeModal }}>
