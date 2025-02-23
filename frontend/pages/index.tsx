@@ -15,24 +15,22 @@ export default function IndexPage() {
   useFilterParams();
 
   return (
-    <>
-      <DefaultLayout>
-        <div
-          className={`flex flex-col gap-4 h-full ${error ? "" : "justify-between"}`}
-        >
-          <SearchFilters />
-          <Card className="flex flex-1 flex-col p-4 gap-4">
-            <SortFilters />
-            <TotalPropertiesCount />
-            <PropertiesView
-              error={error}
-              loading={loading}
-              properties={properties}
-            />
-            <PaginationComponent />
-          </Card>
-        </div>
-      </DefaultLayout>
-    </>
+    <DefaultLayout>
+      <div
+        className={`flex flex-col gap-4 h-full ${error ? "" : "justify-between"}`}
+      >
+        <SearchFilters />
+        <Card className="flex flex-1 flex-col p-4 gap-4">
+          <SortFilters />
+          <TotalPropertiesCount />
+          <PropertiesView
+            error={error}
+            loading={loading}
+            properties={properties}
+          />
+          <PaginationComponent />
+        </Card>
+      </div>
+    </DefaultLayout>
   );
 }
