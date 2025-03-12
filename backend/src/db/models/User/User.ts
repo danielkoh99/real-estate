@@ -25,6 +25,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> {
   public lastName!: string;
   public email!: string;
   public role!: Roles;
+  public phone!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   // Association methods for listed properties
@@ -97,6 +98,10 @@ User.init(
       allowNull: false,
     },
     password: DataTypes.STRING,
+    phone: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
     email: {
       type: DataTypes.STRING,
       unique: true,

@@ -42,6 +42,9 @@ export default NextAuth({
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      return url.startsWith("/") ? url : baseUrl;
+    },
     async jwt({ token, user }) {
       return { ...token, ...user };
     },

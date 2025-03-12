@@ -4,6 +4,7 @@ interface UserAttributes {
   lastName: string;
   password: string;
   email: string;
+  phone: string;
   createdAt?: Date;
   updatedAt?: Date;
   role: Roles;

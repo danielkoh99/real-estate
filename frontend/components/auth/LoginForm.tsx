@@ -13,20 +13,17 @@ type Schema = z.infer<typeof signinScheme>;
 
 const LoginForm = () => {
   const router = useRouter();
-
-  // useForm hook with Zod schema validation
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset, // Resets form after submission
+    reset,
   } = useForm<Schema>({
     resolver: zodResolver(signinScheme),
   });
-
-  // Form submit handler
   const handleLogin = async (data: Schema) => {
     const { email, password } = data;
+    const callbackUrl = (router.query.callbackUrl as string) || "/";
 
     const response = await signIn("credentials", {
       email,
@@ -34,11 +31,10 @@ const LoginForm = () => {
       redirect: false,
     });
 
-    if (response?.ok) {
-      router.push("/");
-    }
     if (response?.error) {
       toast.error(response.error);
+    } else {
+      router.push(callbackUrl);
     }
 
     reset();

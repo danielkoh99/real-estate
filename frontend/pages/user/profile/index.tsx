@@ -17,8 +17,10 @@ export default function UserProfilePage() {
   const { response, error, loading } = useApi<UserInfoResponse>({
     url: "/user/profile",
     method: "GET",
+    autoFetch: true,
   });
 
+  console.log(response, error, loading);
   if (loading || !response) return <div>Loading...</div>;
   if (error) return <Error error_message={error.message} />;
 

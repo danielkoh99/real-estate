@@ -53,6 +53,7 @@ async function seed() {
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         email: faker.internet.email(),
+        phone: faker.phone.number({ style: 'international' }),
         password: hashedPassword,
         role: faker.helpers.arrayElement<Roles>([Roles.agent, Roles.user]),
       });
@@ -61,6 +62,7 @@ async function seed() {
       id: 11,
       firstName: "John",
       lastName: "Doe",
+      phone: "+1234567890",
       email: "admin@admin.com",
       password: hashedPassword,
       role: Roles.user,

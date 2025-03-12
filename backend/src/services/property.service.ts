@@ -128,7 +128,7 @@ const getOne = async (id: any) => {
       {
         model: User,
         as: "listedByUser",
-        attributes: ["firstName", "lastName"],
+        attributes: ["firstName", "lastName", "email", "phone", "id"],
       },
     ],
   });
@@ -154,7 +154,7 @@ async function getByUserId(userId: number) {
         {
           model: Property,
           as: "user",
-          attributes: ["id", "firstName", "lastName", "email"],
+          attributes: ["id", "firstName", "lastName", "email", "phone"],
         },
       ],
     });
@@ -273,7 +273,7 @@ const getRelatedProperties = async (propertyId: string) => {
         },
       ],
     },
-    limit: 5,
+    limit: 10,
     include: [
       {
         model: PropertyImage,

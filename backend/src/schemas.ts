@@ -16,11 +16,18 @@ const authSignin = Joi.object().keys({
   password: Joi.string().required(),
 });
 const propertySchema = Joi.object({
-  title: Joi.string().required(),
-  address: Joi.string().required(),
   price: Joi.number().required(),
+  size: Joi.number().required(),
+  address: Joi.string().required(),
+  bedrooms: Joi.number().integer().min(0).required(),
+  bathrooms: Joi.number().integer().min(0).required(),
   type: Joi.string().valid("apartment", "house").required(),
-  listedByUserId: Joi.number().required(),
+  category: Joi.string().required(),
+  city: Joi.string().required(),
+  district: Joi.string().optional(),
+  yearBuilt: Joi.number().integer().optional(),
+  description: Joi.string().optional(),
+  images: Joi.array().items(Joi.object()).optional(),
 });
 
 export default {

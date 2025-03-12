@@ -1,7 +1,7 @@
 import { Card, CardBody, Tab, Tabs } from "@heroui/react";
-import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import LoginForm from "@/components/auth/LoginForm";
 import SignupForm from "@/components/auth/SignupForm";
@@ -10,12 +10,13 @@ import DefaultLayout from "@/layouts/default";
 export default function LoginPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const callbackUrl = (router.query.callbackUrl as string) || "/";
 
   useEffect(() => {
-    if (session?.user) {
-      router.push("/");
+    if (session) {
+      router.push(callbackUrl);
     }
-  }, [session]);
+  }, [session, callbackUrl, router]);
 
   return (
     <DefaultLayout>

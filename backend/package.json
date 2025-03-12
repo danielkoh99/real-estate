@@ -42,7 +42,7 @@
     "winston": "^3.13.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "^9.6.0",
     "@types/body-parser": "^1.19.5",
     "@types/cookie-parser": "^1.4.7",
     "@types/cookie-session": "^2.0.44",

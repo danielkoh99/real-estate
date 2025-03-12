@@ -49,7 +49,8 @@ const useUserStore = create<UserStore>((set, get) => ({
           userId: userId,
         },
       });
-      console.log(response)
+
+      console.log(response);
       if (error) throw error;
     } catch (error) {
       console.error("Error saving property:", error);

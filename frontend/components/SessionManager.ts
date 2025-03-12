@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 import useUserStore from "@/stores/userStore";
 
@@ -14,6 +14,7 @@ export default function SessionManager() {
         id: session.user.id,
         name: `${session.user.firstName} ${session.user.lastName}`,
         email: session.user.email,
+        createdAt: session.user.createdAt ?? "",
       });
     } else {
       clearUser();

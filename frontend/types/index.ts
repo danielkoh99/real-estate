@@ -6,15 +6,12 @@ export interface PropertyImageAttributes {
   propertyId: string;
 }
 export interface PropertyRes {
-  properties: Property[];
+  properties: PropertyResponse[];
   totalItems: number;
   currentPage: number;
   totalPages: number;
 }
-export interface Property {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
+export interface BaseProperty {
   price: number;
   title: string;
   size: number;
@@ -27,14 +24,29 @@ export interface Property {
   bathrooms: number;
   yearBuilt: number;
   description: string;
-  squarMeterPrice: number;
+}
+
+export interface AddProperty extends BaseProperty {
+  images: FileWithPreview[];
+}
+
+export interface PropertyResponse extends BaseProperty {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
   savedByUserId?: number[];
   listedByUserId?: number;
-  listedByUser: {
-    firstName: string;
-    lastName: string;
-  };
+  lastUpdated?: string;
   images: PropertyImageAttributes[];
+  squarMeterPrice: number;
+  listedByUser: ListedByUser;
+}
+export interface ListedByUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
 }
 export enum PropertyType {
   APARTMENT = "apartment",
@@ -65,7 +77,7 @@ export enum BPDistricts {
   XXII = "XXII",
   XXIII = "XXIII",
 }
-enum PropertyCategory {
+export enum PropertyCategory {
   USED = "Used",
   NEWLY_BUILT = "Newly Built",
   UNDER_CONSTRUCTION = "Under Construction",
@@ -85,8 +97,8 @@ export interface User {
   firstName?: string;
   lastName?: string;
   name?: string;
-  savedProperties?: Property[];
-  listedProperties?: Property[];
+  savedProperties?: PropertyResponse[];
+  listedProperties?: PropertyResponse[];
   createdAt: string;
 }
 export interface LoginResponse extends User, ErrorResponse {
@@ -114,4 +126,7 @@ export interface PropertyFilters {
   sortBy: string;
   sortDirection: SortDirection;
   districts: BPDistricts[] | null;
+}
+export interface FileWithPreview extends File {
+  url: string;
 }

@@ -1,42 +1,24 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Chip,
-  Skeleton,
-  Tooltip,
-} from "@heroui/react";
+import { Card, CardBody, CardHeader, Chip, Skeleton } from "@heroui/react";
 import "swiper/css/bundle";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import {
   CalendarIcon,
   CameraIcon,
-  MapPinIcon,
   Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 import SaveListingBtn from "./SaveListingBtn";
 
-import { Property } from "@/types";
-import usePropertyStore from "@/stores/propertyStore";
+import { PropertyResponse } from "@/types";
 
 const SingleRealEstate: React.FC<{
-  property: Property;
+  property: PropertyResponse;
   small?: boolean;
   loading?: boolean;
   classes?: string;
 }> = ({ property, loading, classes, small = false }) => {
-  const { getIsSaved } = usePropertyStore();
-  const goToMapsUrl = (e: any) => {
-    e.stopPropagation(); // Prevent the Link click
-    e.preventDefault();
-    const url = `http://maps.google.com/?q=${property.address}`;
-
-    window.open(url, "_blank");
-  };
-
   return (
     <Link
       className="w-full text-white text-center py-2 rounded-lg h-full flex justify-center items-center"
@@ -57,10 +39,7 @@ const SingleRealEstate: React.FC<{
                   {property.images.length}
                 </div>
                 <div className="absolute top-0 left-0 bg-gray-800 text-white text-xs rounded-br-lg px-2 py-1 opacity-80 items-center">
-                  <SaveListingBtn
-                    isSaved={getIsSaved(property.id)}
-                    propertyId={property.id}
-                  />
+                  <SaveListingBtn propertyId={property.id} />
                 </div>
               </>
             )}
@@ -95,16 +74,9 @@ const SingleRealEstate: React.FC<{
               </Skeleton>
 
               <Skeleton isLoaded={!loading}>
-                <div className="text-gray-600 flex flex-col space-y-1">
-                  <Tooltip content="Open in Google Maps">
-                    <button
-                      className="flex items-center space-x-1 text-xs underline"
-                      onClick={goToMapsUrl}
-                    >
-                      <MapPinIcon className="h-4 w-4 text-gray-500" />
-                      <p className="truncate">{property.address}</p>
-                    </button>
-                  </Tooltip>
+                <div className="text-gray-600 flex flex-col spac e-y-1">
+                  <p className="text-xs text-gray-500">{property.address}</p>
+
                   {property.city && (
                     <p className="text-xs text-gray-500">{property.city}</p>
                   )}
@@ -113,7 +85,6 @@ const SingleRealEstate: React.FC<{
                       District {property.district}
                     </p>
                   )}
-                  <p className="text-xs text-gray-500">{property.district}</p>
                 </div>
               </Skeleton>
 

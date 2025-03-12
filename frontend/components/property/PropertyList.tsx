@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 
 import SingleRealEstate from "../property/SinglePropertyItem";
 
-import { Property } from "@/types";
+import { PropertyResponse } from "@/types";
 import useUserStore from "@/stores/userStore";
 
 const PropertyList: React.FC<{
-  properties: Property[] | undefined;
+  properties: PropertyResponse[] | undefined;
   delayedLoading?: boolean;
 }> = ({ properties, delayedLoading }) => {
   const { currentUser, fetchSavedProperties } = useUserStore();
