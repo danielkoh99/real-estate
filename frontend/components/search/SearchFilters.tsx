@@ -45,7 +45,7 @@ const SearchFilter = () => {
   return (
     <Card>
       <div className="flex flex-col md:items-center p-4 w-full gap-3">
-        <div className="flex w-full gap-3">
+        <div className="flex flex-col md:flex-row w-full gap-3">
           <div className="flex-1">
             <Select
               defaultSelectedKeys={[query.type || PropertyType.APARTMENT]}

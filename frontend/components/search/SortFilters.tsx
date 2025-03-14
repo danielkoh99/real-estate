@@ -64,10 +64,10 @@ const SortFilters = () => {
   ];
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex gap-4 md:justify-between items-center">
       <Select
-        className="w-1/3"
-        label="Number of listings per page"
+        className="w-1/2 md:w-1/3"
+        label="Listings/Page"
         placeholder="10"
         selectedKeys={[safeFilters.limit.toString()]}
         onChange={handleSelectNumPerPage}
@@ -77,7 +77,7 @@ const SortFilters = () => {
         <SelectItem key="30">30</SelectItem>
       </Select>
       <Select
-        className="w-1/3"
+        className="w-1/2 md:w-1/3"
         label="Sort by"
         selectedKeys={
           validSortKeys.includes(selectedSortKey) ? [selectedSortKey] : []

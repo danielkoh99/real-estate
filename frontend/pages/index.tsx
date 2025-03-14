@@ -1,4 +1,5 @@
 import { Card } from "@heroui/react";
+import { useRef } from "react";
 
 import PropertiesView from "@/components/property/PropertiesView";
 import SearchFilters from "@/components/search/SearchFilters";
@@ -14,6 +15,8 @@ export default function IndexPage() {
 
   useFilterParams();
 
+  const propertiesViewRef = useRef<HTMLDivElement | null>(null);
+
   return (
     <DefaultLayout>
       <div
@@ -24,11 +27,12 @@ export default function IndexPage() {
           <SortFilters />
           <TotalPropertiesCount />
           <PropertiesView
+            ref={propertiesViewRef}
             error={error}
             loading={loading}
             properties={properties}
           />
-          <PaginationComponent />
+          <PaginationComponent propertiesViewRef={propertiesViewRef} />
         </Card>
       </div>
     </DefaultLayout>

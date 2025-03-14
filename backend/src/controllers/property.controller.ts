@@ -17,7 +17,8 @@ const createProperty = async (req: CustomRequest, res: Response) => {
   try {
     const data = req.body as PropertyAttributes;
     const files = req.files as Express.Multer.File[];
-    data.listedByUserId = req.userId;
+    const userId = req.session.userId;
+    data.listedByUserId = userId;
     const response = await createPropertyWithImages(data, files);
     return res.status(200).send(response);
   } catch (err) {

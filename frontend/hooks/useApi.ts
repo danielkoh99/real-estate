@@ -54,7 +54,6 @@ const useApi = <T = any>({
         config: { ...config, headers: axiosConfig.headers },
         timeout,
       });
-      console.log(result)
       if (!result.response) {
         setError("No data found");
       } else {

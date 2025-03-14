@@ -1,3 +1,4 @@
+import fs from "fs"
 import db from "./config";
 import { faker } from "@faker-js/faker";
 import Property from "./models/Property/Property";
@@ -12,7 +13,8 @@ import { Roles, UserAttributes } from "./models/User/user.interface";
 import { hashPassword } from "../utils/auth.utils";
 import logger from "../logger/logger";
 import PropertyImage from "./models/Image/Image";
-
+import path from "path";
+import { __dirname } from "../utils";
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -37,8 +39,21 @@ async function generateRandomImages(propertyId: string) {
   }
   return await PropertyImage.bulkCreate(images); // Create images in bulk
 }
+async function removeUploads() {
+  const uploadDirectory = path.join(__dirname, "../../uploads");
+
+  try {
+    await fs.promises.rm(uploadDirectory, { recursive: true, force: true });
+    console.log("Uploads folder deleted successfully.");
+    await fs.promises.mkdir(uploadDirectory, { recursive: true });
+    console.log("Uploads folder created successfully.");
+  } catch (err) {
+    console.error("Error during file operations:", err);
+  }
+}
 
 async function seed() {
+  await removeUploads()
   try {
     // Sync all models
     await db.sync({ force: true });
@@ -81,7 +96,7 @@ async function seed() {
           ? faker.helpers.arrayElement(Object.values(BPDistricts))
           : undefined;
       properties.push({
-        id: faker.string.uuid(),
+        id: Math.floor(100000000 + Math.random() * 900000000).toString(),
         listedByUserId: faker.helpers.arrayElement(createdUsers).id,
         size: size,
         city: randomCity,

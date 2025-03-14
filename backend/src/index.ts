@@ -3,8 +3,6 @@ import cookieParser from "cookie-parser";
 import db from "./db/config";
 import router from "./api/routes";
 import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import logger from "./logger/logger";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import rateLimit from "express-rate-limit";
@@ -12,6 +10,7 @@ import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import { logRequest } from "./middlewares/logRequest.middleware";
 import session from "express-session";
+import { __dirname } from "./utils";
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes window
@@ -22,8 +21,6 @@ const limiter = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 const app: Express = express();
 const port = process.env.PORT || 3000;
 //middleware
@@ -50,6 +47,7 @@ app.use(
   })
 );
 app.use("/api", router);
+app.use("/uploads", express.static(path.join(__dirname, '..', 'uploads')));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running");

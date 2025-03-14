@@ -38,9 +38,11 @@ class Property
 Property.init(
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.BIGINT,
       primaryKey: true,
+      unique: true,
+      allowNull: false,
+      defaultValue: () => Math.floor(100000000 + Math.random() * 900000000).toString()
     },
     type: {
       type: DataTypes.ENUM,
@@ -61,11 +63,11 @@ Property.init(
     },
     squarMeterPrice: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     description: {
       type: DataTypes.STRING(256),
-      allowNull: false
+      allowNull: true
     },
     bathrooms: {
       type: DataTypes.INTEGER,

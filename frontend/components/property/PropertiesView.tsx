@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import Error from "@/components/global/Error";
 import NotFound from "@/components/property/NotFound";
 import PropertyList from "@/components/property/PropertyList";
-import { Property } from "@/types";
+import { PropertyResponse } from "@/types";
 
 const PropertiesView: React.FC<{
-  properties: Property[] | undefined;
+  properties: PropertyResponse[] | undefined;
   error: any;
   loading: boolean;
+  ref?: React.RefObject<HTMLDivElement>;
 }> = ({ properties, error, loading }): JSX.Element => {
   const [delayedLoading, setDelayedLoading] = useState(false);
 

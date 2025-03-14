@@ -15,7 +15,7 @@ export const siteConfig = {
       href: "/user/profile",
       protected: true,
     },
-    { label: "Upload Listing", href: "/listing/upload", protected: true },
+    { label: "Upload Listing", href: "/listing/new", protected: true },
   ],
   navMenuItems: [
     {
@@ -23,7 +23,7 @@ export const siteConfig = {
       href: "/profile",
       protected: true,
     },
-    { label: "Upload Listing", href: "/listing/upload", protected: true },
+    { label: "Upload Listing", href: "/property/new", protected: true },
     {
       label: "Logout",
       href: "/logout",

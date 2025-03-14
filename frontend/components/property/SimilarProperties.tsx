@@ -8,6 +8,8 @@ import { PropertyResponse } from "@/types";
 const SimilarProperties: React.FC<{
   relatedProperties: PropertyResponse[];
 }> = ({ relatedProperties }) => {
+  if (!relatedProperties.length) return null;
+
   return (
     <Card className="flex flex-col w-full relative">
       <div className="font-bold pl-5 py-5">Similar Properties</div>

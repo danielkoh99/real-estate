@@ -34,13 +34,14 @@ export const createPropertyWithImages = async (
       size,
       type,
       listedByUserId,
+      squarMeterPrice: price / size,
     });
 
     // Upload each image to S3 and store the URL in the database
     const imageUploadPromises = files.map((file) => {
-      // Save the image URL in the PropertyImage model
+      const imageUrl = `http://localhost:3000/uploads/${listedByUserId}/${file.filename}`;
       return PropertyImage.create({
-        url: file.path,
+        url: imageUrl,
         propertyId: property.id,
       });
     });
@@ -180,7 +181,6 @@ export const getPropertiesByFilter = async (filters: PropertyParams) => {
   const offset = (page - 1) * limit;
   const whereClause: any = {};
   const order: any = [];
-  console.log(filters)
 
   if (isFiltering(filters)) {
     if (filters.priceMin || filters.priceMax) {
@@ -243,6 +243,7 @@ export const getPropertiesByFilter = async (filters: PropertyParams) => {
   };
 };
 const getRelatedProperties = async (propertyId: string) => {
+  // !TODO get related properties based on location
   // Fetch the main property
   const mainProperty = await Property.findByPk(propertyId);
   if (!mainProperty) {

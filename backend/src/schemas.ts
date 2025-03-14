@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from "express";
 import Joi, { ObjectSchema } from "joi";
 
 const PASSWORD_REGEX = new RegExp(
@@ -15,20 +16,23 @@ const authSignin = Joi.object().keys({
   email: Joi.string().required(),
   password: Joi.string().required(),
 });
+
 const propertySchema = Joi.object({
-  price: Joi.number().required(),
-  size: Joi.number().required(),
+  price: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
+  size: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
   address: Joi.string().required(),
-  bedrooms: Joi.number().integer().min(0).required(),
-  bathrooms: Joi.number().integer().min(0).required(),
+  bedrooms: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
+  bathrooms: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
   type: Joi.string().valid("apartment", "house").required(),
   category: Joi.string().required(),
   city: Joi.string().required(),
   district: Joi.string().optional(),
-  yearBuilt: Joi.number().integer().optional(),
+  yearBuilt: Joi.alternatives().try(Joi.string(), Joi.number()).optional(),
   description: Joi.string().optional(),
   images: Joi.array().items(Joi.object()).optional(),
 });
+
+
 
 export default {
   signin: authSignin,

@@ -16,7 +16,6 @@ export const createProperty = async <T>(formData: AddProperty) => {
             formDataToSend.append("images", file);
         });
     }
-
     const response = await apiRequest<T>({
         url: `/property`,
         method: "POST",

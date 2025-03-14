@@ -13,7 +13,6 @@ export default function ImageSwiperThumbnail({
 }) {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass>();
 
-  console.log(images);
   if (!images || images.length === 0) {
     return (
       <div className="flex justify-center items-center rounded-md mb-4 h-[500px] w-full">

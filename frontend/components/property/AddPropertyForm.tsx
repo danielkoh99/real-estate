@@ -1,10 +1,18 @@
 "use client";
 
-import { Input, Button, Textarea, Card, CardBody } from "@heroui/react";
+import {
+  Input,
+  Button,
+  Textarea,
+  Card,
+  CardBody,
+  Select,
+  SelectItem,
+} from "@heroui/react";
 import { useMutation } from "@tanstack/react-query";
 
 import Upload from "@/components/property/Upload";
-import { FileWithPreview, AddProperty } from "@/types";
+import { FileWithPreview, AddProperty, PropertyType } from "@/types";
 import { createProperty } from "@/utils/createProperty";
 
 export default function AddPropertyForm({
@@ -26,12 +34,15 @@ export default function AddPropertyForm({
   const handleSaveProperty = () => {
     mutate(formData);
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    const { name, value, type } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: type === "number" ? (value ? Number(value) : "") : value,
     });
   };
 
@@ -45,20 +56,77 @@ export default function AddPropertyForm({
           <div className="flex flex-col gap-4 flex-1">
             <Input
               fullWidth
-              label="Title"
-              name="title"
-              placeholder="Enter property title"
-              value={formData?.title}
+              label="Price"
+              name="price"
+              placeholder="Enter price"
+              type="number"
+              value={formData?.price?.toString()}
               onChange={handleChange}
             />
 
             <Input
               fullWidth
-              label="Price ($)"
-              name="price"
-              placeholder="Enter price"
+              label="Size (sq m)"
+              name="size"
+              placeholder="Enter size"
               type="number"
-              value={formData?.price?.toString()}
+              value={formData?.size?.toString()}
+              onChange={handleChange}
+            />
+
+            <Input
+              fullWidth
+              label="Address"
+              name="address"
+              placeholder="Enter address"
+              value={formData?.address}
+              onChange={handleChange}
+            />
+
+            <Input
+              fullWidth
+              label="Bedrooms"
+              min={0}
+              name="bedrooms"
+              placeholder="Enter number of bedrooms"
+              type="number"
+              value={formData?.bedrooms?.toString()}
+              onChange={handleChange}
+            />
+
+            <Input
+              fullWidth
+              label="Bathrooms"
+              min={0}
+              name="bathrooms"
+              placeholder="Enter number of bathrooms"
+              type="number"
+              value={formData?.bathrooms?.toString()}
+              onChange={handleChange}
+            />
+
+            <Select
+              fullWidth
+              label="Property Type"
+              name="type"
+              selectedKeys={[formData?.type]}
+              onSelectionChange={(keys) =>
+                setFormData({
+                  ...formData,
+                  type: Array.from(keys)[0] as PropertyType,
+                })
+              }
+            >
+              <SelectItem key="apartment">Apartment</SelectItem>
+              <SelectItem key="house">House</SelectItem>
+            </Select>
+
+            <Input
+              fullWidth
+              label="Category"
+              name="category"
+              placeholder="Enter category"
+              value={formData?.category}
               onChange={handleChange}
             />
 
@@ -70,6 +138,26 @@ export default function AddPropertyForm({
               value={formData?.city}
               onChange={handleChange}
             />
+
+            <Input
+              fullWidth
+              label="District"
+              name="district"
+              placeholder="Enter district (optional)"
+              value={formData?.district}
+              onChange={handleChange}
+            />
+
+            <Input
+              fullWidth
+              label="Year Built"
+              name="yearBuilt"
+              placeholder="Enter year built (optional)"
+              type="number"
+              value={formData?.yearBuilt?.toString()}
+              onChange={handleChange}
+            />
+
             <Textarea
               fullWidth
               label="Description"
@@ -78,10 +166,10 @@ export default function AddPropertyForm({
               value={formData?.description}
               onChange={handleChange}
             />
+            <Button color="primary" onPress={handleSaveProperty}>
+              Submit
+            </Button>
           </div>
-          <Button color="primary" onPress={handleSaveProperty}>
-            Submit
-          </Button>
         </form>
       </CardBody>
     </Card>

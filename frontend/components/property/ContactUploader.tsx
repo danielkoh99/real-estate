@@ -10,7 +10,6 @@ export default function ContactUploader({
   listedByUser,
 }: ContactUploaderProps) {
   if (!listedByUser) return null;
-  console.log(listedByUser);
 
   return (
     <Card>

@@ -17,8 +17,4 @@ function verifyPassword(password: string, hash: string) {
   return hashed === hashToVerify;
 }
 
-// const hashed = hashPassword("admin");
-// const isValid = verifyPassword("admin", hashed);
-
-// console.log(`Password is valid: ${isValid}, hash: ${hashed}`);
 export { hashPassword, verifyPassword };

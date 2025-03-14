@@ -12,18 +12,17 @@ import {
 import upload from "../../middlewares/upload.middleware";
 import schemaValidator from "../../middlewares/validation.middleware";
 import { auth } from "../../middlewares/auth.middleware";
+import { validateProperty } from "../../schemas";
 
 const propertyRouter = Router();
 propertyRouter.get("/", getProperties);
 propertyRouter.get("/saved", [auth], getSavedProperties);
 propertyRouter.post("/save", [auth], savePropertyListing);
 propertyRouter.post(
-  "/",
-  [
-    auth,
-    schemaValidator("createProperty"),
-    upload.array("images", 10),
-  ],
+  "/", [
+  auth,
+  upload.array("images", 10),
+],
   createProperty
 );
 propertyRouter.get("/:id", getPropertyById);

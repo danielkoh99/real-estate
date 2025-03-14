@@ -20,7 +20,6 @@ export default function UserProfilePage() {
     autoFetch: true,
   });
 
-  console.log(response, error, loading);
   if (loading || !response) return <div>Loading...</div>;
   if (error) return <Error error_message={error.message} />;
 

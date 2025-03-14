@@ -21,7 +21,6 @@ const Upload = ({
         Object.assign(file, { url: URL.createObjectURL(file) }),
       );
 
-      console.log(newFiles);
       setFiles((prev) => [...prev, ...newFiles]);
       setFileRejections(rejections);
     },

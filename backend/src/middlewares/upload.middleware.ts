@@ -2,23 +2,37 @@ import multer, { StorageEngine } from "multer";
 import path from "path";
 import fs from "fs";
 import { Request } from "express";
+import { randomUUID } from "crypto";
+import { __dirname } from "../utils";
+const uploadDirectory = path.join(__dirname, "../../uploads");
 
-const uploadDirectory = "./uploads";
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory, { recursive: true });
 }
 
-// Configure Multer storage settings
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDirectory); // Set the folder for uploads
+    const userId = req.session.userId;
+
+    if (!userId) {
+      return cb(new Error("User ID is required for file upload"), "");
+    }
+
+    const userFolder = path.join(uploadDirectory, userId.toString());
+
+    // Ensure the user's folder exists
+    fs.mkdirSync(userFolder, { recursive: true });
+
+    cb(null, userFolder);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    const ext = path.extname(file.originalname); // Get the file extension
-    cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`); // Generate a unique filename
+    const uniqueSuffix = `${Date.now()}-${randomUUID()}`;
+    const ext = path.extname(file.originalname);
+    cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
   },
 });
+
 
 // Filter to only accept images
 const fileFilter = (
