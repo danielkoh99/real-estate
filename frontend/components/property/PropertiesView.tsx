@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 
 import Error from "@/components/global/Error";
 import NotFound from "@/components/property/NotFound";
@@ -9,8 +9,8 @@ const PropertiesView: React.FC<{
   properties: PropertyResponse[] | undefined;
   error: any;
   loading: boolean;
-  ref?: React.RefObject<HTMLDivElement>;
-}> = ({ properties, error, loading }): JSX.Element => {
+  ref: React.RefObject<HTMLDivElement|null>;
+}> = ({ properties, error, loading,ref }): JSX.Element => {
   const [delayedLoading, setDelayedLoading] = useState(false);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const PropertiesView: React.FC<{
   return (
     <>
       {!properties?.length && <NotFound />}
-      <PropertyList delayedLoading={delayedLoading} properties={properties} />
+      <PropertyList ref={ref} delayedLoading={delayedLoading} properties={properties} />
     </>
   );
 };

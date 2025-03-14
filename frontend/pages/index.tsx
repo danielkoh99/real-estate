@@ -1,5 +1,5 @@
 import { Card } from "@heroui/react";
-import { useRef } from "react";
+import { useRef, RefObject } from "react";
 
 import PropertiesView from "@/components/property/PropertiesView";
 import SearchFilters from "@/components/search/SearchFilters";
@@ -15,7 +15,7 @@ export default function IndexPage() {
 
   useFilterParams();
 
-  const propertiesViewRef = useRef<HTMLDivElement | null>(null);
+  const propertiesViewRef= useRef<HTMLDivElement>(null);
 
   return (
     <DefaultLayout>
