@@ -9,7 +9,7 @@ import {
   savePropertyListing,
   getSavedProperties
 } from "../../controllers/property.controller";
-import upload from "../../middlewares/upload.middleware";
+import { uploadAndOptimizeImages } from "../../middlewares/upload.middleware";
 import schemaValidator from "../../middlewares/validation.middleware";
 import { auth } from "../../middlewares/auth.middleware";
 import { validateProperty } from "../../schemas";
@@ -21,7 +21,7 @@ propertyRouter.post("/save", [auth], savePropertyListing);
 propertyRouter.post(
   "/", [
   auth,
-  upload.array("images", 10),
+  uploadAndOptimizeImages
 ],
   createProperty
 );

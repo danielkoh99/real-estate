@@ -35,13 +35,15 @@ export default function ImageSwiperThumbnail({
       >
         {images?.map((image, index) => (
           <SwiperSlide key={image.url + index}>
-            <Image
-              alt={image.url}
-              className="object-cover w-full h-full"
-              height={500}
-              src={image.url}
-              width={500}
-            />
+            <div className="flex w-full h-full justify-center items-center">
+              <Image
+                alt={image.url}
+                className="object-contain rounded-md w-full"
+                height={500}
+                src={image.url}
+                width={500}
+              />
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
@@ -56,11 +58,14 @@ export default function ImageSwiperThumbnail({
         onSwiper={setThumbsSwiper}
       >
         {images?.map((image, index) => (
-          <SwiperSlide key={image.url + index}>
-            <div className="relative w-full h-[100px] md:h-[150px]">
+          <SwiperSlide
+            key={image.url + index}
+            className="rounded-md overflow-hidden"
+          >
+            <div className="relative w-full h-[100px] md:h-[150px] overflow-hidden rounded-md">
               <Image
                 alt={image.url}
-                className="object-cover w-full h-full rounded-md"
+                className="object-cover w-full h-full"
                 height={200}
                 src={image.url}
                 width={200}

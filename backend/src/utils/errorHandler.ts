@@ -10,14 +10,14 @@ export const createError = (
   return {
     status,
     message,
-    details,
+    details: details instanceof Error ? details.message : details,
   };
 };
 
 export const sendErrorResponse = (res: Response, error: ErrorResponse) => {
-  return res.status(error.status).json({
-    status: error.status,
-    message: error.message,
-    ...(error.details && { details: error.details }),
+  return res.status(error.status || 500).json({
+    status: error.status || 500,
+    message: error.message || "An error occurred",
+    details: error.details || null, // Ensures details are always included properly
   });
 };

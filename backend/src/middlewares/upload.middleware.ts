@@ -1,68 +1,86 @@
-import multer, { StorageEngine } from "multer";
-import path from "path";
-import fs from "fs";
-import { Request } from "express";
-import { randomUUID } from "crypto";
-import { __dirname } from "../utils";
-const uploadDirectory = path.join(__dirname, "../../uploads");
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { randomUUID } from 'crypto';
+import { NextFunction, Request, Response } from 'express';
+import { __dirname, createError } from '../utils';
+import sharp from 'sharp';
+
+const uploadDirectory = path.join(__dirname, '../../uploads');
 
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory, { recursive: true });
 }
 
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const userId = req.session.userId;
-
-    if (!userId) {
-      return cb(new Error("User ID is required for file upload"), "");
-    }
-
-    const userFolder = path.join(uploadDirectory, userId.toString());
-
-    // Ensure the user's folder exists
-    fs.mkdirSync(userFolder, { recursive: true });
-
-    cb(null, userFolder);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${randomUUID()}`;
-    const ext = path.extname(file.originalname);
-    cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
-  },
-});
-
-
-// Filter to only accept images
-const fileFilter = (
-  req: Request,
-  file: Express.Multer.File,
-  cb: multer.FileFilterCallback
-) => {
-  const allowedTypes = /jpeg|jpg|png/;
-  const extName = allowedTypes.test(
-    path.extname(file.originalname).toLowerCase()
-  );
+const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  const allowedTypes = /jpeg|jpg|png|/;
+  const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mimeType = allowedTypes.test(file.mimetype);
-
   if (extName && mimeType) {
     cb(null, true);
   } else {
-    cb(new Error("Only images are allowed"));
+    cb(new Error('Only images are allowed'));
   }
 };
 
-// Configure the multer instance
 const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Set file size limit to 5MB
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 25 * 1024 * 1024 },
   fileFilter: fileFilter,
-});
+}).array('images', 10);
 
-// S3 configuration
-// const storage: StorageEngine = multer.memoryStorage(); // Store files in memory before uploading
+export const uploadAndOptimizeImages = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        return next(createError(400, `Multer Error: ${err.message}`, { code: err.code }));
+      }
 
-// const upload = multer({ storage });
+      return next(createError(400, "File upload failed", { error: err.message }));
+    }
 
-export default upload;
+    if (!req.files || !Array.isArray(req.files)) {
+      return next(createError(400, "No files uploaded"));
+    }
+
+    try {
+      const userId = req.session?.userId;
+      if (!userId) {
+        return next(createError(401, "User ID is required for file upload"));
+      }
+
+      const userFolder = path.join(uploadDirectory, userId.toString());
+      if (!fs.existsSync(userFolder)) {
+        fs.mkdirSync(userFolder, { recursive: true });
+      }
+
+      const processedImages = await Promise.all(
+        (req.files as Express.Multer.File[]).map(async (file) => {
+          const ext = path.extname(file.originalname).toLowerCase();
+          const uniqueFilename = `${Date.now()}-${randomUUID()}`;
+          const filePath = path.join(userFolder, `${uniqueFilename}.webp`);
+          const tempPath = path.join(userFolder, `${uniqueFilename}${ext}`);
+
+          fs.writeFileSync(tempPath, file.buffer);
+
+          await sharp(tempPath)
+            .resize({ width: 1000, height: 1000, fit: "inside" })
+            .webp({ quality: 80 })
+            .toFile(filePath);
+
+          fs.unlinkSync(tempPath);
+
+          return filePath;
+        })
+      );
+
+      res.status(200).json({ message: "Images uploaded successfully", images: processedImages });
+    } catch (error: any) {
+      return next(createError(500, "Error processing images", { error: error.message }));
+    }
+  });
+};
