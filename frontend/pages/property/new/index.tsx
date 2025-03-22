@@ -14,9 +14,8 @@ import PropertyDetails from "@/components/property/PropertyDetailsView";
 
 export default function CreateListingPage() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
-
+  const [loadingImage, setLoadingImage] = useState<boolean>(false)
   const [formData, setFormData] = useState<AddProperty>({
-    title: "",
     price: 0,
     city: "",
     description: "",
@@ -43,6 +42,8 @@ export default function CreateListingPage() {
             formData={formData}
             setFiles={setFiles}
             setFormData={setFormData}
+            loading={loadingImage}
+            setLoading={setLoadingImage}
           />
         </div>
         <div className="w-full md:w-2/3">

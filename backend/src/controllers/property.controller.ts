@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import {
   getOne,
   deleteOne,
-  createPropertyWithImages,
   getPropertiesByFilter,
   getRelatedProperties,
+  createOne,
 } from "../services/property.service";
 import {
   getOne as getUser,
@@ -16,10 +16,10 @@ import Property from "../db/models/Property/Property";
 const createProperty = async (req: CustomRequest, res: Response) => {
   try {
     const data = req.body as PropertyAttributes;
-    const files = req.files as Express.Multer.File[];
+    const files = req.body.imagePaths as string[];
     const userId = req.session.userId;
     data.listedByUserId = userId;
-    const response = await createPropertyWithImages(data, files);
+    const response = await createOne(data, files);
     return res.status(200).send(response);
   } catch (err) {
     logger.error(err);
@@ -48,7 +48,6 @@ const getProperties = async (req: Request<{}, {}, {}, PropertyParams>, res: Resp
     });
     return res.status(200).send(properties);
   } catch (err) {
-    logger.error(err);
     return res.status(500).send(err);
   }
 };
@@ -56,10 +55,15 @@ const getPropertyById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const property = await getOne(id);
-    return res.status(200).send(property);
-  } catch (err) {
-    logger.error(err);
-    return res.status(500).send(err);
+
+    if (!property) {
+      return res.status(404).json({ error: "Property not found", propertyId: id });
+    }
+
+    return res.status(200).json(property);
+  } catch (err: any) {
+    console.error("Error fetching property:", err);
+    return res.status(500).json({ error: "Internal server error", details: err.message });
   }
 };
 const updatePropertyById = async (req: Request, res: Response) => { };
@@ -70,8 +74,7 @@ const deletePropertyById = async (req: Request, res: Response) => {
     const property = await deleteOne(id);
     return res.status(200).send(property);
   } catch (err) {
-    logger.error(err);
-    return res.status(500).send(err);
+    return res.status(500).json(err);
   }
 };
 

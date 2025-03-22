@@ -13,7 +13,6 @@ export interface PropertyRes {
 }
 export interface BaseProperty {
   price: number;
-  title: string;
   size: number;
   address: string;
   type: PropertyType;
@@ -47,6 +46,10 @@ export interface ListedByUser {
   lastName: string;
   phone: string;
   email: string;
+}
+export enum UserRole {
+  ADMIN = "Agent",
+  USER = "Private",
 }
 export enum PropertyType {
   APARTMENT = "apartment",

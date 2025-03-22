@@ -48,7 +48,7 @@ const SingleRealEstate: React.FC<{
               <Skeleton className="rounded-lg h-full w-full" />
             ) : (
               <Image
-                alt={property.description}
+                alt={property.listedByUser + property.images[0].url}
                 className="object-cover w-full h-full"
                 height={400}
                 src={property.images[0].url}

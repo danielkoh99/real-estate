@@ -8,169 +8,180 @@ import {
   CardBody,
   Select,
   SelectItem,
+  Form,
 } from "@heroui/react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 import Upload from "@/components/property/Upload";
 import { FileWithPreview, AddProperty, PropertyType } from "@/types";
 import { createProperty } from "@/utils/createProperty";
+import { propertySchema } from "@/schemes";
 
 export default function AddPropertyForm({
   files,
   setFiles,
-  formData,
   setFormData,
+  formData,
+  loading,
+  setLoading
 }: {
   files: FileWithPreview[];
   setFiles: React.Dispatch<React.SetStateAction<FileWithPreview[]>>;
-  formData: AddProperty;
   setFormData: React.Dispatch<React.SetStateAction<AddProperty>>;
+  formData: AddProperty;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { mutate, data, error, isPending, isIdle, isError } = useMutation({
-    mutationFn: (formData: AddProperty) =>
-      createProperty<AddProperty>(formData),
+  const { mutate } = useMutation({
+    mutationFn: (data: AddProperty) => createProperty<AddProperty>(data),
   });
 
-  const handleSaveProperty = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm<AddProperty>({
+    resolver: zodResolver(propertySchema),
+  });
+
+  useEffect(() => {
+    const subscription = watch((data) => {
+      setFormData((prev) => {
+        return {
+          ...prev,
+          ...data,
+          images: prev.images,
+        };
+      });
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch, setFormData]);
+  const onSubmit = (data: AddProperty, event?: React.BaseSyntheticEvent) => {
+    event?.preventDefault();
     mutate(formData);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value, type } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: type === "number" ? (value ? Number(value) : "") : value,
-    });
-  };
-
   return (
-    <Card className="flex flex-col h-full flex-grow">
+    <Card className="flex flex-col h-full w-full flex-grow">
       <CardBody className="flex flex-col flex-grow">
-        <form className="flex flex-col justify-between gap-4 flex-grow">
-          <div className="h-1/3">
-            <Upload files={files} setFiles={setFiles} />
+        <Form
+          className="flex flex-col gap-4"
+          validationErrors={Object.fromEntries(
+            Object.entries(errors).map(([key, value]) => [
+              key,
+              value?.message ? [value.message] : [],
+            ]),
+          )}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="h-full w-full">
+            <Upload setLoading={setLoading} loading={loading} files={files} setFiles={setFiles} />
           </div>
-          <div className="flex flex-col gap-4 flex-1">
-            <Input
-              fullWidth
-              label="Price"
-              name="price"
-              placeholder="Enter price"
-              type="number"
-              value={formData?.price?.toString()}
-              onChange={handleChange}
-            />
 
-            <Input
-              fullWidth
-              label="Size (sq m)"
-              name="size"
-              placeholder="Enter size"
-              type="number"
-              value={formData?.size?.toString()}
-              onChange={handleChange}
-            />
+          <Input
+            fullWidth
+            label="Price"
+            {...register("price")}
+            errorMessage={errors.price?.message}
+            placeholder="Enter price"
+            type="number"
+          />
 
-            <Input
-              fullWidth
-              label="Address"
-              name="address"
-              placeholder="Enter address"
-              value={formData?.address}
-              onChange={handleChange}
-            />
+          <Input
+            fullWidth
+            label="Size (sq m)"
+            {...register("size")}
+            errorMessage={errors.size?.message}
+            placeholder="Enter size"
+            type="number"
+          />
 
-            <Input
-              fullWidth
-              label="Bedrooms"
-              min={0}
-              name="bedrooms"
-              placeholder="Enter number of bedrooms"
-              type="number"
-              value={formData?.bedrooms?.toString()}
-              onChange={handleChange}
-            />
+          <Input
+            fullWidth
+            label="Address"
+            {...register("address")}
+            errorMessage={errors.address?.message}
+            placeholder="Enter address"
+          />
 
-            <Input
-              fullWidth
-              label="Bathrooms"
-              min={0}
-              name="bathrooms"
-              placeholder="Enter number of bathrooms"
-              type="number"
-              value={formData?.bathrooms?.toString()}
-              onChange={handleChange}
-            />
+          <Input
+            fullWidth
+            label="Bedrooms"
+            {...register("bedrooms")}
+            errorMessage={errors.bedrooms?.message}
+            placeholder="Enter number of bedrooms"
+            type="number"
+          />
+          <Input
+            fullWidth
+            label="Bathrooms"
+            {...register("bathrooms")}
+            errorMessage={errors.bathrooms?.message}
+            placeholder="Enter number of bathrooms"
+            type="number"
+          />
 
-            <Select
-              fullWidth
-              label="Property Type"
-              name="type"
-              selectedKeys={[formData?.type]}
-              onSelectionChange={(keys) =>
-                setFormData({
-                  ...formData,
-                  type: Array.from(keys)[0] as PropertyType,
-                })
-              }
-            >
-              <SelectItem key="apartment">Apartment</SelectItem>
-              <SelectItem key="house">House</SelectItem>
-            </Select>
+          <Select
+            fullWidth
+            label="Property Type"
+            onSelectionChange={(keys) =>
+              setValue("type", Array.from(keys)[0] as PropertyType)
+            }
+          >
+            <SelectItem key="apartment">Apartment</SelectItem>
+            <SelectItem key="house">House</SelectItem>
+          </Select>
+          <Input
+            fullWidth
+            label="Category"
+            {...register("category")}
+            errorMessage={errors.category?.message}
+            placeholder="Enter category"
+          />
 
-            <Input
-              fullWidth
-              label="Category"
-              name="category"
-              placeholder="Enter category"
-              value={formData?.category}
-              onChange={handleChange}
-            />
+          <Input
+            fullWidth
+            label="City"
+            {...register("city")}
+            errorMessage={errors.city?.message}
+            placeholder="Enter city"
+          />
 
-            <Input
-              fullWidth
-              label="City"
-              name="city"
-              placeholder="Enter city"
-              value={formData?.city}
-              onChange={handleChange}
-            />
+          <Input
+            fullWidth
+            label="District"
+            {...register("district")}
+            placeholder="Enter district (optional)"
+          />
 
-            <Input
-              fullWidth
-              label="District"
-              name="district"
-              placeholder="Enter district (optional)"
-              value={formData?.district}
-              onChange={handleChange}
-            />
+          <Input
+            fullWidth
+            label="Year Built"
+            {...register("yearBuilt")}
+            errorMessage={errors.yearBuilt?.message}
+            placeholder="Enter year built (optional)"
+            type="number"
+          />
 
-            <Input
-              fullWidth
-              label="Year Built"
-              name="yearBuilt"
-              placeholder="Enter year built (optional)"
-              type="number"
-              value={formData?.yearBuilt?.toString()}
-              onChange={handleChange}
-            />
-
-            <Textarea
-              fullWidth
-              label="Description"
-              name="description"
-              placeholder="Enter property details"
-              value={formData?.description}
-              onChange={handleChange}
-            />
-            <Button color="primary" onPress={handleSaveProperty}>
+          <Textarea
+            fullWidth
+            label="Description"
+            {...register("description")}
+            errorMessage={errors.description?.message}
+            placeholder="Enter property details"
+          />
+          <div className="flex justify-center w-full">
+            <Button className="w-full" color="primary" type="submit">
               Submit
             </Button>
           </div>
-        </form>
+        </Form>
       </CardBody>
     </Card>
   );

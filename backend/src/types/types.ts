@@ -8,6 +8,7 @@ interface UserRequestBody {
   email: string;
   password: string;
   role: Roles;
+  phone: string;
 }
 
 interface UserResponseBody {

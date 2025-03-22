@@ -10,8 +10,7 @@ const registerUser = async (
   res: Response<UResponseBody>
 ) => {
   try {
-    const { firstName, lastName, email, password, role } = req.body;
-    // Check if the email exists
+    const { firstName, lastName, email, password, role, phone } = req.body;
     const userExists = await User.findOne({
       where: { email },
     });
@@ -27,6 +26,7 @@ const registerUser = async (
       lastName: lastName,
       email: email,
       password: hashedPassword,
+      phone: phone
     });
     return res.status(200).send({ message: "Registration successful" });
   } catch (err) {
@@ -56,7 +56,7 @@ const signInUser = async (
     }
     // Authenticate user with jwt
     const token = signToken({ userId: user.id });
-    res.cookie("token", token, { httpOnly: true, secure: false });
+    res.cookie("token", token, { httpOnly: true, secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 });
 
     return res.status(200).send({
       id: user.id,

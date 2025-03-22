@@ -38,10 +38,6 @@ export default function ContactUploader({
         <Button className="w-full mb-4" variant="ghost">
           Send a message
         </Button>
-
-        <Button className="w-full" color="secondary">
-          Save listing
-        </Button>
       </CardBody>
     </Card>
   );

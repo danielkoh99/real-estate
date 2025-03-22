@@ -6,7 +6,6 @@ interface JwtPayload {
   userId: number;
 }
 const auth = (req: Request<{}, {}, JwtPayload>, res: Response, next: NextFunction) => {
-  logger.info("auth middleware");
   const token =
     req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
   if (token) {
@@ -19,7 +18,7 @@ const auth = (req: Request<{}, {}, JwtPayload>, res: Response, next: NextFunctio
   res.status(401).json({ message: "Unauthorized" });
 };
 export function signToken(payload: JwtPayload): string {
-  return jwt.sign(payload, SECRET_KEY, { expiresIn: "8h" });
+  return jwt.sign(payload, SECRET_KEY, { expiresIn: "7d" });
 }
 
 export function verifyToken(token: string): JwtPayload | null {

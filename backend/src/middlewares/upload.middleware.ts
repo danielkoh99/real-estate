@@ -5,6 +5,7 @@ import { randomUUID } from 'crypto';
 import { NextFunction, Request, Response } from 'express';
 import { __dirname, createError } from '../utils';
 import sharp from 'sharp';
+import logger from '../logger/logger';
 
 const uploadDirectory = path.join(__dirname, '../../uploads');
 
@@ -73,12 +74,13 @@ export const uploadAndOptimizeImages = (
             .toFile(filePath);
 
           fs.unlinkSync(tempPath);
-
-          return filePath;
+          const nameWithExtention = `${uniqueFilename}.webp`;
+          return nameWithExtention;
         })
       );
-
-      res.status(200).json({ message: "Images uploaded successfully", images: processedImages });
+      req.body.imagePaths = processedImages;
+      logger.info("Images processed successfully", processedImages);
+      next();
     } catch (error: any) {
       return next(createError(500, "Error processing images", { error: error.message }));
     }

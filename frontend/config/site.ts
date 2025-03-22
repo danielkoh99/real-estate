@@ -15,9 +15,13 @@ export const siteConfig = {
       href: "/user/profile",
       protected: true,
     },
-    { label: "Upload Listing", href: "/listing/new", protected: true },
+    { label: "Upload Listing", href: "/property/new", protected: true },
   ],
   navMenuItems: [
+    {
+      label: "Home",
+      href: "/",
+    },
     {
       label: "Profile",
       href: "/profile",

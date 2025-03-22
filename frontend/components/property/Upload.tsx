@@ -14,16 +14,19 @@ const heic2any = typeof window !== "undefined" ? require("heic2any") : null;
 const Upload = ({
   setFiles,
   files,
+  loading,
+  setLoading,
 }: {
   setFiles: React.Dispatch<React.SetStateAction<FileWithPreview[]>>;
   files: FileWithPreview[];
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [fileRejections, setFileRejections] = useState<FileRejection[]>([]);
-
   const onDrop = useCallback(
     async (acceptedFiles: File[], rejections: FileRejection[]) => {
+      setLoading(true);
       if (typeof window === "undefined") return;
-
       const convertedFiles = await Promise.all(
         acceptedFiles.map(async (file) => {
           if (file.type === "image/heic" || file.type === "image/heif") {
@@ -55,15 +58,11 @@ const Upload = ({
       ]);
 
       setFileRejections(rejections);
+      setLoading(false);
     },
     [],
   );
 
-  useEffect(() => {
-    return () => {
-      files.forEach((file) => URL.revokeObjectURL(file.url));
-    };
-  }, [files]);
   const removeFile = (fileToRemove: FileWithPreview) => {
     setFiles((prevFiles) =>
       prevFiles.filter(
@@ -85,17 +84,21 @@ const Upload = ({
       "image/heic": [],
       "image/heif": [],
     },
-    maxSize: 5 * 1024 * 1024, // 5MB limit
+    maxSize: 25 * 1024 * 1024,
     maxFiles: 15,
   });
 
   return (
-    <div>
+    <div className="relative">
       <div
         {...getRootProps()}
-        className={` h-full flex flex-col items-center justify-center w-full p-6 border-2 border-dashed rounded-lg transition-all duration-200 cursor-pointer ${isDragActive ? "border-blue-500 bg-blue-100" : "border-gray-300  hover:border-blue-500"}`}
+        className={`h-full flex flex-col items-center justify-center w-full p-6 border-2 border-dashed rounded-lg transition-all duration-200
+           cursor-pointer ${isDragActive
+            ? "border-blue-500 bg-blue-100"
+            : "border-gray-300 hoverorder-blue-500"
+          }`}
       >
-        <div>
+        <div className="w-full">
           <input {...getInputProps()} />
           <p className="text-lg font-semibold text-center">
             Drag & drop your files here, or click to select
@@ -110,7 +113,7 @@ const Upload = ({
                 {fileRejection.errors.map((error) => (
                   <span key={error.code} className="block">
                     {error.code === "file-too-large" &&
-                      "File is too large (max 5MB)"}
+                      "File is too large (max 25MB)"}
                     {error.code === "file-invalid-type" &&
                       "Unsupported file type"}
                     {error.code === "too-many-files" &&
@@ -122,11 +125,13 @@ const Upload = ({
           </ul>
         )}
       </div>
+
+      {/* Uploaded Files Preview */}
       {files.length > 0 && (
         <div className="mt-4 flex space-x-4 overflow-x-auto pb-2">
           {files.map((file) => (
             <div
-              key={file.name}
+              key={file.name + Date.now()}
               className="relative group w-28 md:w-36 flex-shrink-0"
             >
               <Image
@@ -145,6 +150,16 @@ const Upload = ({
               </button>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="absolute inset-0 bg-gray-700 bg-opacity-50 flex items-center justify-center rounded-lg">
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin" />
+            <p className="text-white mt-2">Uploading...</p>
+          </div>
         </div>
       )}
     </div>

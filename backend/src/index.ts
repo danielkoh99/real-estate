@@ -46,7 +46,7 @@ app.use(
   })
 );
 app.use("/api", router);
-app.use("/uploads", express.static(path.join(__dirname, '..', 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, '../../', 'uploads')));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running");
@@ -64,6 +64,7 @@ app.listen(port, async () => {
     await db.authenticate();
     logger.info(`Database connected to discover`);
     logger.info(`[server]: Server is running at http://localhost:${port}`);
+    logger.info(path.join(__dirname, '../../', 'uploads'));
   } catch (err) {
     logger.error(err);
   }

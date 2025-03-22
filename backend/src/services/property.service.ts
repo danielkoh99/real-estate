@@ -8,15 +8,13 @@ import User from "../db/models/User/User";
 import { Op } from "sequelize";
 import { PropertyParams } from "../types/types";
 
-export const createPropertyWithImages = async (
+const createOne = async (
   data: PropertyAttributes,
-  f: Express.Multer.File[]
+  files: string[]
 ) => {
-  if (!f || (f as Express.Multer.File[]).length === 0) {
+  if (!files || (files as string[]).length === 0) {
     return { message: "Please upload at least one image" };
   }
-
-  const files = f as Express.Multer.File[];
 
   try {
     const { address, price, type, listedByUserId, size, bedrooms, bathrooms, yearBuilt, category, city, district } = data;
@@ -39,7 +37,7 @@ export const createPropertyWithImages = async (
 
     // Upload each image to S3 and store the URL in the database
     const imageUploadPromises = files.map((file) => {
-      const imageUrl = `http://localhost:3000/uploads/${listedByUserId}/${file.filename}`;
+      const imageUrl = `http://localhost:3000/uploads/${listedByUserId}/${file}`;
       return PropertyImage.create({
         url: imageUrl,
         propertyId: property.id,
@@ -47,9 +45,9 @@ export const createPropertyWithImages = async (
     });
 
     await Promise.all(imageUploadPromises);
-    return property;
+    return { message: "Property created successfully" };
   } catch (error) {
-    logger.error("Error creating property with images:", error);
+    logger.error("Error creating property ", error);
     return;
   }
 };
@@ -87,10 +85,7 @@ export const createPropertyWithImages = async (
 //     return;
 //   }
 // };
-const createOne = async (data: any) => {
-  const property = await Property.create(data);
-  return property;
-};
+
 const updateOne = async (id: number, data: any) => {
   const user = await Property.findByPk(id);
   if (!user) {
