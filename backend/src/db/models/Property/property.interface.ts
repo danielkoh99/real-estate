@@ -19,7 +19,14 @@ interface PropertyAttributes {
   savedByUserId?: number[];
   listedByUserId?: number;
   images?: PropertyImageAttributes[];
+  locationId: number;
 }
+interface LocationData {
+  lat: string;
+  lon: string;
+  boundingBox: [string, string, string, string]; // [south, north, west, east]
+}
+
 enum BPDistricts {
   I = "I",
   II = "II",
@@ -60,4 +67,4 @@ enum PropertyCategory {
   VACATION_HOME = "Vacation Home",
   OTHER = "Other",
 }
-export { PropertyAttributes, PropertyType, PropertyCategory, BPDistricts };
+export { PropertyAttributes, PropertyType, PropertyCategory, BPDistricts, LocationData };

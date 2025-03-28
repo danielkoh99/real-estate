@@ -1,5 +1,7 @@
 import { Card, CardBody, Divider } from "@heroui/react";
 import { CurrencyDollarIcon, CalendarIcon } from "@heroicons/react/24/outline";
+import dynamic from "next/dynamic";
+import { useMemo } from "react";
 
 import ContactUploader from "./ContactUploader";
 import SaveListingBtn from "./SaveListingBtn";
@@ -12,21 +14,41 @@ interface PropertyDetailsProps {
   property: AddProperty | PropertyResponse;
   preview?: boolean;
 }
+// const location = {
+//   lat: "55.19652",
+//   lon: "9.300227",
+//   display_name: "2, Mellemgade, Haderslev, Denmark",
+//   boundingBox: ["55.1964700", "55.1965700", "9.3001770", "9.3002770"], // South, North, West, East
+// };
+
 export default function PropertyDetailsView({
   property,
   preview = false,
 }: PropertyDetailsProps) {
+  const Map = useMemo(
+    () =>
+      dynamic(() => import("./Map"), {
+        loading: () => <p>Map is loading...</p>,
+        ssr: false,
+      }),
+    [],
+  );
+  const title = `${property.type} for sale`;
   const hasListedByUser = "listedByUser" in property && property.listedByUser;
   const hasPropertyId = "id" in property && property.id;
 
   return (
     <div className="flex flex-col md:flex-row gap-8 w-full relative">
       <div
-        className={`flex flex-col gap-8 ${!preview ? "md:w-2/3" : "w-full"}`}
+        className={`flex flex-col gap-8 ${!preview ? "md:w-3/5" : "w-full"}`}
       >
         <Card className="p-5">
-          <div className="flex items-center justify-between text-gray-700 mb-4">
-            <h1 className="text-3xl font-bold mb-4">{property.title}</h1>
+          <div className="flex flex-wrap items-center justify-between text-gray-700 mb-4 gap-2 text-center">
+            <div className="flex flex-col justify-start items-start ">
+              <h1 className="text-lg font-bold">{title}</h1>
+              <p>{property.city}</p>
+              <p>{property.district}</p>
+            </div>
             <div className="flex justify-end items-center gap-5">
               <GoToMaps address={property.address} />
               {hasPropertyId && !preview && (
@@ -83,9 +105,15 @@ export default function PropertyDetailsView({
         </Card>
       </div>
       {hasListedByUser && !preview && (
-        <div className="w-full md:w-1/3 relative">
-          <div className="sticky top-0">
+        <div className="w-full md:w-2/5 relative">
+          <div className="flex gap-5 flex-col-reverse md:flex-col sticky top-0 ">
             <ContactUploader listedByUser={property.listedByUser} />
+            <Map
+              boundingBox={property.location.boundingBox}
+              display_name={property.address}
+              lat={property.location.lat}
+              lon={property.location.lon}
+            />
           </div>
         </div>
       )}

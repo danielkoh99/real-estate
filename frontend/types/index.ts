@@ -28,7 +28,11 @@ export interface BaseProperty {
 export interface AddProperty extends BaseProperty {
   images: FileWithPreview[];
 }
-
+interface LocationData {
+  lat: string;
+  lon: string;
+  boundingBox: [string, string, string, string];
+}
 export interface PropertyResponse extends BaseProperty {
   id: string;
   createdAt: string;
@@ -39,6 +43,7 @@ export interface PropertyResponse extends BaseProperty {
   images: PropertyImageAttributes[];
   squarMeterPrice: number;
   listedByUser: ListedByUser;
+  location: LocationData;
 }
 export interface ListedByUser {
   id: number;

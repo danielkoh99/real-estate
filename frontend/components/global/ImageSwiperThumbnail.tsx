@@ -35,7 +35,7 @@ export default function ImageSwiperThumbnail({
       >
         {images?.map((image, index) => (
           <SwiperSlide key={image.url + index}>
-            <div className="flex w-full h-full justify-center items-center">
+            <div className="flex w-full h-[300px] md:h-[500px] justify-center items-center ">
               <Image
                 alt={image.url}
                 className="object-contain rounded-md w-full"
@@ -47,9 +47,8 @@ export default function ImageSwiperThumbnail({
           </SwiperSlide>
         ))}
       </Swiper>
-
       <Swiper
-        className="mt-4 h-[200px] cursor-grab w-full"
+        className="mt-4 h-[100px] md:h-[150px] cursor-grab w-full"
         freeMode={true}
         modules={[FreeMode, Navigation, Thumbs]}
         slidesPerView={4}

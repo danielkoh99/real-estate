@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 .swiper-button-prev {
-  color: #00b877 !important; /* Replace with your desired color */
+  color: #3A7DFF !important; /* Replace with your desired color */
 }
 
 .swiper-button-next {
-  color: #00b877 !important; /* Replace with your desired color */
+  color: #3A7DFF !important; /* Replace with your desired color */
 }
 
 .hide-scrollbar {

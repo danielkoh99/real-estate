@@ -21,7 +21,7 @@ const SingleRealEstate: React.FC<{
 }> = ({ property, loading, classes, small = false }) => {
   return (
     <Link
-      className="w-full text-white text-center py-2 rounded-lg h-full flex justify-center items-center"
+      className="w-full text-white text-center py-2 rounded-lg h-full flex items-center"
       href={`/property/${property.id}`}
     >
       <div

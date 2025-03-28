@@ -1,4 +1,3 @@
-import multer from "multer";
 import PropertyImage from "../db/models/Image/Image";
 import Property from "../db/models/Property/Property";
 import { PropertyAttributes } from "../db/models/Property/property.interface";
@@ -7,19 +6,32 @@ import { uploadImageToS3 } from "../utils/s3Upload";
 import User from "../db/models/User/User";
 import { Op } from "sequelize";
 import { PropertyParams } from "../types/types";
-
-const createOne = async (
-  data: PropertyAttributes,
-  files: string[]
-) => {
-  if (!files || (files as string[]).length === 0) {
+import axios from 'axios';
+import Location from "../db/models/Location/Location";
+import fetchPropertyLocation from "../utils/fetchPropertyLocation";
+import { getAllLocations } from "./location.service";
+const getNearbyProperties = async (lat: number, lon: number, boundingBox: [number, number, number, number]) => {
+  try {
+    const locations = await getAllLocations()
+  } catch (error) {
+    logger.error("Error fetching nearby properties:", error);
+    return [];
+  }
+}
+const createOne = async (data: PropertyAttributes, files: string[]) => {
+  if (!files || files.length === 0) {
     return { message: "Please upload at least one image" };
   }
 
   try {
     const { address, price, type, listedByUserId, size, bedrooms, bathrooms, yearBuilt, category, city, district } = data;
-
-    // Create property
+    const computedAddress = data.address + " " + data.city;
+    const { lat, lon, boundingBox } = await fetchPropertyLocation(computedAddress)
+    const location = await Location.create({
+      lat,
+      lon,
+      boundingBox
+    })
     const property = await Property.create({
       address,
       price,
@@ -33,9 +45,9 @@ const createOne = async (
       type,
       listedByUserId,
       squarMeterPrice: price / size,
+      locationId: location.id,
     });
 
-    // Upload each image to S3 and store the URL in the database
     const imageUploadPromises = files.map((file) => {
       const imageUrl = `http://localhost:3000/uploads/${listedByUserId}/${file}`;
       return PropertyImage.create({
@@ -45,10 +57,11 @@ const createOne = async (
     });
 
     await Promise.all(imageUploadPromises);
-    return { message: "Property created successfully" };
+
+    return { message: "Property created successfully", property };
   } catch (error) {
     logger.error("Error creating property ", error);
-    return;
+    return { message: "An error occurred" };
   }
 };
 // export const createPropertyWithImages = async (
@@ -108,7 +121,11 @@ const getAll = async () => {
         as: "images",
         attributes: ["id", "url"],
       },
-
+      {
+        model: Location,
+        as: "location",
+        attributes: ["lat", "lon", "boundingBox"]
+      },
     ],
   });
   return property;
@@ -126,8 +143,19 @@ const getOne = async (id: any) => {
         as: "listedByUser",
         attributes: ["firstName", "lastName", "email", "phone", "id"],
       },
+      {
+        model: Location,
+        as: "location",
+        attributes: ["lat", "lon", "boundingBox"],
+      },
     ],
   });
+  if (property && property.location) {
+    const boundingBox = property.location.boundingBox;
+    if (boundingBox && typeof boundingBox === 'string') {
+      property.location.boundingBox = JSON.parse(boundingBox)
+    }
+  }
   return property;
 };
 

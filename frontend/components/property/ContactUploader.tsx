@@ -16,12 +16,12 @@ export default function ContactUploader({
       <CardBody>
         <h3 className="text-xl font-bold mb-4">Contact Uplader</h3>
         <Link
-          className="flex items-center gap-4 mb-4"
+          className="flex items-center gap-4 mb-4 transition duration-300 hover:bg-gray-100 hover:shadow-md p-2 rounded-lg"
           href={`/user/profile/${listedByUser.id}`}
         >
-          <Avatar name={listedByUser.firstName} size="lg" />
+          <Avatar isFocusable name={listedByUser.firstName} size="lg" />
           <div>
-            <p className="font-medium">
+            <p className="font-medium text-gray-800 hover:text-gray-900">
               {listedByUser.firstName} {listedByUser.lastName}
             </p>
           </div>

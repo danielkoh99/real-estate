@@ -14,7 +14,7 @@ const SimilarProperties: React.FC<{
     <Card className="flex flex-col w-full relative">
       <div className="font-bold pl-5 py-5">Similar Properties</div>
       <div
-        className="flex flex-row overflow-x-auto p-4 gap-4 snap-x snap-mandatory hide-scrollbar"
+        className="flex flex-row overflow-x-auto p-4 gap-4 snap-x snap-mandatory hide-scrollbar justify-start items-start"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {relatedProperties.map((property) => (

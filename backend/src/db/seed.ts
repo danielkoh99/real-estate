@@ -15,6 +15,7 @@ import logger from "../logger/logger";
 import PropertyImage from "./models/Image/Image";
 import path from "path";
 import { __dirname } from "../utils";
+import Location from "./models/Location/Location";
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -22,11 +23,10 @@ function getRandomCityOrBudapest() {
   const options = [faker.location.city(), "Budapest"];
   return faker.helpers.arrayElement(options);
 }
-// Function to create random images for a property
 async function generateRandomImages(propertyId: string) {
   const images = [];
   for (let i = 0; i < randomInt(3, 10); i++) {
-    // Create 3 random images
+
     images.push({
       id: faker.string.uuid(),
       url: faker.image.urlLoremFlickr({
@@ -34,11 +34,24 @@ async function generateRandomImages(propertyId: string) {
         width: 400,
         height: 400,
       }),
-      propertyId, // Associate with propertyId
+      propertyId,
     });
   }
-  return await PropertyImage.bulkCreate(images); // Create images in bulk
+  return await PropertyImage.bulkCreate(images);
 }
+const generateRandomLocation = () => {
+  const lat = faker.location.latitude({ precision: 6 }).toString();
+  const lon = faker.location.longitude({ precision: 6 }).toString();
+  // 1 km bounding area
+  const boundingBox: [string, string, string, string] = [
+    (parseFloat(lat) - 0.01).toString(),
+    (parseFloat(lat) + 0.01).toString(),
+    (parseFloat(lon) - 0.01).toString(),
+    (parseFloat(lon) + 0.01).toString(),
+  ];
+
+  return { lat, lon, boundingBox };
+};
 async function removeUploads() {
   const uploadDirectory = path.join(__dirname, "../../uploads");
 
@@ -55,10 +68,8 @@ async function removeUploads() {
 async function seed() {
   await removeUploads()
   try {
-    // Sync all models
     await db.sync({ force: true });
 
-    // Generate random users
     const users: UserAttributes[] = [];
     const hashedPassword = hashPassword("admin");
 
@@ -82,12 +93,11 @@ async function seed() {
       password: hashedPassword,
       role: Roles.user,
     });
-    // Create users and store references
     const createdUsers = await User.bulkCreate(users, { returning: true });
-
-    // Generate random properties
     const properties: PropertyAttributes[] = [];
     for (let i = 0; i < 200; i++) {
+      const { lat, lon, boundingBox } = generateRandomLocation()
+      const location = await Location.create({ lat, lon, boundingBox });
       const price = parseFloat(faker.commerce.price())
       const size = randomInt(15, 200)
       const randomCity = getRandomCityOrBudapest()
@@ -109,22 +119,20 @@ async function seed() {
         squarMeterPrice: price / size,
         category: faker.helpers.arrayElement(Object.values(PropertyCategory)),
         price: price,
+        locationId: location.id,
         type: faker.helpers.arrayElement<PropertyType>([
           PropertyType.APARTMENT,
           PropertyType.HOUSE,
         ]),
       });
     }
-    // Create properties and store references
     const createdProperties = await Property.bulkCreate(properties, {
       returning: true,
     });
 
-    // Create random images for each property
     for (const property of createdProperties) {
-      await generateRandomImages(property.id); // Generate and associate images
+      await generateRandomImages(property.id);
     }
-    // Assign listed properties to users
     for (const user of createdUsers) {
       const userProperties = createdProperties.filter(
         (property) => property.listedByUserId === user.id
@@ -132,7 +140,6 @@ async function seed() {
       await user.setListedProperties(userProperties);
     }
 
-    // Assign saved properties to users
     for (const user of createdUsers) {
       const randomProperties = faker.helpers.arrayElements(
         createdProperties,

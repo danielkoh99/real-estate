@@ -4,9 +4,10 @@ import {
   HasManyGetAssociationsMixin,
   Optional,
 } from "sequelize";
-import { BPDistricts, PropertyAttributes, PropertyCategory, PropertyType } from "./property.interface";
+import { BPDistricts, LocationData, PropertyAttributes, PropertyCategory, PropertyType } from "./property.interface";
 import db from "../../config";
 import PropertyImage from "../Image/Image";
+import Location from "../Location/Location";
 interface PropertyCreationAttributes
   extends Optional<PropertyAttributes, "id"> { }
 
@@ -29,6 +30,8 @@ class Property
   public category!: PropertyCategory;
   public description?: string;
   public yearBuilt!: number;
+  public locationId!: number;
+  public location?: LocationData;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly images?: PropertyImage[];
@@ -55,6 +58,10 @@ Property.init(
     },
     city: {
       type: DataTypes.STRING(256),
+      allowNull: false,
+    },
+    locationId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     bedrooms: {
@@ -102,14 +109,15 @@ Property.init(
   },
   { tableName: "properties", timestamps: true, sequelize: db, paranoid: true }
 );
-// One-to-Many association: Property has many Images
 Property.hasMany(PropertyImage, {
   foreignKey: "propertyId",
-  as: "images", // Alias for association
+  as: "images",
 });
 
 PropertyImage.belongsTo(Property, {
   foreignKey: "propertyId",
   as: "property",
 });
+Property.belongsTo(Location, { foreignKey: "locationId", as: "location" });
+Location.hasMany(Property, { foreignKey: "locationId", as: "properties" });
 export default Property;
