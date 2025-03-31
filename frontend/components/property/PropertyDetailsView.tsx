@@ -14,17 +14,11 @@ interface PropertyDetailsProps {
   property: AddProperty | PropertyResponse;
   preview?: boolean;
 }
-// const location = {
-//   lat: "55.19652",
-//   lon: "9.300227",
-//   display_name: "2, Mellemgade, Haderslev, Denmark",
-//   boundingBox: ["55.1964700", "55.1965700", "9.3001770", "9.3002770"], // South, North, West, East
-// };
-
 export default function PropertyDetailsView({
   property,
   preview = false,
 }: PropertyDetailsProps) {
+  console.log(property);
   const Map = useMemo(
     () =>
       dynamic(() => import("./Map"), {

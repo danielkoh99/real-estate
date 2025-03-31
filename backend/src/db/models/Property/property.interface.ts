@@ -24,7 +24,11 @@ interface PropertyAttributes {
 interface LocationData {
   lat: string;
   lon: string;
-  boundingBox: [string, string, string, string]; // [south, north, west, east]
+  minLat: number;
+  maxLat: number;
+  minLon: number;
+  maxLon: number;
+  boundingBox?: [string, string, string, string];
 }
 
 enum BPDistricts {
@@ -53,8 +57,8 @@ enum BPDistricts {
   XXIII = "XXIII"
 }
 enum PropertyType {
-  APARTMENT = "apartment",
-  HOUSE = "house",
+  APARTMENT = "Apartment",
+  HOUSE = "House",
 }
 enum PropertyCategory {
   USED = "Used",

@@ -10,8 +10,8 @@ import {
   getOne as getUser,
 } from "../services/user.service";
 import logger from "../logger/logger";
-import { CustomRequest, PropertyParams, PropertyType } from "../types/types";
-import { BPDistricts, PropertyAttributes } from "../db/models/Property/property.interface";
+import { CustomRequest, PropertyParams } from "../types/types";
+import { BPDistricts, PropertyAttributes, PropertyType } from "../db/models/Property/property.interface";
 import Property from "../db/models/Property/Property";
 const createProperty = async (req: CustomRequest, res: Response) => {
   try {

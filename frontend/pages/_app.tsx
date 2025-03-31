@@ -14,6 +14,7 @@ import { fontSans, fontMono } from "@/config/fonts";
 import SessionManager from "@/components/SessionManager";
 import { ModalProvider } from "@/contexts/ModalContext";
 import LoginRequiredModal from "@/components/auth/LoginRequiredModal";
+import LayoutTransition from "@/layouts/transition";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,8 +42,10 @@ export default function App({
             <SessionManager />
             <NuqsAdapter>
               <ModalProvider>
-                <Component {...pageProps} />
-                <LoginRequiredModal />
+                <LayoutTransition>
+                  <Component {...pageProps} />
+                  <LoginRequiredModal />
+                </LayoutTransition>
               </ModalProvider>
             </NuqsAdapter>
             <Toaster

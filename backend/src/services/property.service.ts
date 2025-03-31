@@ -9,10 +9,16 @@ import { PropertyParams } from "../types/types";
 import axios from 'axios';
 import Location from "../db/models/Location/Location";
 import fetchPropertyLocation from "../utils/fetchPropertyLocation";
-import { getAllLocations } from "./location.service";
-const getNearbyProperties = async (lat: number, lon: number, boundingBox: [number, number, number, number]) => {
+import { createLocation, getAllLocations } from "./location.service";
+const getNearbyProperties = async (lat: number, lon: number, minLat: number, maxLat: number, minLon: number, maxLon: number) => {
   try {
-    const locations = await getAllLocations()
+    const locations = await getAllLocations({
+      where: {
+        lat: { [Op.between]: [minLat, maxLat] },
+        lon: { [Op.between]: [minLon, maxLon] }
+      }
+    })
+    return locations
   } catch (error) {
     logger.error("Error fetching nearby properties:", error);
     return [];
@@ -26,12 +32,22 @@ const createOne = async (data: PropertyAttributes, files: string[]) => {
   try {
     const { address, price, type, listedByUserId, size, bedrooms, bathrooms, yearBuilt, category, city, district } = data;
     const computedAddress = data.address + " " + data.city;
-    const { lat, lon, boundingBox } = await fetchPropertyLocation(computedAddress)
-    const location = await Location.create({
+    const response = await fetchPropertyLocation(computedAddress);
+
+    if ("message" in response) {
+      throw new Error(response.message);
+    }
+
+    const { lat, lon, minLat, maxLat, minLon, maxLon } = response;
+
+    const location = await createLocation({
       lat,
       lon,
-      boundingBox
-    })
+      minLat,
+      maxLat,
+      minLon,
+      maxLon,
+    });
     const property = await Property.create({
       address,
       price,
@@ -146,18 +162,13 @@ const getOne = async (id: any) => {
       {
         model: Location,
         as: "location",
-        attributes: ["lat", "lon", "boundingBox"],
+        attributes: ["lat", "lon", "minLat", "maxLat", "minLon", "maxLon", "boundingBox"],
+
       },
     ],
   });
-  if (property && property.location) {
-    const boundingBox = property.location.boundingBox;
-    if (boundingBox && typeof boundingBox === 'string') {
-      property.location.boundingBox = JSON.parse(boundingBox)
-    }
-  }
   return property;
-};
+}
 
 const deleteOne = async (id: string) => {
   const property = await Property.destroy({

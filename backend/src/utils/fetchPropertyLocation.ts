@@ -1,12 +1,19 @@
 import axios, { AxiosResponse } from "axios";
 import { LocationData } from "../db/models/Property/property.interface";
-interface LocationResponse {
-    lat?: string;
-    lon?: string;
-    boundingBox?: string;
-    message?: string;
+interface LocationSuccessResponse {
+    lat: number;
+    lon: number;
+    minLat: number;
+    maxLat: number;
+    minLon: number;
+    maxLon: number;
 }
 
+interface LocationErrorResponse {
+    message: string;
+}
+
+type LocationResponse = LocationSuccessResponse | LocationErrorResponse;
 const fetchPropertyLocation = async (address: string): Promise<LocationResponse> => {
     try {
         const locationResponse: AxiosResponse<LocationData[]> = await axios.get(
@@ -18,15 +25,17 @@ const fetchPropertyLocation = async (address: string): Promise<LocationResponse>
         }
 
         const locationData = locationResponse.data[0];
+
         return {
-            lat: locationData.lat,
-            lon: locationData.lon,
-            boundingBox: JSON.stringify(locationData.boundingbox),
+            lat: parseFloat(locationData.lat),
+            lon: parseFloat(locationData.lon),
+            minLat: parseFloat(locationData.boundingbox[0]),
+            maxLat: parseFloat(locationData.boundingbox[1]),
+            minLon: parseFloat(locationData.boundingbox[2]),
+            maxLon: parseFloat(locationData.boundingbox[3]),
         };
     } catch (error) {
-        console.error("Error fetching location", error);
-        return { message: "An error occurred" };
+        return { message: "Error fetching location" };
     }
 };
-
 export default fetchPropertyLocation;

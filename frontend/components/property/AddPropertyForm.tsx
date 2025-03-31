@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import Upload from "@/components/property/Upload";
 import { FileWithPreview, AddProperty, PropertyType } from "@/types";
@@ -26,19 +27,32 @@ export default function AddPropertyForm({
   setFormData,
   formData,
   loading,
-  setLoading
+  setLoadingImage,
+  setLoading,
 }: {
   files: FileWithPreview[];
   setFiles: React.Dispatch<React.SetStateAction<FileWithPreview[]>>;
   setFormData: React.Dispatch<React.SetStateAction<AddProperty>>;
   formData: AddProperty;
   loading: boolean;
+  setLoadingImage: React.Dispatch<React.SetStateAction<boolean>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const router = useRouter();
   const { mutate } = useMutation({
     mutationFn: (data: AddProperty) => createProperty<AddProperty>(data),
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSuccess: (response) => {
+      console.log(response);
+      setLoading(false);
+      router.push("/property/");
+    },
+    onError: () => {
+      setLoading(false);
+    },
   });
-
   const {
     register,
     handleSubmit,
@@ -81,7 +95,12 @@ export default function AddPropertyForm({
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="h-full w-full">
-            <Upload setLoading={setLoading} loading={loading} files={files} setFiles={setFiles} />
+            <Upload
+              files={files}
+              loading={loading}
+              setFiles={setFiles}
+              setLoading={setLoadingImage}
+            />
           </div>
 
           <Input
@@ -134,8 +153,9 @@ export default function AddPropertyForm({
               setValue("type", Array.from(keys)[0] as PropertyType)
             }
           >
-            <SelectItem key="apartment">Apartment</SelectItem>
-            <SelectItem key="house">House</SelectItem>
+            {Object.values(PropertyType).map((type) => (
+              <SelectItem key={type}>{type}</SelectItem>
+            ))}
           </Select>
           <Input
             fullWidth

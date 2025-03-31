@@ -14,7 +14,8 @@ import PropertyDetails from "@/components/property/PropertyDetailsView";
 
 export default function CreateListingPage() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
-  const [loadingImage, setLoadingImage] = useState<boolean>(false)
+  const [loadingImage, setLoadingImage] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<AddProperty>({
     price: 0,
     city: "",
@@ -40,15 +41,21 @@ export default function CreateListingPage() {
           <AddPropertyForm
             files={files}
             formData={formData}
+            loading={loadingImage}
             setFiles={setFiles}
             setFormData={setFormData}
-            loading={loadingImage}
-            setLoading={setLoadingImage}
+            setLoading={setLoading}
+            setLoadingImage={setLoadingImage}
           />
         </div>
         <div className="w-full md:w-2/3">
           <PropertyDetails preview property={formData} />
         </div>
+        {loading ? (
+          <div className="flex justify-center items-center w-full h-full">
+            Loading...
+          </div>
+        ) : null}
       </div>
     </DefaultLayout>
   );

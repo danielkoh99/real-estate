@@ -49,7 +49,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
   display_name,
   boundingBox,
 }) => {
-  console.log(boundingBox);
   const formattedBoundingBox: [number, number, number, number] =
     boundingBox.map(Number) as [number, number, number, number];
 

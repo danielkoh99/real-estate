@@ -16,6 +16,7 @@ import PropertyImage from "./models/Image/Image";
 import path from "path";
 import { __dirname } from "../utils";
 import Location from "./models/Location/Location";
+import { createLocation } from "../services/location.service";
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -43,14 +44,11 @@ const generateRandomLocation = () => {
   const lat = faker.location.latitude({ precision: 6 }).toString();
   const lon = faker.location.longitude({ precision: 6 }).toString();
   // 1 km bounding area
-  const boundingBox: [string, string, string, string] = [
-    (parseFloat(lat) - 0.01).toString(),
-    (parseFloat(lat) + 0.01).toString(),
-    (parseFloat(lon) - 0.01).toString(),
-    (parseFloat(lon) + 0.01).toString(),
-  ];
-
-  return { lat, lon, boundingBox };
+  const minLat = parseFloat(lat) - 0.01;
+  const maxLat = parseFloat(lat) + 0.01;
+  const minLon = parseFloat(lon) - 0.01;
+  const maxLon = parseFloat(lon) + 0.01;
+  return { lat, lon, minLat, maxLat, minLon, maxLon };
 };
 async function removeUploads() {
   const uploadDirectory = path.join(__dirname, "../../uploads");
@@ -96,8 +94,15 @@ async function seed() {
     const createdUsers = await User.bulkCreate(users, { returning: true });
     const properties: PropertyAttributes[] = [];
     for (let i = 0; i < 200; i++) {
-      const { lat, lon, boundingBox } = generateRandomLocation()
-      const location = await Location.create({ lat, lon, boundingBox });
+      const { lat, lon, minLat, maxLat, minLon, maxLon } = generateRandomLocation()
+      const location = await createLocation({
+        lat,
+        lon,
+        minLat,
+        maxLat,
+        minLon,
+        maxLon,
+      })
       const price = parseFloat(faker.commerce.price())
       const size = randomInt(15, 200)
       const randomCity = getRandomCityOrBudapest()

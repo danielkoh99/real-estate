@@ -33,6 +33,7 @@ interface LocationData {
   lon: string;
   boundingBox: [string, string, string, string];
 }
+
 export interface PropertyResponse extends BaseProperty {
   id: string;
   createdAt: string;
@@ -57,8 +58,8 @@ export enum UserRole {
   USER = "Private",
 }
 export enum PropertyType {
-  APARTMENT = "apartment",
-  HOUSE = "house",
+  APARTMENT = "Apartment",
+  HOUSE = "House",
 }
 export enum BPDistricts {
   I = "I",

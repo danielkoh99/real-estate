@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { Roles } from "../db/models/User/user.interface";
-import { BPDistricts } from "../db/models/Property/property.interface";
+import { BPDistricts, PropertyType } from "../db/models/Property/property.interface";
 
 interface UserRequestBody {
   firstName: string;
@@ -44,9 +44,5 @@ interface PropertyParams {
   sortBy?: string;
   sortDirection?: string;
 }
-enum PropertyType {
-  APARTMENT = "apartment",
-  HOUSE = "house",
-}
 
-export { UserRequestBody, UResponseBody, ErrorResponse, CustomRequest, PropertyType, PropertyParams };
+export { UserRequestBody, UResponseBody, ErrorResponse, CustomRequest, PropertyParams };
