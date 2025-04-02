@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
 import Image from "next/image";
 
@@ -93,10 +93,11 @@ const Upload = ({
       <div
         {...getRootProps()}
         className={`h-full flex flex-col items-center justify-center w-full p-6 border-2 border-dashed rounded-lg transition-all duration-200
-           cursor-pointer ${isDragActive
-            ? "border-blue-500 bg-blue-100"
-            : "border-gray-300 hoverorder-blue-500"
-          }`}
+           cursor-pointer ${
+             isDragActive
+               ? "border-blue-500 bg-blue-100"
+               : "border-gray-300 hoverorder-blue-500"
+           }`}
       >
         <div className="w-full">
           <input {...getInputProps()} />

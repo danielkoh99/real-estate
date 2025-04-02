@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Spinner } from "@heroui/react";
 
 import DefaultLayout from "@/layouts/default";
 import {
@@ -15,7 +16,7 @@ import PropertyDetails from "@/components/property/PropertyDetailsView";
 export default function CreateListingPage() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [loadingImage, setLoadingImage] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [saving, setSaving] = useState<boolean>(false);
   const [formData, setFormData] = useState<AddProperty>({
     price: 0,
     city: "",
@@ -36,24 +37,27 @@ export default function CreateListingPage() {
 
   return (
     <DefaultLayout>
-      <div className="flex flex-1 flex-col md:flex-row gap-6 h-screen">
+      <div className="flex flex-1 flex-col md:flex-row gap-6 h-screen relative">
         <div className="w-full md:w-1/3 flex">
           <AddPropertyForm
             files={files}
             formData={formData}
-            loading={loadingImage}
+            loadingImage={loadingImage}
             setFiles={setFiles}
             setFormData={setFormData}
-            setLoading={setLoading}
             setLoadingImage={setLoadingImage}
+            setSaving={setSaving}
           />
         </div>
         <div className="w-full md:w-2/3">
           <PropertyDetails preview property={formData} />
         </div>
-        {loading ? (
-          <div className="flex justify-center items-center w-full h-full">
-            Loading...
+        {saving ? (
+          <div className="flex flex-col justify-center items-center w-full h-full absolute bg-white/70 backdrop-blur-sm p-4 rounded-lg shadow-md z-50">
+            <p className="text-lg font-medium text-gray-700">
+              Placing your listing on the marketplace...
+            </p>
+            <Spinner className="mt-2" size="lg" />
           </div>
         ) : null}
       </div>

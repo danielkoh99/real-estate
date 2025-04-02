@@ -26,31 +26,31 @@ export default function AddPropertyForm({
   setFiles,
   setFormData,
   formData,
-  loading,
+  loadingImage,
   setLoadingImage,
-  setLoading,
+  setSaving,
 }: {
   files: FileWithPreview[];
   setFiles: React.Dispatch<React.SetStateAction<FileWithPreview[]>>;
   setFormData: React.Dispatch<React.SetStateAction<AddProperty>>;
   formData: AddProperty;
-  loading: boolean;
+  loadingImage: boolean;
   setLoadingImage: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setSaving: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const router = useRouter();
   const { mutate } = useMutation({
     mutationFn: (data: AddProperty) => createProperty<AddProperty>(data),
     onMutate: () => {
-      setLoading(true);
+      setSaving(true);
     },
     onSuccess: (response) => {
       console.log(response);
-      setLoading(false);
-      router.push("/property/");
+      setSaving(false);
+      router.push("/");
     },
     onError: () => {
-      setLoading(false);
+      setSaving(false);
     },
   });
   const {
@@ -61,21 +61,21 @@ export default function AddPropertyForm({
     watch,
   } = useForm<AddProperty>({
     resolver: zodResolver(propertySchema),
+    defaultValues: formData, // Alapértelmezett értékek beállítása
   });
 
   useEffect(() => {
     const subscription = watch((data) => {
-      setFormData((prev) => {
-        return {
-          ...prev,
-          ...data,
-          images: prev.images,
-        };
-      });
+      setFormData((prev) => ({
+        ...prev,
+        ...data,
+        images: prev.images,
+      }));
     });
 
     return () => subscription.unsubscribe();
   }, [watch, setFormData]);
+
   const onSubmit = (data: AddProperty, event?: React.BaseSyntheticEvent) => {
     event?.preventDefault();
     mutate(formData);
@@ -97,7 +97,7 @@ export default function AddPropertyForm({
           <div className="h-full w-full">
             <Upload
               files={files}
-              loading={loading}
+              loading={loadingImage}
               setFiles={setFiles}
               setLoading={setLoadingImage}
             />
@@ -107,6 +107,7 @@ export default function AddPropertyForm({
             fullWidth
             label="Price"
             {...register("price")}
+            defaultValue={formData.price.toString()}
             errorMessage={errors.price?.message}
             placeholder="Enter price"
             type="number"
@@ -116,6 +117,7 @@ export default function AddPropertyForm({
             fullWidth
             label="Size (sq m)"
             {...register("size")}
+            defaultValue={formData.size.toString()}
             errorMessage={errors.size?.message}
             placeholder="Enter size"
             type="number"
@@ -125,50 +127,59 @@ export default function AddPropertyForm({
             fullWidth
             label="Address"
             {...register("address")}
+            defaultValue={formData.address}
             errorMessage={errors.address?.message}
             placeholder="Enter address"
           />
 
-          <Input
-            fullWidth
-            label="Bedrooms"
-            {...register("bedrooms")}
-            errorMessage={errors.bedrooms?.message}
-            placeholder="Enter number of bedrooms"
-            type="number"
-          />
-          <Input
-            fullWidth
-            label="Bathrooms"
-            {...register("bathrooms")}
-            errorMessage={errors.bathrooms?.message}
-            placeholder="Enter number of bathrooms"
-            type="number"
-          />
+          <div className="flex gap-4 w-full">
+            <Input
+              fullWidth
+              label="Bedrooms"
+              {...register("bedrooms")}
+              defaultValue={formData.bedrooms.toString()}
+              errorMessage={errors.bedrooms?.message}
+              placeholder="Enter number of bedrooms"
+              type="number"
+            />
+            <Input
+              fullWidth
+              label="Bathrooms"
+              {...register("bathrooms")}
+              defaultValue={formData.bathrooms.toString()}
+              errorMessage={errors.bathrooms?.message}
+              placeholder="Enter number of bathrooms"
+              type="number"
+            />
+          </div>
+          <div className="flex gap-4 w-full">
+            <Select
+              fullWidth
+              defaultSelectedKeys={[formData.type]}
+              label="Property Type"
+              onSelectionChange={(keys) =>
+                setValue("type", Array.from(keys)[0] as PropertyType)
+              }
+            >
+              {Object.values(PropertyType).map((type) => (
+                <SelectItem key={type}>{type}</SelectItem>
+              ))}
+            </Select>
 
-          <Select
-            fullWidth
-            label="Property Type"
-            onSelectionChange={(keys) =>
-              setValue("type", Array.from(keys)[0] as PropertyType)
-            }
-          >
-            {Object.values(PropertyType).map((type) => (
-              <SelectItem key={type}>{type}</SelectItem>
-            ))}
-          </Select>
-          <Input
-            fullWidth
-            label="Category"
-            {...register("category")}
-            errorMessage={errors.category?.message}
-            placeholder="Enter category"
-          />
-
+            <Input
+              fullWidth
+              label="Category"
+              {...register("category")}
+              defaultValue={formData.category}
+              errorMessage={errors.category?.message}
+              placeholder="Enter category"
+            />
+          </div>
           <Input
             fullWidth
             label="City"
             {...register("city")}
+            defaultValue={formData.city}
             errorMessage={errors.city?.message}
             placeholder="Enter city"
           />
@@ -177,6 +188,7 @@ export default function AddPropertyForm({
             fullWidth
             label="District"
             {...register("district")}
+            defaultValue={formData.district}
             placeholder="Enter district (optional)"
           />
 
@@ -184,6 +196,7 @@ export default function AddPropertyForm({
             fullWidth
             label="Year Built"
             {...register("yearBuilt")}
+            defaultValue={formData.yearBuilt.toString()}
             errorMessage={errors.yearBuilt?.message}
             placeholder="Enter year built (optional)"
             type="number"
@@ -193,6 +206,7 @@ export default function AddPropertyForm({
             fullWidth
             label="Description"
             {...register("description")}
+            defaultValue={formData.description}
             errorMessage={errors.description?.message}
             placeholder="Enter property details"
           />

@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { PropertyType, UserRole } from "./types";
 export const signinScheme = z.object({
   email: z
@@ -17,7 +18,6 @@ export const signupScheme = z.object({
   password: z.string().min(3, "Password is required"),
   phone: z.string().min(3, "Phone is required"),
   role: z.nativeEnum(UserRole),
-
 });
 
 export const propertySchema = z.object({
@@ -26,10 +26,13 @@ export const propertySchema = z.object({
   address: z.string().min(5, "Address must be at least 5 characters"),
   bedrooms: z.coerce.number().min(1, "Must be at least 1"),
   bathrooms: z.coerce.number().min(1, "Must be at least 1"),
-  type: z.nativeEnum(PropertyType),
+  type: z.nativeEnum(PropertyType).refine((val) => val !== undefined, {
+    message: "Property type is required",
+  }),
   category: z.string().min(3, "Category is required"),
   city: z.string().min(2, "City is required"),
   district: z.string().optional(),
   yearBuilt: z.coerce.number().optional(),
+
   description: z.string().min(10, "Description must be at least 10 characters"),
 });

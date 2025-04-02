@@ -5,9 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
-import toast from "react-hot-toast";
 
 import { signinScheme } from "@/schemes";
+import toast from "@/utils/toast";
 
 type Schema = z.infer<typeof signinScheme>;
 
@@ -32,7 +32,7 @@ const LoginForm = () => {
     });
 
     if (response?.error) {
-      toast.error(response.error);
+      toast.error("Error", response.error);
     } else {
       router.push(callbackUrl);
     }

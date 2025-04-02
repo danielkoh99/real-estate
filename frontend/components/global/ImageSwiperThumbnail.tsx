@@ -3,6 +3,7 @@ import { Thumbs, FreeMode, Navigation } from "swiper/modules";
 import "swiper/css/bundle";
 import { useState } from "react";
 import Image from "next/image";
+import { PhotoIcon } from "@heroicons/react/24/outline";
 
 import { FileWithPreview, PropertyImageAttributes } from "@/types";
 
@@ -15,8 +16,9 @@ export default function ImageSwiperThumbnail({
 
   if (!images || images.length === 0) {
     return (
-      <div className="flex justify-center items-center rounded-md mb-4 h-[500px] w-full">
-        no images added
+      <div className="flex flex-col justify-center items-center rounded-md mb-4 h-[500px] w-full">
+        <PhotoIcon className="w-10 h-10 text-gray-400" />
+        <span className="text-gray-400">No images available</span>
       </div>
     );
   }

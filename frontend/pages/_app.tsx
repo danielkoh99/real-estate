@@ -1,12 +1,9 @@
 import type { AppProps } from "next/app";
 
-import { useRouter } from "next/router";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { HeroUIProvider } from "@heroui/react";
 
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
-import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -15,6 +12,7 @@ import SessionManager from "@/components/SessionManager";
 import { ModalProvider } from "@/contexts/ModalContext";
 import LoginRequiredModal from "@/components/auth/LoginRequiredModal";
 import LayoutTransition from "@/layouts/transition";
+import UIProviders from "@/providers/UIProviders";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,11 +30,9 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
-  const router = useRouter();
-
   return (
     <QueryClientProvider client={queryClient}>
-      <HeroUIProvider navigate={router.push}>
+      <UIProviders>
         <NextThemesProvider>
           <SessionProvider session={session}>
             <SessionManager />
@@ -48,25 +44,9 @@ export default function App({
                 </LayoutTransition>
               </ModalProvider>
             </NuqsAdapter>
-            <Toaster
-              gutter={8}
-              position="top-center"
-              reverseOrder={false}
-              toastOptions={{
-                className: "",
-                duration: 5000,
-                style: {
-                  background: "#363636",
-                  color: "#fff",
-                },
-                success: {
-                  duration: 3000,
-                },
-              }}
-            />
           </SessionProvider>
         </NextThemesProvider>
-      </HeroUIProvider>
+      </UIProviders>
     </QueryClientProvider>
   );
 }
