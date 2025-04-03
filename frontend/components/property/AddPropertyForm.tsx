@@ -15,11 +15,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import Upload from "@/components/property/Upload";
 import { FileWithPreview, AddProperty, PropertyType } from "@/types";
 import { createProperty } from "@/utils/createProperty";
 import { propertySchema } from "@/schemes";
+import toast from "@/utils/toast";
 
 export default function AddPropertyForm({
   files,
@@ -40,16 +42,28 @@ export default function AddPropertyForm({
 }) {
   const router = useRouter();
   const { mutate } = useMutation({
-    mutationFn: (data: AddProperty) => createProperty<AddProperty>(data),
+    mutationFn: createProperty<AddProperty>,
     onMutate: () => {
       setSaving(true);
     },
     onSuccess: (response) => {
-      console.log(response);
+      console.log("Success:", response);
       setSaving(false);
       router.push("/");
+      toast.success(
+        "Success",
+        response.message ?? "Property created successfully",
+        <Link href={`/property/${response.id}`}>
+          <Button color="primary" variant="ghost">
+            View Property
+          </Button>
+        </Link>,
+        20000,
+      );
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Mutation error:", error.message);
+      toast.error("Error", error.message); // Show error message in toast
       setSaving(false);
     },
   });

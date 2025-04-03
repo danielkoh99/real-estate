@@ -1,34 +1,16 @@
 import { addToast } from "@heroui/react";
+import { ReactNode } from "react";
+
+const createToast =
+  (color: "success" | "danger" | "primary" | "warning") =>
+  (title: string, message: string, endContent?: ReactNode, timeout?: number) =>
+    addToast({ title, description: message, color, endContent, timeout });
 
 const toast = {
-  success: (title: string, message: string) => {
-    addToast({
-      title: title,
-      description: message,
-      color: "success",
-    });
-  },
-  error: (title: string, message: string) => {
-    addToast({
-      title: title,
-      description: message,
-      color: "danger",
-    });
-  },
-  info: (title: string, message: string) => {
-    addToast({
-      title: title,
-      description: message,
-      color: "primary",
-    });
-  },
-  warning: (title: string, message: string) => {
-    addToast({
-      title: title,
-      description: message,
-      color: "warning",
-    });
-  },
+  success: createToast("success"),
+  error: createToast("danger"),
+  info: createToast("primary"),
+  warning: createToast("warning"),
 };
 
 export default toast;

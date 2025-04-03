@@ -18,7 +18,6 @@ export default function PropertyDetailsView({
   property,
   preview = false,
 }: PropertyDetailsProps) {
-  console.log(property);
   const Map = useMemo(
     () =>
       dynamic(() => import("./Map"), {
@@ -29,7 +28,6 @@ export default function PropertyDetailsView({
   );
   const title = `${property.type} for sale`;
   const hasListedByUser = "listedByUser" in property && property.listedByUser;
-  const hasPropertyId = "id" in property && property.id;
 
   return (
     <div className="flex flex-col md:flex-row gap-8 w-full relative">
@@ -45,7 +43,7 @@ export default function PropertyDetailsView({
             </div>
             <div className="flex justify-end items-center gap-5">
               <GoToMaps address={property.address} />
-              {hasPropertyId && !preview && (
+              {property.id && !preview && (
                 <SaveListingBtn color="black" propertyId={property.id} />
               )}
             </div>
@@ -100,7 +98,7 @@ export default function PropertyDetailsView({
       </div>
       {hasListedByUser && !preview && (
         <div className="w-full md:w-2/5 relative">
-          <div className="flex gap-5 flex-col-reverse md:flex-col sticky top-0 ">
+          <div className="flex gap-10 flex-col-reverse md:flex-col sticky top-0 ">
             <ContactUploader listedByUser={property.listedByUser} />
             <Map
               boundingBox={property.location.boundingBox}

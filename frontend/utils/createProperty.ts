@@ -2,7 +2,7 @@ import { apiRequest } from "./customFetch";
 
 import { AddProperty } from "@/types";
 
-export const createProperty = async <T>(formData: AddProperty) => {
+export const createProperty = async <T>(formData: AddProperty): Promise<T> => {
     const formDataToSend = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
@@ -11,21 +11,37 @@ export const createProperty = async <T>(formData: AddProperty) => {
         }
     });
 
-    if (formData.images) {
+    if (formData.images && formData.images.length > 0) {
         formData.images.forEach((file) => {
             formDataToSend.append("images", file);
         });
+    } else {
+        throw new Error("Please upload at least one image");
     }
-    const response = await apiRequest<T>({
-        url: `/property`,
-        method: "POST",
-        data: formDataToSend,
-        config: {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        },
-    });
 
-    return response.response?.data as T;
+    try {
+        const { response, error } = await apiRequest<T>({
+            url: "/property",
+            method: "POST",
+            data: formDataToSend,
+            config: {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            },
+        });
+
+        if (error) {
+            if (error.response.data.message) {
+                throw error.response.data;
+            } else {
+                throw error;
+            }
+        }
+
+        return response?.data as T;
+    } catch (error) {
+        console.error("Error in createProperty:", error);
+        throw error;
+    }
 };

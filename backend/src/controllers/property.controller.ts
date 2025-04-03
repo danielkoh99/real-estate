@@ -20,6 +20,9 @@ const createProperty = async (req: CustomRequest, res: Response) => {
     const userId = req.session.userId;
     data.listedByUserId = userId;
     const response = await createOne(data, files);
+    if (response.error) {
+      return res.status(response.status).send(response);
+    }
     return res.status(200).send(response);
   } catch (err) {
     logger.error(err);

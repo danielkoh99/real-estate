@@ -25,13 +25,10 @@ const getNearbyProperties = async (lat: number, lon: number, minLat: number, max
   }
 }
 const createOne = async (data: PropertyAttributes, files: string[]) => {
-  if (!files || files.length === 0) {
-    return { message: "Please upload at least one image" };
-  }
 
   try {
     const { address, price, type, listedByUserId, size, bedrooms, bathrooms, yearBuilt, category, city, district } = data;
-    const computedAddress = data.address + " " + data.city;
+    const computedAddress = `${data.address} ${data.city}`;
     const response = await fetchPropertyLocation(computedAddress);
 
     if ("message" in response) {
@@ -48,6 +45,7 @@ const createOne = async (data: PropertyAttributes, files: string[]) => {
       minLon,
       maxLon,
     });
+
     const property = await Property.create({
       address,
       price,
@@ -74,10 +72,10 @@ const createOne = async (data: PropertyAttributes, files: string[]) => {
 
     await Promise.all(imageUploadPromises);
 
-    return { message: "Property created successfully", property };
+    return { message: "Property created successfully", id: property.id };
   } catch (error) {
     logger.error("Error creating property ", error);
-    return { message: "An error occurred" };
+    return { error: true, status: 500, message: "An error occurred while creating the property" };
   }
 };
 // export const createPropertyWithImages = async (

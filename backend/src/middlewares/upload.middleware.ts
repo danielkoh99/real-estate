@@ -44,7 +44,7 @@ export const uploadAndOptimizeImages = (
       return next(createError(400, "File upload failed", { error: err.message }));
     }
 
-    if (!req.files || !Array.isArray(req.files)) {
+    if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
       return next(createError(400, "No files uploaded"));
     }
 

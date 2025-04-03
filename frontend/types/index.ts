@@ -12,6 +12,7 @@ export interface PropertyRes {
   totalPages: number;
 }
 export interface BaseProperty {
+  id?: string;
   price: number;
   size: number;
   address: string;
@@ -23,6 +24,7 @@ export interface BaseProperty {
   bathrooms: number;
   yearBuilt: number;
   description: string;
+  message?: string;
 }
 
 export interface AddProperty extends BaseProperty {
@@ -35,11 +37,10 @@ interface LocationData {
 }
 
 export interface PropertyResponse extends BaseProperty {
-  id: string;
   createdAt: string;
   updatedAt: string;
   savedByUserId?: number[];
-  listedByUserId?: number;
+  listedByUserId: number;
   lastUpdated?: string;
   images: PropertyImageAttributes[];
   squarMeterPrice: number;

@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
 import { useQueryStore } from "./queryStore";
-
 import useUserStore from "./userStore";
-import { Property, PropertyRes } from "@/types";
+
+import { PropertyResponse, PropertyRes } from "@/types";
 import { apiRequest } from "@/utils/index";
 
 interface Filter {
@@ -11,7 +11,7 @@ interface Filter {
 }
 
 interface Store {
-  properties: Property[];
+  properties: PropertyResponse[];
   loading: boolean;
   error: string | null;
   filters: Filter;
@@ -22,7 +22,7 @@ interface Store {
   fetchProperties: () => Promise<void>;
   getAvalaibleCities: () => string[];
   getAvailabelYearsBuilt: () => number[];
-  getProperties: () => Property[];
+  getProperties: () => PropertyResponse[];
   getLoading: () => boolean;
   getError: () => string | null;
   getTotalItems: () => number;
