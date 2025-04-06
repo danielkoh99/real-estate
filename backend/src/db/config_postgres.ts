@@ -7,6 +7,7 @@ const db = new Sequelize({
   database: db_name,
   username: db_user,
   password: db_password,
+  logging: false
 });
 
 export default db;

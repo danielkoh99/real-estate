@@ -63,7 +63,7 @@ export default function AddPropertyForm({
     },
     onError: (error) => {
       console.error("Mutation error:", error.message);
-      toast.error("Error", error.message); // Show error message in toast
+      toast.error("Error", error.message);
       setSaving(false);
     },
   });
@@ -75,7 +75,7 @@ export default function AddPropertyForm({
     watch,
   } = useForm<AddProperty>({
     resolver: zodResolver(propertySchema),
-    defaultValues: formData, // Alapértelmezett értékek beállítása
+    defaultValues: formData,
   });
 
   useEffect(() => {

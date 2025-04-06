@@ -13,7 +13,8 @@ import {
   BelongsToManyRemoveAssociationsMixin,
   BelongsToManySetAssociationsMixin,
 } from "sequelize";
-import db from "../../config";
+
+import db from "../../config_postgres";
 import Property from "../Property/Property";
 import { UserAttributes, Roles } from "./user.interface";
 // Define creation attributes for the User model
@@ -89,6 +90,8 @@ User.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      unique: true,
+      allowNull: false
     },
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,

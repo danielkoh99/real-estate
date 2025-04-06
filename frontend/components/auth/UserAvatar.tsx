@@ -20,9 +20,14 @@ export default function UserAvatar() {
     if (key === "signout") {
       signOut();
     }
-
     if (key === "profile") {
       router.push("/user/profile");
+    }
+    if (key === "saved-listings") {
+      router.push("/user/saved-listings");
+    }
+    if (key === "messages") {
+      router.push("/user/messages");
     }
   };
 
@@ -33,6 +38,8 @@ export default function UserAvatar() {
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions" onAction={handleDropdownAction}>
         <DropdownItem key="profile">Profile</DropdownItem>
+        <DropdownItem key="saved-listings">Saved Listings</DropdownItem>
+        <DropdownItem key="messages">Messages</DropdownItem>
         <DropdownItem key="signout" className="text-danger">
           Sign out
         </DropdownItem>

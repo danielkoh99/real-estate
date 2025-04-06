@@ -1,13 +1,14 @@
 import { create } from "zustand";
 
-import { User } from "@/types";
+import { BaseProperty, User } from "@/types";
 import { apiRequest } from "@/utils";
 interface UserStore {
-  savedProperties: string[];
+  savedProperties: BaseProperty[];
   listedProperties: string[];
   currentUser?: User;
   fetchSavedProperties: () => Promise<void>;
-  getSavedProperties: () => string[];
+  getSavedProperties: () => BaseProperty[];
+  getSavedPropertiesIds: () => string[];
   saveProperty: (propertyId: string, userId: number) => Promise<void>;
   setCurrentUser: (user: User) => void;
   clearUser: () => void;
@@ -18,7 +19,7 @@ const useUserStore = create<UserStore>((set, get) => ({
   currentUser: undefined,
   fetchSavedProperties: async () => {
     try {
-      const { response, error } = await apiRequest({
+      const { response, error } = await apiRequest<BaseProperty[]>({
         url: "/property/saved",
         method: "GET",
       });
@@ -41,7 +42,7 @@ const useUserStore = create<UserStore>((set, get) => ({
   setCurrentUser: (user) => set({ currentUser: user }),
   saveProperty: async (propertyId, userId) => {
     try {
-      const { response, error } = await apiRequest({
+      const { error } = await apiRequest({
         url: "/property/save",
         method: "POST",
         data: {
@@ -57,6 +58,8 @@ const useUserStore = create<UserStore>((set, get) => ({
   },
   clearUser: () => set({ currentUser: undefined }),
   getSavedProperties: () => get().savedProperties,
+  getSavedPropertiesIds: () =>
+    get().savedProperties.map((property) => property.id),
 }));
 
 export default useUserStore;

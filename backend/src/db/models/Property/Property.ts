@@ -4,8 +4,10 @@ import {
   HasManyGetAssociationsMixin,
   Optional,
 } from "sequelize";
+import { nanoid } from "nanoid";
 import { BPDistricts, LocationData, PropertyAttributes, PropertyCategory, PropertyType } from "./property.interface";
-import db from "../../config";
+import db from "../../config_postgres";
+
 import PropertyImage from "../Image/Image";
 import Location from "../Location/Location";
 interface PropertyCreationAttributes
@@ -41,23 +43,23 @@ class Property
 Property.init(
   {
     id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING(10),
       primaryKey: true,
       unique: true,
       allowNull: false,
-      defaultValue: () => Math.floor(100000000 + Math.random() * 900000000).toString()
+      defaultValue: () => nanoid(10)
     },
     type: {
       type: DataTypes.ENUM,
-      values: ["agent", "user"],
+      values: Object.values(PropertyType),
       allowNull: false,
     },
     address: {
-      type: DataTypes.STRING(256),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     city: {
-      type: DataTypes.STRING(256),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     locationId: {
@@ -69,12 +71,12 @@ Property.init(
       allowNull: false,
     },
     squarMeterPrice: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+      type: DataTypes.FLOAT,
+      allowNull: false,
     },
     description: {
-      type: DataTypes.STRING(256),
-      allowNull: true
+      type: DataTypes.STRING(1024),
+      allowNull: false
     },
     bathrooms: {
       type: DataTypes.INTEGER,
@@ -92,10 +94,10 @@ Property.init(
     },
     yearBuilt: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     size: {
@@ -104,7 +106,7 @@ Property.init(
     },
     listedByUserId: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
     },
   },
   { tableName: "properties", timestamps: true, sequelize: db, paranoid: true }

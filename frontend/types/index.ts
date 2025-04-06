@@ -12,7 +12,7 @@ export interface PropertyRes {
   totalPages: number;
 }
 export interface BaseProperty {
-  id?: string;
+  id: string;
   price: number;
   size: number;
   address: string;
@@ -104,12 +104,12 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export interface User {
   id: number;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  name?: string;
+  firstName: string;
+  lastName: string;
   savedProperties?: PropertyResponse[];
   listedProperties?: PropertyResponse[];
   createdAt: string;
+  updatedAt: string;
 }
 export interface LoginResponse extends User, ErrorResponse {
   accessToken: string;

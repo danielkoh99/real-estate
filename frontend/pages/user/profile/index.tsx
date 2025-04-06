@@ -6,31 +6,42 @@ import {
   CardFooter,
   CardHeader,
 } from "@heroui/react";
+import { useQuery } from "@tanstack/react-query";
 
 import DefaultLayout from "@/layouts/default";
-import useApi from "@/hooks/useApi";
 import { UserInfoResponse } from "@/types";
 import Error from "@/components/global/Error";
 import { formatDateTime } from "@/utils/formatDateTime";
-
-export default function UserProfilePage() {
-  const { response, error, loading } = useApi<UserInfoResponse>({
+import { apiRequest } from "@/utils";
+const fetchUserProfile = async () => {
+  const { response, error } = await apiRequest<UserInfoResponse>({
     url: "/user/profile",
     method: "GET",
-    autoFetch: true,
   });
 
-  if (loading || !response) return <div>Loading...</div>;
+  if (error) {
+    throw error.response?.data?.message || "Failed to fetch user profile";
+  }
+
+  return response?.data as UserInfoResponse;
+};
+
+export default function UserProfilePage() {
+  const { data, error, isLoading } = useQuery<UserInfoResponse>({
+    queryKey: ["userProfile"],
+    queryFn: fetchUserProfile,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
   if (error) return <Error error_message={error.message} />;
 
-  const { firstName, lastName, email, createdAt } = response.data;
+  const { firstName, lastName, email, createdAt } = data!;
   const formattedDate = formatDateTime(createdAt);
 
   return (
     <DefaultLayout>
       <div className="min-h-screen p-5 flex justify-center items-center">
         <Card className="w-full max-w-xl">
-          {/* Header section */}
           <CardHeader className="bg-blue-500 p-white p-4 rounded-t-lg flex flex-col items-center">
             <Avatar
               isBordered
@@ -45,10 +56,8 @@ export default function UserProfilePage() {
             </p>
           </CardHeader>
 
-          {/* Body section */}
           <CardBody className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Information fields */}
               <div className="space-y-2">
                 <p className="text-lg font-semibold">Email</p>
                 <p className="p-gray-600">{email}</p>
@@ -63,8 +72,6 @@ export default function UserProfilePage() {
               </div>
             </div>
           </CardBody>
-
-          {/* Footer section */}
           <CardFooter className="bg-gray-50 p-4 rounded-b-lg flex justify-end">
             <Button color="primary" variant="shadow">
               Edit Profile

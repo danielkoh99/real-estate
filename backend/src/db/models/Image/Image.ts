@@ -1,16 +1,17 @@
 import { Model, DataTypes, Optional } from "sequelize";
-import db from "../../config";
+
+import db from "../../config_postgres";
+
 import { PropertyImageAttributes } from "./image.interface";
 interface PropertyImageCreationAttributes
-  extends Optional<PropertyImageAttributes, "id"> {}
+  extends Optional<PropertyImageAttributes, "id"> { }
 
 class PropertyImage
   extends Model<PropertyImageAttributes, PropertyImageCreationAttributes>
-  implements PropertyImageAttributes
-{
+  implements PropertyImageAttributes {
   public id!: string;
-  public url!: string; // Stores the image URL
-  public propertyId!: string; // Foreign key to the Property model
+  public url!: string;
+  public propertyId!: string;
 }
 
 PropertyImage.init(
@@ -25,7 +26,7 @@ PropertyImage.init(
       allowNull: false,
     },
     propertyId: {
-      type: DataTypes.UUID, // Foreign key, assuming Property's id is UUID
+      type: DataTypes.STRING(10),
       allowNull: false,
     },
   },

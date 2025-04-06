@@ -28,3 +28,4 @@ database.sqlite
 
 #local image uploads
 backend/uploads
+.env

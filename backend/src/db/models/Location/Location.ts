@@ -1,5 +1,6 @@
 import { Model, DataTypes, Optional } from "sequelize";
-import db from "../../config";
+
+import db from "../../config_postgres";
 
 interface LocationCreationAttributes extends Optional<LocationAttributes, "id"> { }
 export interface LocationOutput extends Required<LocationAttributes> { }

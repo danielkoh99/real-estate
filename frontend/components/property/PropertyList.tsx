@@ -23,7 +23,10 @@ const PropertyList: React.FC<{
   }, [currentUser]);
 
   return (
-    <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full justify-center place-items-center">
+    <div
+      ref={ref}
+      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full justify-center place-items-center"
+    >
       {properties &&
         properties.map((property) => (
           <SingleRealEstate

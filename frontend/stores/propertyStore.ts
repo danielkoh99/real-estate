@@ -7,7 +7,7 @@ import { PropertyResponse, PropertyRes } from "@/types";
 import { apiRequest } from "@/utils/index";
 
 interface Filter {
-  [key: string]: string | number; // Define filter criteria as needed
+  [key: string]: string | number;
 }
 
 interface Store {
@@ -96,11 +96,9 @@ const usePropertyStore = create<Store>((set, get) => ({
     return years;
   },
   getIsSaved(propertyId) {
-    const { getSavedProperties } = useUserStore.getState();
+    const { getSavedPropertiesIds } = useUserStore.getState();
 
-    return getSavedProperties().some(
-      (savedPropertyId) => savedPropertyId === propertyId,
-    );
+    return getSavedPropertiesIds().includes(propertyId);
   },
   getProperties: () => get().properties,
   getLoading: () => get().loading,

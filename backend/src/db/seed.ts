@@ -1,5 +1,6 @@
 import fs from "fs"
-import db from "./config";
+// import db from "./config";
+import db from "./config_postgres";
 import { faker } from "@faker-js/faker";
 import Property from "./models/Property/Property";
 import User from "./models/User/User";
@@ -15,8 +16,8 @@ import logger from "../logger/logger";
 import PropertyImage from "./models/Image/Image";
 import path from "path";
 import { __dirname } from "../utils";
-import Location from "./models/Location/Location";
 import { createLocation } from "../services/location.service";
+import { nanoid } from "nanoid";
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -64,10 +65,11 @@ async function removeUploads() {
 }
 
 async function seed() {
-  await removeUploads()
   try {
+    await db.authenticate()
     await db.sync({ force: true });
 
+    await removeUploads()
     const users: UserAttributes[] = [];
     const hashedPassword = hashPassword("admin");
 
@@ -76,7 +78,10 @@ async function seed() {
         id: i + 1,
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
-        email: faker.internet.email(),
+        email: faker.internet.email({
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+        }),
         phone: faker.phone.number({ style: 'international' }),
         password: hashedPassword,
         role: faker.helpers.arrayElement<Roles>([Roles.agent, Roles.user]),
@@ -111,7 +116,7 @@ async function seed() {
           ? faker.helpers.arrayElement(Object.values(BPDistricts))
           : undefined;
       properties.push({
-        id: Math.floor(100000000 + Math.random() * 900000000).toString(),
+        id: nanoid(10),
         listedByUserId: faker.helpers.arrayElement(createdUsers).id,
         size: size,
         city: randomCity,
@@ -132,7 +137,7 @@ async function seed() {
       });
     }
     const createdProperties = await Property.bulkCreate(properties, {
-      returning: true,
+      returning: false,
     });
 
     for (const property of createdProperties) {
@@ -153,6 +158,7 @@ async function seed() {
       await user.addSavedProperties(randomProperties);
     }
     console.log("Database synced and data seeded!");
+    await db.close();
     process.exit();
   } catch (error) {
     logger.error("Error seeding data:", error);

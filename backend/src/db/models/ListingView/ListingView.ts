@@ -4,25 +4,26 @@ import {
   Optional,
   BelongsToGetAssociationMixin,
 } from "sequelize";
-import db from "../../config";
+
+import db from "../../config_postgres";
+
 import Property from "../Property/Property";
 import { ListingViewAttributes } from "./listingview.interface";
 
 interface ListingViewCreationAttributes
-  extends Optional<ListingViewAttributes, "id"> {}
+  extends Optional<ListingViewAttributes, "id"> { }
 
-export interface ListingViewOutput extends Required<ListingViewAttributes> {}
+export interface ListingViewOutput extends Required<ListingViewAttributes> { }
 
 class ListingView
   extends Model<ListingViewAttributes, ListingViewCreationAttributes>
-  implements ListingViewAttributes
-{
+  implements ListingViewAttributes {
   public id!: string;
   public propertyId!: string;
   public userId!: string;
   public viewedAt!: Date;
 
-  public getProperty!: BelongsToGetAssociationMixin<Property>; 
+  public getProperty!: BelongsToGetAssociationMixin<Property>;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -39,7 +40,7 @@ ListingView.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: Property, 
+        model: Property,
         key: "id",
       },
     },

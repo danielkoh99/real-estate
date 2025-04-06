@@ -116,9 +116,12 @@ const getSavedProperties = async (req: Request, res: Response) => {
   try {
     const user = await getUser(userId)
     if (!user) return res.status(404).json({ message: "User not found" });
-    const userSavedProperties = await user.getSavedProperties()
-    const mappedToId = userSavedProperties.map(property => property.id)
-    return res.status(200).send(mappedToId);
+    const userSavedProperties = await user.getSavedProperties({
+      attributes: [
+        'id', 'description', 'price', 'size', 'type', 'yearBuilt', 'address', 'city', 'district', 'category', 'bedrooms', 'bathrooms', 'squarMeterPrice'
+      ]
+    })
+    return res.status(200).send(userSavedProperties);
   } catch (err) {
     logger.error(err);
     return res.status(500).send(err);
