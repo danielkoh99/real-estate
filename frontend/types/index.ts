@@ -30,10 +30,10 @@ export interface BaseProperty {
 export interface AddProperty extends BaseProperty {
   images: FileWithPreview[];
 }
-interface LocationData {
-  lat: string;
-  lon: string;
-  boundingBox: [string, string, string, string];
+export interface LocationData {
+  lat: number;
+  lon: number;
+  boundingbox: [number, number, number, number];
 }
 
 export interface PropertyResponse extends BaseProperty {

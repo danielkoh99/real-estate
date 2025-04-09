@@ -7,6 +7,8 @@ import "leaflet/dist/leaflet.css";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 
+import { LocationData } from "@/types";
+
 const customIcon = L.icon({
   iconUrl: markerIconPng.src,
   shadowUrl: markerShadowPng.src,
@@ -16,45 +18,45 @@ const customIcon = L.icon({
 });
 
 const FitBounds = ({
-  boundingBox,
+  boundingbox,
 }: {
-  boundingBox: [number, number, number, number];
+  boundingbox: [number, number, number, number];
 }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (!boundingBox || boundingBox.length !== 4) return;
+    if (!boundingbox || boundingbox.length !== 4) return;
 
     const bounds: LatLngBoundsLiteral = [
-      [boundingBox[0], boundingBox[2]],
-      [boundingBox[1], boundingBox[3]],
+      [boundingbox[0], boundingbox[2]],
+      [boundingbox[1], boundingbox[3]],
     ];
 
     map.fitBounds(bounds, { padding: [50, 50] });
-  }, [map, boundingBox]);
+  }, [map, boundingbox]);
 
   return null;
 };
 
-interface MapComponentProps {
-  lat: string;
-  lon: string;
+interface MapComponentProps extends LocationData {
+  lat: number;
+  lon: number;
   display_name: string;
-  boundingBox: string[];
+  boundingbox: [number, number, number, number];
 }
 
 const MapComponent: React.FC<MapComponentProps> = ({
   lat,
   lon,
   display_name,
-  boundingBox,
+  boundingbox,
 }) => {
-  const formattedBoundingBox: [number, number, number, number] =
-    boundingBox.map(Number) as [number, number, number, number];
+  // const formattedBoundingBox: [number, number, number, number] =
+  //   boundingbox.map(Number) as [number, number, number, number];
 
   return (
     <MapContainer
-      center={[parseFloat(lat), parseFloat(lon)]}
+      center={[lat, lon]}
       maxZoom={18}
       style={{
         height: "400px",
@@ -68,10 +70,10 @@ const MapComponent: React.FC<MapComponentProps> = ({
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker icon={customIcon} position={[parseFloat(lat), parseFloat(lon)]}>
+      <Marker icon={customIcon} position={[lat, lon]}>
         <Popup>{display_name}</Popup>
       </Marker>
-      <FitBounds boundingBox={formattedBoundingBox} />
+      <FitBounds boundingbox={boundingbox} />
     </MapContainer>
   );
 };

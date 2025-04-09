@@ -18,6 +18,7 @@ export default function PropertyDetailsView({
   property,
   preview = false,
 }: PropertyDetailsProps) {
+  console.log(property);
   const Map = useMemo(
     () =>
       dynamic(() => import("./Map"), {
@@ -101,7 +102,7 @@ export default function PropertyDetailsView({
           <div className="flex gap-10 flex-col-reverse md:flex-col sticky top-0 ">
             <ContactUploader listedByUser={property.listedByUser} />
             <Map
-              boundingBox={property.location.boundingBox}
+              boundingbox={property.location.boundingbox}
               display_name={property.address}
               lat={property.location.lat}
               lon={property.location.lon}

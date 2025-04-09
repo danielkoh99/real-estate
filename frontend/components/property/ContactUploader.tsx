@@ -1,4 +1,8 @@
-import { AtSymbolIcon, PhoneIcon } from "@heroicons/react/24/outline";
+import {
+  AtSymbolIcon,
+  ChatBubbleBottomCenterTextIcon,
+  PhoneIcon,
+} from "@heroicons/react/24/outline";
 import { Card, CardBody, Avatar, Button } from "@heroui/react";
 import Link from "next/link";
 
@@ -34,8 +38,8 @@ export default function ContactUploader({
             className="flex items-center justify-center w-full h-full"
             href={callPhoneLink}
           >
-            <PhoneIcon className="w-5 h-5 mr-2" />
             {listedByUser.phone}
+            <PhoneIcon className="w-5 h-5 mx-2" />
           </a>
         </Button>
         <Button className="w-full mb-4 text-white" color="primary">
@@ -43,12 +47,13 @@ export default function ContactUploader({
             className="flex items-center justify-center w-full h-full"
             href={mailtoLink}
           >
-            <AtSymbolIcon className="w-5 h-5 mr-2" />
             {listedByUser.email}
+            <AtSymbolIcon className="w-5 h-5 mx-2" />
           </a>
         </Button>
         <Button className="w-full mb-4" variant="ghost">
           Send a message
+          <ChatBubbleBottomCenterTextIcon className="w-5 h-5 mx-2" />
         </Button>
       </CardBody>
     </Card>

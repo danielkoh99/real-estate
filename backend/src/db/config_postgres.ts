@@ -1,5 +1,6 @@
 import { db_host, db_port, db_name, db_user, db_password } from "../config";
 import { Sequelize } from "sequelize";
+console.log(db_host, db_port, db_name, db_user, db_password)
 const db = new Sequelize({
   dialect: "postgres",
   host: db_host,

@@ -24,11 +24,7 @@ interface PropertyAttributes {
 interface LocationData {
   lat: string;
   lon: string;
-  minLat: number;
-  maxLat: number;
-  minLon: number;
-  maxLon: number;
-  boundingBox?: [string, string, string, string];
+  boundingbox: [string, string, string, string];
 }
 
 enum BPDistricts {

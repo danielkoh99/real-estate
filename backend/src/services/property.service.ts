@@ -35,15 +35,12 @@ const createOne = async (data: PropertyAttributes, files: string[]) => {
       throw new Error(response.message);
     }
 
-    const { lat, lon, minLat, maxLat, minLon, maxLon } = response;
+    const { lat, lon, boundingbox } = response;
 
     const location = await createLocation({
       lat,
       lon,
-      minLat,
-      maxLat,
-      minLon,
-      maxLon,
+      boundingbox
     });
 
     const property = await Property.create({
@@ -138,7 +135,7 @@ const getAll = async () => {
       {
         model: Location,
         as: "location",
-        attributes: ["lat", "lon", "boundingBox"]
+        attributes: ["lat", "lon", "boundingbox"]
       },
     ],
   });
@@ -160,7 +157,7 @@ const getOne = async (id: any) => {
       {
         model: Location,
         as: "location",
-        attributes: ["lat", "lon", "minLat", "maxLat", "minLon", "maxLon", "boundingBox"],
+        attributes: ["lat", "lon", "boundingbox"],
 
       },
     ],

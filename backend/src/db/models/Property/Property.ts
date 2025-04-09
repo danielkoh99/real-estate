@@ -37,8 +37,7 @@ class Property
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly images?: PropertyImage[];
-  // Association method to get images for a property
-  public getImages!: HasManyGetAssociationsMixin<PropertyImage>; // Gets all associated images
+  public getImages!: HasManyGetAssociationsMixin<PropertyImage>;
 }
 Property.init(
   {

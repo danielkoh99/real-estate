@@ -49,7 +49,8 @@ const generateRandomLocation = () => {
   const maxLat = parseFloat(lat) + 0.01;
   const minLon = parseFloat(lon) - 0.01;
   const maxLon = parseFloat(lon) + 0.01;
-  return { lat, lon, minLat, maxLat, minLon, maxLon };
+  const boundingbox = [minLat, maxLat, minLon, maxLon]
+  return { lat, lon, boundingbox };
 };
 async function removeUploads() {
   const uploadDirectory = path.join(__dirname, "../../uploads");
@@ -99,14 +100,11 @@ async function seed() {
     const createdUsers = await User.bulkCreate(users, { returning: true });
     const properties: PropertyAttributes[] = [];
     for (let i = 0; i < 200; i++) {
-      const { lat, lon, minLat, maxLat, minLon, maxLon } = generateRandomLocation()
+      const { lat, lon, boundingbox } = generateRandomLocation()
       const location = await createLocation({
         lat,
         lon,
-        minLat,
-        maxLat,
-        minLon,
-        maxLon,
+        boundingbox
       })
       const price = parseFloat(faker.commerce.price())
       const size = randomInt(15, 200)
