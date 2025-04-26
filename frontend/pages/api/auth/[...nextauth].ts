@@ -1,9 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import axios from "axios";
-import { ZodError } from "zod";
-
-import { LoginResponse } from "@/types";
 
 export default NextAuth({
   session: {
@@ -17,23 +14,24 @@ export default NextAuth({
         email: {},
         password: {},
       },
-      authorize: async (credentials) => {
+      authorize: async (
+        credentials: Record<"email" | "password", string> | undefined,
+      ) => {
+        if (!credentials) return null;
+
         try {
-          const response = await axios.post<LoginResponse>(
+          const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
             credentials,
           );
 
-          if (response.data) {
-            return { ...response.data };
-          }
-
-          return null;
-        } catch (error: any) {
-          if (error instanceof ZodError) {
+          if (response.status !== 200 || !response.data) {
             return null;
           }
 
+          return { ...response.data };
+        } catch (error: any) {
+          console.log(error);
           throw new Error(
             error.response.data?.message || "An unknown error occurred",
           );

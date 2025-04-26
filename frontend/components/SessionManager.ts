@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import useUserStore from "@/stores/userStore";
 
@@ -32,7 +32,7 @@ export default function SessionManager() {
         // Ensures it's not logging out immediately
         const timer = setTimeout(() => {
           console.log("Session expired, logging out...");
-          // signOut();
+          signOut();
         }, timeRemaining);
 
         return () => clearTimeout(timer);

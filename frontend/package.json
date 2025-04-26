@@ -59,5 +59,11 @@
 		"tailwind-variants": "0.1.20",
 		"tailwindcss": "3.4.3",
 		"typescript": "5.0.4"
-	}
+	},
+	"description": "This is a template for creating applications using Next.js 14 (pages directory) and NextUI (v2).",
+	"main": "next.config.js",
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"type": "commonjs"
 }

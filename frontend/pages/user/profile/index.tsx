@@ -34,51 +34,60 @@ export default function UserProfilePage() {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <Error error_message={error.message} />;
+  if (!data) return <div>No data found</div>;
 
-  const { firstName, lastName, email, createdAt } = data!;
+  const { firstName, lastName, email, createdAt, phone, savedProperties } =
+    data;
   const formattedDate = formatDateTime(createdAt);
 
   return (
     <DefaultLayout>
-      <div className="min-h-screen p-5 flex justify-center items-center">
-        <Card className="w-full max-w-xl">
-          <CardHeader className="bg-blue-500 p-white p-4 rounded-t-lg flex flex-col items-center">
-            <Avatar
-              isBordered
-              alt="Profile Picture"
-              className="mb-4"
-              color="primary"
-              size="lg"
-              src="https://via.placeholder.com/150"
-            />
-            <p>
-              {firstName} {lastName}
-            </p>
-          </CardHeader>
+      <Card className="w-full shadow-xl rounded-2xl overflow-hidden">
+        <CardHeader className="bg-blue-600 text-white p-8 flex flex-col items-center">
+          <Avatar
+            isBordered
+            alt="Profile Picture"
+            className="mb-4"
+            name={`${firstName} ${lastName}`}
+          />
+          <h2 className="text-2xl font-bold">
+            {firstName} {lastName}
+          </h2>
+          <p className="text-blue-200">{email}</p>
+        </CardHeader>
 
-          <CardBody className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <p className="text-lg font-semibold">Email</p>
-                <p className="p-gray-600">{email}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-lg font-semibold">Joined</p>
-                <p className="p-gray-600">{formattedDate}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-lg font-semibold">Phone</p>
-                <p className="p-gray-600">+1 (555) 123-4567</p>
-              </div>
-            </div>
-          </CardBody>
-          <CardFooter className="bg-gray-50 p-4 rounded-b-lg flex justify-end">
-            <Button color="primary" variant="shadow">
-              Edit Profile
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+        <CardBody className="bg-white p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p className="text-gray-500 text-sm">Email</p>
+            <p className="text-gray-800 font-medium">{email}</p>
+          </div>
+          <div>
+            <p className="text-gray-500 text-sm">Phone</p>
+            <p className="text-gray-800 font-medium">
+              {phone || "Not provided"}
+            </p>
+          </div>
+          <div>
+            <p className="text-gray-500 text-sm">Joined</p>
+            <p className="text-gray-800 font-medium">{formattedDate}</p>
+          </div>
+          <div>
+            <p className="text-gray-500 text-sm">Saved Properties</p>
+            <p className="text-gray-800 font-medium">
+              {savedProperties?.length ?? 0}
+            </p>
+          </div>
+        </CardBody>
+
+        <CardFooter className="bg-gray-50 p-6 flex justify-between">
+          <Button color="primary" variant="shadow">
+            Edit Profile
+          </Button>
+          <Button color="danger" variant="ghost">
+            Delete Profile
+          </Button>
+        </CardFooter>
+      </Card>
     </DefaultLayout>
   );
 }

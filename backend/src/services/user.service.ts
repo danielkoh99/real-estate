@@ -42,11 +42,11 @@ const getOne = async <
   T extends keyof typeof User.prototype
 >(
   id: number,
-  excludedAttributes: T[] = [], // Typed attributes as keys of User
-  include: FindOptions["include"] = [] // Include relationships
+  excludedAttributes: T[] = [],
+  include: FindOptions["include"] = []
 ) => {
   const item = await User.findByPk(id, {
-    attributes: { exclude: excludedAttributes.length > 0 ? excludedAttributes : [] }, // Set undefined if no attributes are provided
+    attributes: { exclude: excludedAttributes.length > 0 ? excludedAttributes : [] },
     include: include || [],
   });
 

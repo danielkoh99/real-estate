@@ -51,9 +51,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
   display_name,
   boundingbox,
 }) => {
-  // const formattedBoundingBox: [number, number, number, number] =
-  //   boundingbox.map(Number) as [number, number, number, number];
-
   return (
     <MapContainer
       center={[lat, lon]}

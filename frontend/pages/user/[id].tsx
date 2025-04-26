@@ -1,16 +1,9 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 
-interface UserProfileProps {
-  user: {
-    id: string;
-    name: string;
-    username: string;
-    bio: string;
-  };
-}
+import { User } from "@/types";
 
-const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
+const UserProfile: React.FC<{ user: User }> = ({ user }) => {
   const router = useRouter();
 
   if (router.isFallback) {
@@ -19,9 +12,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
 
   return (
     <div className="p-4">
-      <h1>{user.name}</h1>
-      <p>@{user.username}</p>
-      <p>{user.bio}</p>
+      <h1>{user.firstName}</h1>
+      <p>@{user.email}</p>
+      <p>{user.phone}</p>
     </div>
   );
 };
@@ -47,15 +40,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default UserProfile;
 
 async function fetchUserById(id: string) {
-  const users = [
-    {
-      id: "1",
-      name: "John Doe",
-      username: "johndoe",
-      bio: "Software Developer",
-    },
-    { id: "2", name: "Jane Smith", username: "janesmith", bio: "Designer" },
-  ];
+  const userResponse = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/${id}`,
+  );
+  const user: User = await userResponse.json();
 
-  return users.find((user) => user.id === id) || null;
+  console.log(user);
+
+  return user;
 }

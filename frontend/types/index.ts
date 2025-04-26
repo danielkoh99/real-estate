@@ -104,12 +104,14 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export interface User {
   id: number;
   email: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   savedProperties?: PropertyResponse[];
   listedProperties?: PropertyResponse[];
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
+  name?: string;
+  phone?: string;
 }
 export interface LoginResponse extends User, ErrorResponse {
   accessToken: string;

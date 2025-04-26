@@ -2,11 +2,9 @@ import PropertyImage from "../db/models/Image/Image";
 import Property from "../db/models/Property/Property";
 import { PropertyAttributes } from "../db/models/Property/property.interface";
 import logger from "../logger/logger";
-import { uploadImageToS3 } from "../utils/s3Upload";
 import User from "../db/models/User/User";
 import { Op } from "sequelize";
 import { PropertyParams } from "../types/types";
-import axios from 'axios';
 import Location from "../db/models/Location/Location";
 import fetchPropertyLocation from "../utils/fetchPropertyLocation";
 import { createLocation, getAllLocations } from "./location.service";
@@ -75,40 +73,6 @@ const createOne = async (data: PropertyAttributes, files: string[]) => {
     return { error: true, status: 500, message: "An error occurred while creating the property" };
   }
 };
-// export const createPropertyWithImages = async (
-//   data: PropertyAttributes,
-//   files: Express.Multer.File[]
-// ) => {
-//   try {
-//     const { title, address, price, type, listedByUserId } = data;
-
-//     // Create property
-//     const property = await Property.create({
-//       title,
-//       address,
-//       price,
-//       type,
-//       listedByUserId,
-//     });
-
-//     // Upload each image to S3 and store the URL in the database
-//     const imageUploadPromises = files.map(async (file) => {
-//       const imageUrl = await uploadImageToS3(file);
-
-//       // Save the image URL in the PropertyImage model
-//       return PropertyImage.create({
-//         url: imageUrl,
-//         propertyId: property.id,
-//       });
-//     });
-
-//     await Promise.all(imageUploadPromises);
-//     return property;
-//   } catch (error) {
-//     logger.error("Error creating property with images:", error);
-//     return;
-//   }
-// };
 
 const updateOne = async (id: number, data: any) => {
   const user = await Property.findByPk(id);

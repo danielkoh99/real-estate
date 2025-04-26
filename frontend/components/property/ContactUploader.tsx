@@ -23,7 +23,7 @@ export default function ContactUploader({
         <h3 className="text-xl font-bold mb-4">Contact Uplader</h3>
         <Link
           className="flex items-center gap-4 mb-4 transition duration-300 hover:bg-gray-100 hover:shadow-md p-2 rounded-lg"
-          href={`/user/profile/${listedByUser.id}`}
+          href={`/user/${listedByUser.id}`}
         >
           <Avatar isFocusable name={listedByUser.firstName} size="lg" />
           <div>
