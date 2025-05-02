@@ -1,20 +1,36 @@
-# Use an official Node.js runtime as the base image
-FROM node:18
+# ----------- Build Stage -----------
+FROM node:18 AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to install dependencies
+# Copy and install all dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy source code
 COPY . .
 
-# Expose the port that the backend runs on
+# Build TypeScript to dist/
+RUN npm run build
+
+# ----------- Production Stage -----------
+FROM node:18-slim AS runner
+
+WORKDIR /app
+
+# Only install production dependencies
+COPY package*.json ./
+RUN npm install --omit=dev --no-audit
+
+# Copy compiled output and env files
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/.env ./.env
+
+# Set environment
+ENV NODE_ENV=production
+
+# Expose backend port (match your code)
 EXPOSE 3000
 
-# Start the Node.js server
-CMD ["node", "index.js"]
+# Run the production server
+CMD ["node", "--env-file=.env", "dist/index.js"]
