@@ -24,8 +24,6 @@ RUN npm install --omit=dev --no-audit
 
 # Copy compiled output and env files
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/.env ./.env
-
 # Set environment
 ENV NODE_ENV=production
 
@@ -33,4 +31,4 @@ ENV NODE_ENV=production
 EXPOSE 3000
 
 # Run the production server
-CMD ["node", "--env-file=.env", "dist/index.js"]
+CMD ["node", "dist/index.js"]
