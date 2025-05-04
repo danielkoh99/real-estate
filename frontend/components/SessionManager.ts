@@ -11,10 +11,12 @@ export default function SessionManager() {
   useEffect(() => {
     if (session) {
       setCurrentUser({
-        id: session.user.id,
+        id: parseInt(session.user.id),
         name: `${session.user.firstName} ${session.user.lastName}`,
-        email: session.user.email,
+        email: session.user.email ?? "",
+        phone: session.user.phone,
         createdAt: session.user.createdAt ?? "",
+        role: session.user.role,
       });
     } else {
       clearUser();

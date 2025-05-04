@@ -19,21 +19,16 @@ const useUserStore = create<UserStore>((set, get) => ({
   currentUser: undefined,
   fetchSavedProperties: async () => {
     try {
-      const { response, error } = await apiRequest<BaseProperty[]>({
+      const response = await apiRequest<BaseProperty[]>({
         url: "/property/saved",
         method: "GET",
       });
 
-      if (error) {
-        console.error("Error fetching saved properties:", error);
-
-        return;
-      }
-
-      if (response && response.data) {
-        set({ savedProperties: response.data });
+      if (response) {
+        set({ savedProperties: response });
       } else {
         console.warn("No properties found in API response.");
+        set({ savedProperties: [] });
       }
     } catch (err) {
       console.error("Unexpected error fetching saved properties:", err);

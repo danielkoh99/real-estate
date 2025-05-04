@@ -1,43 +1,34 @@
-import { Attributes, FindAttributeOptions, FindOptions, Model } from "sequelize";
+import { FindOptions, UniqueConstraintError } from "sequelize";
 import Property from "../db/models/Property/Property";
 import User from "../db/models/User/User";
 import { UserAttributes } from "../db/models/User/user.interface";
 
-const createOne = async (data: any) => {
-  const user = await User.create(data, { include: [Property] });
-  return user;
+const createOne = async (data: UserAttributes) => {
+  try {
+    const user = await User.create(data);
+    return user;
+  } catch (error) {
+    if (error instanceof UniqueConstraintError) {
+      console.log(error.errors[0].message);
+      throw new Error(error.errors[0].message);
+    } else {
+      throw new Error("not found");
+    }
+  }
 };
-const updateOne = async (id: number, data: any) => {
+const updateOne = async (id: number, data: Partial<UserAttributes>) => {
   const user = await User.findByPk(id);
   if (!user) {
-    throw new Error("not found");
+    throw new Error("User not found");
   }
   const updatedUser = await User.update(data, {
     where: {
-      id: data.id,
+      id: id,
     },
   });
   return updatedUser;
 };
-// const getOne = async (id: number) => {
-//   const user = await User.findByPk(id, {
-//     attributes: { exclude: ["password"] },
-//     include: [
-//       {
-//         model: Property,
-//         as: "listedProperties",
-//       },
-//       // {
-//       //   model: Property,
-//       //   as: "savedProperties",
-//       //   through: {
-//       //     attributes: [],
-//       //   }
-//       // },
-//     ],
-//   });
-//   return user;
-// };
+
 const getOne = async <
   T extends keyof typeof User.prototype
 >(

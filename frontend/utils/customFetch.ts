@@ -25,11 +25,7 @@ export const apiRequest = async <T = any>({
   data = null,
   config = {},
   timeout = 5000,
-}: ApiRequestProps): Promise<ApiResponse<T>> => {
-  let response: AxiosResponse<T> | null = null;
-  let error: any = null;
-  let loading = true;
-
+}: ApiRequestProps): Promise<T> => {
   try {
     const session = await getSession();
     const token = session?.user.accessToken;
@@ -41,18 +37,19 @@ export const apiRequest = async <T = any>({
       headers: {
         "Content-Type": "application/json",
         ...config.headers,
-        Authorization: token ? `Bearer ${token}` : "",
+        ...(token && { Authorization: `Bearer ${token}` }),
       },
       ...(data && { data }),
       ...(config.params && { params: config.params }),
     };
 
-    response = await api(axiosConfig);
-  } catch (err) {
-    error = err;
-  } finally {
-    loading = false;
-  }
+    const response = await api<T>(axiosConfig);
 
-  return { response, error, loading };
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+    throw error;
+  }
 };

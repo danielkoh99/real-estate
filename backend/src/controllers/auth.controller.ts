@@ -4,7 +4,6 @@ import { hashPassword, verifyPassword } from "../utils/auth.utils";
 import { UserRequestBody, UResponseBody } from "../types/types";
 import { Roles } from "../db/models/User/user.interface";
 import { signToken } from "../middlewares/auth.middleware";
-import logger from "../logger/logger";
 const registerUser = async (
   req: Request<{}, {}, UserRequestBody>,
   res: Response<UResponseBody>
@@ -55,7 +54,7 @@ const signInUser = async (
         .json({ message: "Incorrect email and password combination" });
     }
     // Authenticate user with jwt
-    const token = signToken({ userId: user.id });
+    const token = signToken({ userId: user.id, role: user.role });
     res.cookie("token", token, { httpOnly: true, secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 });
 
     return res.status(200).send({

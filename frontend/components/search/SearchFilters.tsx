@@ -55,7 +55,7 @@ const SearchFilter = () => {
               onChange={handleSelectChange}
             >
               {Object.values(PropertyType).map((type) => (
-                <SelectItem key={type} value={type}>
+                <SelectItem key={type} textValue={type}>
                   {capitalizeFirst(type)}
                 </SelectItem>
               ))}
@@ -72,7 +72,7 @@ const SearchFilter = () => {
               onChange={handleSelectDistricts}
             >
               {Object.keys(BPDistricts).map((district) => (
-                <SelectItem key={district} value={district}>
+                <SelectItem key={district} textValue={district}>
                   {district}
                 </SelectItem>
               ))}

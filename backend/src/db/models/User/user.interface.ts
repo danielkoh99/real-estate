@@ -8,12 +8,14 @@ interface UserAttributes {
   createdAt?: Date;
   updatedAt?: Date;
   role: Roles;
+  profileImage?: string;
   savedProperties?: string[];
   listedProperties?: string[];
 }
 enum Roles {
   agent = "agent",
   user = "user",
+  admin = "admin"
 }
 
 export { UserAttributes, Roles };

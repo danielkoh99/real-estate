@@ -25,7 +25,7 @@ const getNearbyProperties = async (lat: number, lon: number, minLat: number, max
 const createOne = async (data: PropertyAttributes, files: string[]) => {
 
   try {
-    const { address, price, type, listedByUserId, size, bedrooms, bathrooms, yearBuilt, category, city, district } = data;
+    const { address, price, type, listedByUserId, size, bedrooms, bathrooms, yearBuilt, category, city, district, description } = data;
     const computedAddress = `${data.address} ${data.city}`;
     const response = await fetchPropertyLocation(computedAddress);
 
@@ -53,12 +53,13 @@ const createOne = async (data: PropertyAttributes, files: string[]) => {
       size,
       type,
       listedByUserId,
+      description,
       squarMeterPrice: price / size,
       locationId: location.id,
     });
 
     const imageUploadPromises = files.map((file) => {
-      const imageUrl = `http://${process.env.SERVER_URL}/uploads/${listedByUserId}/${file}`;
+      const imageUrl = `${process.env.SERVER_URL}/uploads/${listedByUserId}/${file}`;
       return PropertyImage.create({
         url: imageUrl,
         propertyId: property.id,
@@ -169,8 +170,7 @@ const isFiltering = (filters: PropertyParams): boolean => {
 
 export const getPropertiesByFilter = async (filters: PropertyParams) => {
   const limit = filters.limit || 10;
-  const page = filters.page || 1;
-
+  let page = filters.page || 1;
   const offset = (page - 1) * limit;
   const whereClause: any = {};
   const order: any = [];
@@ -178,28 +178,21 @@ export const getPropertiesByFilter = async (filters: PropertyParams) => {
   if (isFiltering(filters)) {
     if (filters.priceMin || filters.priceMax) {
       whereClause.price = {};
-      if (filters.priceMin) {
-        whereClause.price[Op.gte] = filters.priceMin;
-      }
-      if (filters.priceMax) {
-        whereClause.price[Op.lte] = filters.priceMax;
-      }
+      if (filters.priceMin) whereClause.price[Op.gte] = filters.priceMin;
+      if (filters.priceMax) whereClause.price[Op.lte] = filters.priceMax;
     }
 
     if (filters.sizeMin || filters.sizeMax) {
       whereClause.size = {};
-      if (filters.sizeMin) {
-        whereClause.size[Op.gte] = filters.sizeMin;
-      }
-      if (filters.sizeMax) {
-        whereClause.size[Op.lte] = filters.sizeMax;
-      }
+      if (filters.sizeMin) whereClause.size[Op.gte] = filters.sizeMin;
+      if (filters.sizeMax) whereClause.size[Op.lte] = filters.sizeMax;
     }
 
     if (filters.type) {
       whereClause.type = filters.type;
     }
-    if (filters.districts && filters.districts.length > 0) {
+
+    if (filters.districts?.length) {
       whereClause.district = { [Op.in]: filters.districts };
     }
 
@@ -207,7 +200,16 @@ export const getPropertiesByFilter = async (filters: PropertyParams) => {
       order.push([filters.sortBy || "createdAt", filters.sortDirection || "ASC"]);
     }
   }
-  const properties = await Property.findAndCountAll({
+
+  const { count: totalItems } = await Property.findAndCountAll({
+    where: whereClause,
+    distinct: true,
+  });
+
+  const totalPages = Math.ceil(totalItems / limit) || 1;
+  if (page > totalPages) page = 1;
+
+  const properties = await Property.findAll({
     where: whereClause,
     include: [
       {
@@ -216,23 +218,16 @@ export const getPropertiesByFilter = async (filters: PropertyParams) => {
         required: false,
       },
     ],
-    distinct: true,
     limit,
-    offset,
-    order
+    offset: (page - 1) * limit,
+    order,
   });
 
-  const totalItems = properties.count;
-  const totalPages = Math.ceil(totalItems / limit);
-
-  const currentPage = page > totalPages ? totalPages : page;
-  const rows = page > totalPages ? [] : properties.rows;
-
   return {
-    properties: rows,
+    properties,
     totalItems,
     totalPages,
-    currentPage,
+    currentPage: page,
   };
 };
 const getRelatedProperties = async (propertyId: string) => {

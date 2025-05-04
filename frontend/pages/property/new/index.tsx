@@ -6,9 +6,9 @@ import { Spinner } from "@heroui/react";
 import DefaultLayout from "@/layouts/default";
 import {
   FileWithPreview,
-  AddProperty,
   PropertyType,
   PropertyCategory,
+  NewProperty,
 } from "@/types";
 import AddPropertyForm from "@/components/property/AddPropertyForm";
 import PropertyDetails from "@/components/property/PropertyDetailsView";
@@ -17,7 +17,7 @@ export default function CreateListingPage() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [loadingImage, setLoadingImage] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
-  const [formData, setFormData] = useState<AddProperty>({
+  const [formData, setFormData] = useState<NewProperty>({
     price: 0,
     city: "",
     description: "",

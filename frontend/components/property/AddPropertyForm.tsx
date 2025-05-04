@@ -47,7 +47,6 @@ export default function AddPropertyForm({
       setSaving(true);
     },
     onSuccess: (response) => {
-      console.log("Success:", response);
       setSaving(false);
       router.push("/");
       toast.success(

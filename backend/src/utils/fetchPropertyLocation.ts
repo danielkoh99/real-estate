@@ -18,7 +18,7 @@ const fetchPropertyLocation = async (address: string): Promise<LocationResponse>
         );
 
         if (!locationResponse.data.length) {
-            return { message: "Could not find location" };
+            return { lat: 0, lon: 0, boundingbox: [0, 0, 0, 0] };
         }
 
         const locationData = locationResponse.data[0];

@@ -24,11 +24,14 @@ export interface BaseProperty {
   bathrooms: number;
   yearBuilt: number;
   description: string;
-  message?: string;
 }
 
-export interface AddProperty extends BaseProperty {
+export type NewProperty = Omit<BaseProperty, "id"> & {
   images: FileWithPreview[];
+  message?: string;
+};
+export interface UpdateUser extends User {
+  message?: string;
 }
 export interface LocationData {
   lat: number;
@@ -54,9 +57,10 @@ export interface ListedByUser {
   phone: string;
   email: string;
 }
-export enum UserRole {
-  ADMIN = "Agent",
-  USER = "Private",
+enum Roles {
+  agent = "agent",
+  user = "user",
+  admin = "admin",
 }
 export enum PropertyType {
   APARTMENT = "Apartment",
@@ -101,22 +105,27 @@ export enum PropertyCategory {
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
+
 export interface User {
   id: number;
   email: string;
   firstName?: string;
   lastName?: string;
-  savedProperties?: PropertyResponse[];
-  listedProperties?: PropertyResponse[];
   createdAt: string;
   updatedAt?: string;
+  profileImage?: string;
+  role?: Roles;
   name?: string;
   phone?: string;
+}
+
+export interface UserInfoResponse extends User {
+  savedProperties: PropertyResponse[];
+  listedProperties: PropertyResponse[];
 }
 export interface LoginResponse extends User, ErrorResponse {
   accessToken: string;
 }
-export type UserInfoResponse = User;
 interface ErrorResponse {
   status: number;
   message?: string;

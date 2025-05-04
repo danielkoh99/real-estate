@@ -99,43 +99,56 @@ async function seed() {
     });
     const createdUsers = await User.bulkCreate(users, { returning: true });
     const properties: PropertyAttributes[] = [];
+
+    const locationPromises = Array.from({ length: 200 }).map(async () => {
+      const { lat, lon, boundingbox } = generateRandomLocation();
+      return await createLocation({ lat, lon, boundingbox });
+    });
+    const locations = await Promise.all(locationPromises);
+
     for (let i = 0; i < 200; i++) {
-      const { lat, lon, boundingbox } = generateRandomLocation()
-      const location = await createLocation({
-        lat,
-        lon,
-        boundingbox
-      })
-      const price = parseFloat(faker.commerce.price())
-      const size = randomInt(15, 200)
-      const randomCity = getRandomCityOrBudapest()
+      const location = locations[i];
+      const price = parseFloat(faker.commerce.price());
+      const size = randomInt(15, 200);
+      const randomCity = getRandomCityOrBudapest();
+
       const district =
         randomCity === "Budapest"
           ? faker.helpers.arrayElement(Object.values(BPDistricts))
-          : undefined;
-      properties.push({
+          : null;
+
+      const property: PropertyAttributes = {
         id: nanoid(10),
         listedByUserId: faker.helpers.arrayElement(createdUsers).id,
-        size: size,
+        size,
         city: randomCity,
-        district: district,
+        district: district ?? null,
         address: faker.location.streetAddress({ useFullAddress: true }),
         bedrooms: faker.number.int({ min: 1, max: 6 }),
         bathrooms: faker.number.int({ min: 1, max: 3 }),
         yearBuilt: faker.number.int({ min: 1900, max: 2024 }),
-        description: faker.lorem.paragraph(5),
-        squarMeterPrice: price / size,
+        description: faker.lorem.paragraphs(2),
+        squarMeterPrice: parseFloat((price / size).toFixed(2)),
         category: faker.helpers.arrayElement(Object.values(PropertyCategory)),
-        price: price,
+        price,
         locationId: location.id,
         type: faker.helpers.arrayElement<PropertyType>([
           PropertyType.APARTMENT,
           PropertyType.HOUSE,
         ]),
-      });
+      };
+
+      properties.push(property);
+    }
+    for (const prop of properties) {
+      for (const key in prop) {
+        if (prop[key as keyof typeof prop] === undefined) {
+          console.warn(`Property is missing field: ${key}`, prop);
+        }
+      }
     }
     const createdProperties = await Property.bulkCreate(properties, {
-      returning: false,
+      returning: true,
     });
 
     for (const property of createdProperties) {

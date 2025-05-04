@@ -12,7 +12,7 @@ interface PropertyAttributes {
   type: PropertyType;
   category: PropertyCategory;
   city: string;
-  district?: BPDistricts;
+  district?: BPDistricts | null;
   squarMeterPrice?: number;
   yearBuilt?: number;
   description?: string;

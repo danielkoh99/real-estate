@@ -74,7 +74,7 @@ Property.init(
       allowNull: false,
     },
     description: {
-      type: DataTypes.STRING(1024),
+      type: DataTypes.STRING(1000),
       allowNull: false
     },
     bathrooms: {

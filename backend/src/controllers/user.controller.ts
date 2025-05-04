@@ -32,16 +32,7 @@ const getSessionUser = async (req: Request, res: Response) => {
   const { userId } = req.session;
   if (!userId) return res.status(404).json({ message: "User not found" });
   try {
-    const user = await getOne(userId, ['password'], [
-      {
-        model: Property,
-        as: "listedProperties",
-      },
-      {
-        model: Property,
-        as: "savedProperties",
-      }
-    ]);
+    const user = await getOne(userId, ['password']);
     return res.status(200).send(user);
   } catch (err) {
     logger.error(err);
@@ -49,10 +40,10 @@ const getSessionUser = async (req: Request, res: Response) => {
   }
 };
 
-const updateUserById = async (req: Request<{ id: number }>, res: Response) => {
+const updateUserById = async (req: Request<{ id: string }>, res: Response) => {
   const { id } = req.params;
   try {
-    const user = await updateOne(id, req.body);
+    const user = await updateOne(Number(id), req.body);
     if (!user) return res.status(404).json({ message: "User not found" });
     return res.status(200).send(user);
   } catch (err) {
@@ -86,5 +77,20 @@ const deleteUserById = async (req: Request<{ id: number }>, res: Response) => {
   }
 };
 
+const changePassword = async (req: Request<{}, {}, { oldPassword: string, newPassword: string }, {}>, res: Response) => {
+  const { oldPassword, newPassword } = req.body;
+  const { userId } = req.session;
+  try {
+    if (!userId) return res.status(404).json({ message: "User not found" });
+    const user = await getOne(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.password !== oldPassword) return res.status(400).json({ message: "Old password is incorrect" });
+    await updateOne(userId, { password: newPassword });
+    return res.status(200).json({ message: "Password changed successfully" });
+  } catch (err) {
+    logger.error(err);
+    return res.status(500).send(err);
+  }
+};
 
-export { getAllUsers, deleteUserById, getUserById, updateUserById, getSessionUser };
+export { getAllUsers, deleteUserById, getUserById, updateUserById, getSessionUser, changePassword, deleteProfile };

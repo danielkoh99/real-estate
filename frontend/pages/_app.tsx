@@ -6,6 +6,7 @@ import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import SessionManager from "@/components/SessionManager";
@@ -30,6 +31,8 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
+  const router = useRouter();
+
   return (
     <QueryClientProvider client={queryClient}>
       <UIProviders>
@@ -38,7 +41,7 @@ export default function App({
             <SessionManager />
             <NuqsAdapter>
               <ModalProvider>
-                <LayoutTransition>
+                <LayoutTransition transitionKey={router.pathname}>
                   <Component {...pageProps} />
                   <LoginRequiredModal />
                 </LayoutTransition>

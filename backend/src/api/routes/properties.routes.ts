@@ -10,9 +10,7 @@ import {
   getSavedProperties
 } from "../../controllers/property.controller";
 import { uploadAndOptimizeImages } from "../../middlewares/upload.middleware";
-import schemaValidator from "../../middlewares/validation.middleware";
 import { auth } from "../../middlewares/auth.middleware";
-import { validateProperty } from "../../schemas";
 
 const propertyRouter = Router();
 propertyRouter.get("/", getProperties);
@@ -21,7 +19,12 @@ propertyRouter.post("/save", [auth], savePropertyListing);
 propertyRouter.post(
   "/", [
   auth,
-  uploadAndOptimizeImages
+  uploadAndOptimizeImages({
+    targetFolder: 'properties',
+    resize: { width: 1000, height: 1000 },
+    maxFiles: 10,
+    maxFileSizeMB: 25
+  })
 ],
   createProperty
 );

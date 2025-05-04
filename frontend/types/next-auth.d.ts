@@ -1,16 +1,10 @@
 /* eslint-disable unused-imports/no-unused-imports */
-import { DefaultSession } from "next-auth";
+import { DefaultSession, DefaultUser } from "next-auth";
 
+import { User as AppUser } from "@/types";
 declare module "next-auth" {
-  interface User extends DefaultUser {
+  interface User extends AppUser {
     accessToken: string;
-    id: number;
-    email: string;
-    firstName?: string;
-    lastName?: string;
-    savedProperties?: Property[];
-    listedProperties?: Property[];
-    createdAt?: string;
   }
 
   interface Session {

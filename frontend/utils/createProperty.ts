@@ -20,7 +20,8 @@ export const createProperty = async <T>(formData: AddProperty): Promise<T> => {
     }
 
     try {
-        const { response, error } = await apiRequest<T>({
+
+        const data = await apiRequest<T>({
             url: "/property",
             method: "POST",
             data: formDataToSend,
@@ -31,15 +32,7 @@ export const createProperty = async <T>(formData: AddProperty): Promise<T> => {
             },
         });
 
-        if (error) {
-            if (error.response.data.message) {
-                throw error.response.data;
-            } else {
-                throw error;
-            }
-        }
-
-        return response?.data as T;
+        return data;
     } catch (error) {
         console.error("Error in createProperty:", error);
         throw error;
