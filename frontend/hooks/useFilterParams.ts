@@ -5,9 +5,10 @@ import {
   parseAsString,
   parseAsArrayOf,
 } from "nuqs";
-import { useEffect, useCallback } from "react";
-import { debounce } from "lodash";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
+import { debounce } from "lodash";
+import { useRef } from "react";
 
 import usePropertyStore from "@/stores/propertyStore";
 import { useQueryStore } from "@/stores/queryStore";
@@ -56,7 +57,6 @@ const useFilterParams = () => {
       );
     }
   }, [router.isReady]);
-
   const [queryParams, setQueryParams] = useQueryStates(
     {
       page: parseAsInteger,
@@ -78,6 +78,8 @@ const useFilterParams = () => {
     { history: "push" },
   );
 
+  const prevQueryParams = useRef(queryParams);
+
   const debouncedFetchProperties = useCallback(
     debounce(() => {
       fetchProperties();
@@ -85,10 +87,37 @@ const useFilterParams = () => {
     [fetchProperties],
   );
 
+  // Synchronize filters, query params, and fetched data with debounce
   useEffect(() => {
-    updateFilters(queryParams as Partial<PropertyFilters>);
-    debouncedFetchProperties();
-  }, [queryParams, debouncedFetchProperties]);
+    const fetchAndSync = async () => {
+      updateFilters(queryParams as Partial<PropertyFilters>); // Sync filters in the store
+
+      const res = await fetchProperties(); // Fetch properties based on current query params
+
+      if (res) {
+        if (res.currentPage !== queryParams.page) {
+          setQueryParams((prev) => {
+            if (prev.page !== res.currentPage) {
+              return { ...prev, page: res.currentPage };
+            }
+
+            return prev;
+          });
+        }
+      }
+    };
+
+    if (prevQueryParams.current !== queryParams) {
+      fetchAndSync();
+      prevQueryParams.current = queryParams;
+    }
+  }, [
+    queryParams,
+    fetchProperties,
+    setQueryParams,
+    updateFilters,
+    debouncedFetchProperties,
+  ]);
 
   return {
     queryParams,

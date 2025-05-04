@@ -19,7 +19,7 @@ interface Store {
   page: number;
   totalPages: number;
   totalItems: number;
-  fetchProperties: () => Promise<void>;
+  fetchProperties: () => Promise<PropertyRes | null>;
   getAvalaibleCities: () => string[];
   getAvailabelYearsBuilt: () => number[];
   getProperties: () => PropertyResponse[];
@@ -43,46 +43,51 @@ const usePropertyStore = create<Store>((set, get) => ({
     const { filters } = useQueryStore.getState();
 
     set({ loading: true, error: null });
-    const { response, error } = await apiRequest<PropertyRes>({
-      url: "/property",
-      method: "GET",
-      config: {
-        params: {
-          ...filters,
-          ...(filters.districts?.length
-            ? { districts: filters.districts.join(",") }
-            : {}),
+    try {
+      const response = await apiRequest<PropertyRes>({
+        url: "/property",
+        method: "GET",
+        config: {
+          params: {
+            ...filters,
+            ...(filters.districts?.length
+              ? { districts: filters.districts.join(",") }
+              : {}),
+          },
         },
-      },
-    });
-
-    if (error) {
-      set({ error: error.message, loading: false });
-    } else if (response) {
-      set({
-        properties: response.data.properties,
-        loading: false,
-        totalPages: response.data.totalPages,
-        totalItems: response.data.totalItems,
-        page: response.data.currentPage,
       });
+
+      console.log(response);
+      set({
+        properties: response.properties,
+        loading: false,
+        totalPages: response.totalPages,
+        totalItems: response.totalItems,
+        page: response.currentPage,
+      });
+
+      return response;
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
+
+      return null;
     }
   },
 
   fetchUserProperties: async () => {
     set({ loading: true, error: null });
-    const { response, error } = await apiRequest<PropertyRes>({
-      url: "/user/properties",
-      method: "GET",
-    });
+    try {
+      const response = await apiRequest<PropertyRes>({
+        url: "/user/properties",
+        method: "GET",
+      });
 
-    if (error) {
-      set({ error: error.message, loading: false });
-    } else if (response?.data) {
       set({
-        properties: response.data.properties,
+        properties: response.properties,
         loading: false,
       });
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
     }
   },
   getAvalaibleCities: () => {
