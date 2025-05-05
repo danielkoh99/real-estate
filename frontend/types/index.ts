@@ -57,7 +57,7 @@ export interface ListedByUser {
   phone: string;
   email: string;
 }
-enum Roles {
+export enum Roles {
   agent = "agent",
   user = "user",
   admin = "admin",
@@ -109,8 +109,8 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export interface User {
   id: number;
   email: string;
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   createdAt: string;
   updatedAt?: string;
   profileImage?: string;

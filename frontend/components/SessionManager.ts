@@ -12,11 +12,14 @@ export default function SessionManager() {
     if (session) {
       setCurrentUser({
         id: parseInt(session.user.id),
+        firstName: session.user.firstName,
+        lastName: session.user.lastName,
         name: `${session.user.firstName} ${session.user.lastName}`,
         email: session.user.email ?? "",
         phone: session.user.phone,
         createdAt: session.user.createdAt ?? "",
         role: session.user.role,
+        profileImage: session.user.image ?? "",
       });
     } else {
       clearUser();

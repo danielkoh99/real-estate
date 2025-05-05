@@ -1,5 +1,6 @@
 import { Skeleton, Tab, Tabs } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 import PasswordChange from "./components/PasswordChange";
 import PersonalData from "./components/PersonalData";
@@ -32,32 +33,36 @@ export default function UserProfilePage() {
   const { data, error, isLoading } = useQuery<User>({
     queryKey: ["userProfile"],
     queryFn: fetchUserProfile,
+    refetchOnMount: true,
+    staleTime: 0,
   });
+  const tabs = useMemo<TabDefinition[]>(() => {
+    if (!data) return [];
+
+    return [
+      {
+        title: "Profile",
+        content: PersonalData,
+        props: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          createdAt: data.createdAt,
+        },
+      },
+      {
+        title: "Change password",
+        content: PasswordChange,
+        props: {
+          id: data.id,
+        },
+      },
+    ];
+  }, [data]);
 
   if (error) return <Error error_message={error.message} />;
   if (!data) return <div>No data found</div>;
-
-  const { firstName, lastName, email, createdAt, phone, id } = data;
-  const tabs: TabDefinition[] = [
-    {
-      title: "Profile",
-      content: PersonalData,
-      props: {
-        firstName,
-        lastName,
-        email,
-        phone,
-        createdAt,
-      },
-    },
-    {
-      title: "Change password",
-      content: PasswordChange,
-      props: {
-        id,
-      },
-    },
-  ];
 
   return (
     <DefaultLayout>

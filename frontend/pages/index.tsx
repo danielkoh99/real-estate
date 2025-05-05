@@ -1,5 +1,5 @@
 import { Card } from "@heroui/react";
-import { useRef, RefObject } from "react";
+import { useRef } from "react";
 
 import PropertiesView from "@/components/property/PropertiesView";
 import SearchFilters from "@/components/search/SearchFilters";
@@ -8,14 +8,11 @@ import usePropertyStore from "@/stores/propertyStore";
 import PaginationComponent from "@/components/property/Pagination";
 import SortFilters from "@/components/search/SortFilters";
 import TotalPropertiesCount from "@/components/property/TotalPropertiesCount";
-import useFilterParams from "@/hooks/useFilterParams";
 
 export default function IndexPage() {
   const { properties, loading, error } = usePropertyStore();
 
-  useFilterParams();
-
-  const propertiesViewRef= useRef<HTMLDivElement>(null);
+  const propertiesViewRef = useRef<HTMLDivElement>(null);
 
   return (
     <DefaultLayout>

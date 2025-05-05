@@ -16,10 +16,11 @@ userRouter.get("/profile", [auth], getSessionUser);
 userRouter.get("/:id", getUserById);
 userRouter.get("/", [auth], getAllUsers);
 userRouter.post("/", createOne);
-userRouter.put("/:id", [auth,
+userRouter.patch("/:id", [auth,
   uploadAndOptimizeImages({
     targetFolder: "profiles",
     resize: { width: 300, height: 300 },
+    minFiles: 0,
     maxFiles: 1,
     maxFileSizeMB: 5
   })

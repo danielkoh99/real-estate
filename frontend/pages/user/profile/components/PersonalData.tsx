@@ -1,12 +1,20 @@
-import { Card, Avatar, CardFooter, Button } from "@heroui/react";
+import { Card, Avatar, CardFooter, Button, Input } from "@heroui/react";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 import { UpdateUser, User } from "@/types";
 import { apiRequest, formatDateTime } from "@/utils";
 import toast from "@/utils/toast";
-const updateUserProfile = async (data: FormData) => {
-  const response = await apiRequest<UpdateUser>({
-    url: "/user",
+const updateUserProfile = async ({
+  userId,
+  data,
+}: {
+  userId: string;
+  data: Partial<UpdateUser>;
+}) => {
+  const response = await apiRequest<Partial<UpdateUser>>({
+    url: `/user/${userId}`,
     method: "PATCH",
     data: data,
     config: {
@@ -14,6 +22,14 @@ const updateUserProfile = async (data: FormData) => {
         "Content-Type": "multipart/form-data",
       },
     },
+  });
+
+  return response;
+};
+const deleteUserProfile = async () => {
+  const response = await apiRequest({
+    url: "/user",
+    method: "DELETE",
   });
 
   console.log(response);
@@ -28,22 +44,54 @@ export default function PersonalData({
   phone,
   createdAt,
 }: User) {
+  const { data: session } = useSession();
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [formData, setFormData] = useState<Partial<UpdateUser>>({
+    firstName,
+    lastName,
+    email,
+    phone,
+  });
   const formattedDate = formatDateTime(createdAt);
-  const { mutate } = useMutation({
+  const updateMutation = useMutation({
     mutationFn: updateUserProfile,
-
     onSuccess: (response) => {
       toast.success(
         "Success",
         response.message ?? "Profile updated successfully",
-        undefined,
-        20000,
       );
     },
     onError: (error) => {
       toast.error("Error", error.message);
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteUserProfile,
+    onSuccess: (response) => {
+      if (response.message)
+        toast.success("Profile deleted successfully", response.message);
+    },
+    onError: (error) => {
+      toast.error("Failed to delete profile", error.message);
+    },
+  });
+
+  const handleUpdate = (data: Partial<UpdateUser>) => {
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      toast.error("Error", "User ID not found in session.");
+
+      return;
+    }
+
+    updateMutation.mutate({ userId, data });
+  };
+
+  const handleDelete = () => {
+    deleteMutation.mutate();
+  };
 
   return (
     <Card className="w-full shadow-2xl rounded-2xl overflow-hidden">
@@ -71,13 +119,29 @@ export default function PersonalData({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <p className="text-gray-400 text-sm">Email</p>
-            <p className="text-gray-800 font-medium">{email}</p>
+            <Input
+              className="text-gray-800 font-medium"
+              disabled={!isEditing}
+              isDisabled={!isEditing}
+              label="Email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+            />
           </div>
           <div>
             <p className="text-gray-400 text-sm">Phone</p>
-            <p className="text-gray-800 font-medium">
-              {phone || "Not provided"}
-            </p>
+            <Input
+              className="text-gray-800 font-medium"
+              disabled={!isEditing}
+              isDisabled={!isEditing}
+              label="Phone"
+              value={formData.phone}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+            />
           </div>
           <div>
             <p className="text-gray-400 text-sm">Joined</p>
@@ -87,9 +151,9 @@ export default function PersonalData({
       </div>
 
       <CardFooter className="bg-gray-50 p-6 flex flex-col md:flex-row md:justify-between gap-4">
-        <div className="flex gap-2">
-          <Button className="w-full md:w-auto" color="primary" variant="shadow">
-            Edit Profile
+        <div className="flex gap-2 w-full">
+          <Button className="w-full md:w-auto" color="danger" variant="ghost">
+            Delete Profile
           </Button>
           <Button
             className="w-full md:w-auto"
@@ -99,8 +163,19 @@ export default function PersonalData({
             Change password
           </Button>
         </div>
-        <Button className="w-full md:w-auto" color="danger" variant="ghost">
-          Delete Profile
+
+        <Button
+          className="w-full md:w-auto"
+          color="primary"
+          variant="shadow"
+          onPress={() => {
+            if (isEditing) {
+              handleUpdate(formData);
+            }
+            setIsEditing(!isEditing);
+          }}
+        >
+          {isEditing ? "Save" : "Edit"}
         </Button>
       </CardFooter>
     </Card>

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { PropertyType, UserRole } from "./types";
+import { PropertyType, Roles } from "./types";
 export const signinScheme = z.object({
   email: z
     .string()
@@ -17,7 +17,7 @@ export const signupScheme = z.object({
     .email("invalid Email address"),
   password: z.string().min(3, "Password is required"),
   phone: z.string().min(3, "Phone is required"),
-  role: z.nativeEnum(UserRole),
+  role: z.nativeEnum(Roles),
 });
 
 export const propertySchema = z.object({
@@ -36,3 +36,13 @@ export const propertySchema = z.object({
 
   description: z.string().min(10, "Description must be at least 10 characters"),
 });
+
+export const passwordSchema = z
+  .object({
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });

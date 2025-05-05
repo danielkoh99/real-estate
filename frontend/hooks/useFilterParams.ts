@@ -5,9 +5,8 @@ import {
   parseAsString,
   parseAsArrayOf,
 } from "nuqs";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { debounce } from "lodash";
 import { useRef } from "react";
 
 import usePropertyStore from "@/stores/propertyStore";
@@ -80,15 +79,9 @@ const useFilterParams = () => {
 
   const prevQueryParams = useRef(queryParams);
 
-  const debouncedFetchProperties = useCallback(
-    debounce(() => {
-      fetchProperties();
-    }, 300),
-    [fetchProperties],
-  );
-
   // Synchronize filters, query params, and fetched data with debounce
   useEffect(() => {
+    if (router.pathname !== "/") return;
     const fetchAndSync = async () => {
       updateFilters(queryParams as Partial<PropertyFilters>); // Sync filters in the store
 
@@ -111,13 +104,7 @@ const useFilterParams = () => {
       fetchAndSync();
       prevQueryParams.current = queryParams;
     }
-  }, [
-    queryParams,
-    fetchProperties,
-    setQueryParams,
-    updateFilters,
-    debouncedFetchProperties,
-  ]);
+  }, [queryParams, fetchProperties, setQueryParams, updateFilters]);
 
   return {
     queryParams,

@@ -27,7 +27,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> {
   public email!: string;
   public role!: Roles;
   public phone!: string;
-  public profileImage!: string;
+  public profileImage?: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   // Association methods for listed properties
@@ -100,7 +100,7 @@ User.init(
       type: DataTypes.ENUM,
       values: Object.values(Roles),
       defaultValue: Roles.user,
-      allowNull: false,
+      allowNull: true,
     },
     password: {
       type: DataTypes.STRING,

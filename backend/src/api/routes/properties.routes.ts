@@ -22,6 +22,7 @@ propertyRouter.post(
   uploadAndOptimizeImages({
     targetFolder: 'properties',
     resize: { width: 1000, height: 1000 },
+    minFiles: 1,
     maxFiles: 10,
     maxFileSizeMB: 25
   })

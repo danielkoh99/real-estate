@@ -8,17 +8,16 @@ import SaveListingBtn from "./SaveListingBtn";
 import GoToMaps from "./GoToMaps";
 
 import ImageSwiperThumbnail from "@/components/global/ImageSwiperThumbnail";
-import { AddProperty, PropertyResponse } from "@/types";
+import { PropertyResponse } from "@/types";
 
 interface PropertyDetailsProps {
-  property: AddProperty | PropertyResponse;
+  property: PropertyResponse;
   preview?: boolean;
 }
 export default function PropertyDetailsView({
   property,
   preview = false,
 }: PropertyDetailsProps) {
-  console.log(property);
   const Map = useMemo(
     () =>
       dynamic(() => import("./Map"), {

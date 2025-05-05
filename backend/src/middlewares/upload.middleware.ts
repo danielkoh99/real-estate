@@ -36,6 +36,7 @@ interface UploadOptions {
   resize: { width: number; height: number };
   maxFiles: number;
   maxFileSizeMB: number;
+  minFiles: number;
 }
 
 export const uploadAndOptimizeImages = (options: UploadOptions) => {
@@ -43,14 +44,20 @@ export const uploadAndOptimizeImages = (options: UploadOptions) => {
 
   return (req: Request, res: Response, next: NextFunction) => {
     uploader(req, res, async (err) => {
+      const files = req.files as Express.Multer.File[]
       if (err) {
         if (err instanceof multer.MulterError) {
           return next(createError(400, `Multer Error: ${err.message}`, { code: err.code }));
         }
         return next(createError(400, "File upload failed", { error: err.message }));
       }
-
-      if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+      if (!files || files.length === 0) {
+        return next();
+      }
+      if (files.length < options.minFiles) {
+        return next(createError(400, `At least ${options.minFiles} files are required`));
+      }
+      if (!req.files || !Array.isArray(req.files)) {
         return next(createError(400, "No files uploaded"));
       }
 
@@ -66,7 +73,7 @@ export const uploadAndOptimizeImages = (options: UploadOptions) => {
         }
 
         const processedImages = await Promise.all(
-          (req.files as Express.Multer.File[]).map(async (file) => {
+          (files as Express.Multer.File[]).map(async (file) => {
             const ext = path.extname(file.originalname).toLowerCase();
             const uniqueFilename = `${Date.now()}-${randomUUID()}`;
             const finalPath = path.join(userFolder, `${uniqueFilename}.webp`);

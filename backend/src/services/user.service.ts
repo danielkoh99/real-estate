@@ -2,6 +2,7 @@ import { FindOptions, UniqueConstraintError } from "sequelize";
 import Property from "../db/models/Property/Property";
 import User from "../db/models/User/User";
 import { UserAttributes } from "../db/models/User/user.interface";
+import logger from "../logger/logger";
 
 const createOne = async (data: UserAttributes) => {
   try {
