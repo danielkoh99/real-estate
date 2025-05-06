@@ -10,6 +10,7 @@ import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import { logRequest } from "./middlewares/logRequest.middleware";
 import session from "express-session";
+import helmet from "helmet";
 import { __dirname } from "./utils";
 
 const limiter = rateLimit({
@@ -24,6 +25,7 @@ const limiter = rateLimit({
 const app: Express = express();
 const port = process.env.PORT || 3000;
 //middleware
+app.use(helmet());
 app.use(cors());
 app.use(logRequest);
 app.use(express.json());
