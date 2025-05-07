@@ -1,6 +1,6 @@
-import React from "react";
 import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { JSX } from "react";
 
 import CustomModal from "@/components/global/CustomModal";
 import { useModal } from "@/contexts/ModalContext";

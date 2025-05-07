@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import Upload from "@/components/property/Upload";
-import { FileWithPreview, AddProperty, PropertyType } from "@/types";
+import { AddProperty, FileWithPreview, PropertyType } from "@/types";
 import { createProperty } from "@/utils/createProperty";
 import { propertySchema } from "@/schemes";
 import toast from "@/utils/toast";

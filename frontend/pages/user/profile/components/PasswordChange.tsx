@@ -11,6 +11,7 @@ export default function PasswordChange() {
   const {
     register,
     handleSubmit,
+
     formState: { errors, isSubmitting },
   } = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
@@ -30,7 +31,7 @@ export default function PasswordChange() {
       </div>
 
       <Form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <div className="w-full">
           <Input
             label="New password"
             type="password"
@@ -38,7 +39,7 @@ export default function PasswordChange() {
             errorMessage={errors.password?.message}
           />
         </div>
-        <div>
+        <div className="w-full">
           <Input
             label="Confirm password"
             type="password"

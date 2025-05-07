@@ -8,10 +8,10 @@ import SaveListingBtn from "./SaveListingBtn";
 import GoToMaps from "./GoToMaps";
 
 import ImageSwiperThumbnail from "@/components/global/ImageSwiperThumbnail";
-import { PropertyResponse } from "@/types";
+import { AddProperty, PropertyForDisplay } from "@/types";
 
 interface PropertyDetailsProps {
-  property: PropertyResponse;
+  property: PropertyForDisplay | AddProperty;
   preview?: boolean;
 }
 export default function PropertyDetailsView({

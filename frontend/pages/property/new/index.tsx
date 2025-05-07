@@ -8,7 +8,7 @@ import {
   FileWithPreview,
   PropertyType,
   PropertyCategory,
-  NewProperty,
+  AddProperty,
 } from "@/types";
 import AddPropertyForm from "@/components/property/AddPropertyForm";
 import PropertyDetails from "@/components/property/PropertyDetailsView";
@@ -17,7 +17,8 @@ export default function CreateListingPage() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [loadingImage, setLoadingImage] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
-  const [formData, setFormData] = useState<NewProperty>({
+  const [formData, setFormData] = useState<AddProperty>({
+    id: "",
     price: 0,
     city: "",
     description: "",
@@ -29,6 +30,7 @@ export default function CreateListingPage() {
     category: PropertyCategory.USED,
     bathrooms: 0,
     bedrooms: 0,
+    district: undefined,
   });
 
   useEffect(() => {

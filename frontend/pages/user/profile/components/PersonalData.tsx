@@ -155,13 +155,6 @@ export default function PersonalData({
           <Button className="w-full md:w-auto" color="danger" variant="ghost">
             Delete Profile
           </Button>
-          <Button
-            className="w-full md:w-auto"
-            color="secondary"
-            variant="shadow"
-          >
-            Change password
-          </Button>
         </div>
 
         <Button

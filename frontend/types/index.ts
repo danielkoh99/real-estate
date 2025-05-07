@@ -1,71 +1,16 @@
 import { SVGProps } from "react";
 
-export interface PropertyImageAttributes {
-  id: string;
-  url: string;
-  propertyId: string;
-}
-export interface PropertyRes {
-  properties: PropertyResponse[];
-  totalItems: number;
-  currentPage: number;
-  totalPages: number;
-}
-export interface BaseProperty {
-  id: string;
-  price: number;
-  size: number;
-  address: string;
-  type: PropertyType;
-  city: string;
-  district?: BPDistricts;
-  category: PropertyCategory;
-  bedrooms: number;
-  bathrooms: number;
-  yearBuilt: number;
-  description: string;
-}
-
-export type NewProperty = Omit<BaseProperty, "id"> & {
-  images: FileWithPreview[];
-  message?: string;
-};
-export interface UpdateUser extends User {
-  message?: string;
-}
-export interface LocationData {
-  lat: number;
-  lon: number;
-  boundingbox: [number, number, number, number];
-}
-
-export interface PropertyResponse extends BaseProperty {
-  createdAt: string;
-  updatedAt: string;
-  savedByUserId?: number[];
-  listedByUserId: number;
-  lastUpdated?: string;
-  images: PropertyImageAttributes[];
-  squarMeterPrice: number;
-  listedByUser: ListedByUser;
-  location: LocationData;
-}
-export interface ListedByUser {
-  id: number;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-}
 export enum Roles {
   agent = "agent",
   user = "user",
   admin = "admin",
 }
+
 export enum PropertyType {
   APARTMENT = "Apartment",
   HOUSE = "House",
 }
+
 export enum BPDistricts {
   I = "I",
   II = "II",
@@ -91,6 +36,7 @@ export enum BPDistricts {
   XXII = "XXII",
   XXIII = "XXIII",
 }
+
 export enum PropertyCategory {
   USED = "Used",
   NEWLY_BUILT = "Newly Built",
@@ -102,9 +48,19 @@ export enum PropertyCategory {
   VACATION_HOME = "Vacation Home",
   OTHER = "Other",
 }
+
+export enum SortDirection {
+  asc = "ASC",
+  desc = "DESC",
+}
+
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
+
+export interface FileWithPreview extends File {
+  url: string;
+}
 
 export interface User {
   id: number;
@@ -119,22 +75,91 @@ export interface User {
   phone?: string;
 }
 
+export interface UpdateUser extends User {
+  message?: string;
+}
+
 export interface UserInfoResponse extends User {
   savedProperties: PropertyResponse[];
   listedProperties: PropertyResponse[];
 }
+
 export interface LoginResponse extends User, ErrorResponse {
   accessToken: string;
 }
+
 interface ErrorResponse {
   status: number;
   message?: string;
 }
-export enum SortDirection {
-  asc = "ASC",
-  desc = "DESC",
+
+export interface PropertyImageAttributes {
+  id: string;
+  url: string;
+  propertyId: string;
 }
 
+export interface LocationData {
+  lat: number;
+  lon: number;
+  boundingbox: [number, number, number, number];
+}
+
+export interface ListedByUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+}
+export interface AddProperty extends BaseProperty {
+  images: FileWithPreview[];
+  message?: string;
+}
+export interface BaseProperty {
+  id: string;
+  price: number;
+  size: number;
+  address: string;
+  type: PropertyType;
+  city: string;
+  district?: BPDistricts;
+  category: PropertyCategory;
+  bedrooms: number;
+  bathrooms: number;
+  yearBuilt: number;
+  description: string;
+}
+
+export type NewProperty = Omit<BaseProperty, "id"> & {
+  images: FileWithPreview[];
+  message?: string;
+};
+
+export interface PropertyResponse extends BaseProperty {
+  createdAt: string;
+  updatedAt: string;
+  savedByUserId?: number[];
+  listedByUserId: number;
+  lastUpdated?: string;
+  images: PropertyImageAttributes[];
+  squarMeterPrice: number;
+  listedByUser: ListedByUser;
+  location: LocationData;
+}
+
+export interface PropertyRes {
+  properties: PropertyResponse[];
+  totalItems: number;
+  currentPage: number;
+  totalPages: number;
+}
+export type PropertyForDisplay = BaseProperty & {
+  images: FileWithPreview[] | PropertyImageAttributes[];
+  listedByUser?: ListedByUser;
+  location: LocationData;
+  squarMeterPrice?: number;
+};
 export interface PropertyFilters {
   page: number;
   limit: number;
@@ -147,7 +172,4 @@ export interface PropertyFilters {
   sortBy: string;
   sortDirection: SortDirection;
   districts: BPDistricts[] | null;
-}
-export interface FileWithPreview extends File {
-  url: string;
 }

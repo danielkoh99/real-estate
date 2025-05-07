@@ -9,7 +9,7 @@ interface UserStore {
   fetchSavedProperties: () => Promise<void>;
   getSavedProperties: () => BaseProperty[];
   getSavedPropertiesIds: () => string[];
-  saveProperty: (propertyId: string, userId: number) => Promise<void>;
+  saveProperty: (propertyId: string, userId: string) => Promise<void>;
   setCurrentUser: (user: User) => void;
   clearUser: () => void;
 }
@@ -42,7 +42,7 @@ const useUserStore = create<UserStore>((set, get) => ({
         method: "POST",
         data: {
           propertyId: propertyId,
-          userId: userId,
+          userId: Number(userId),
         },
       });
 
