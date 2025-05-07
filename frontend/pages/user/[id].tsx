@@ -45,7 +45,5 @@ async function fetchUserById(id: string) {
   );
   const user: User = await userResponse.json();
 
-  console.log(user);
-
   return user;
 }

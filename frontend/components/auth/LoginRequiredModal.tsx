@@ -5,7 +5,7 @@ import { JSX } from "react";
 import CustomModal from "@/components/global/CustomModal";
 import { useModal } from "@/contexts/ModalContext";
 
-const renderContent = () => {
+const RenderContent = (): JSX.Element => {
   return (
     <div>
       <h1>Logging in is required to use this functionality</h1>
@@ -33,7 +33,7 @@ const LoginRequiredModal: React.FC = (): JSX.Element => {
   return (
     <CustomModal
       actions={RenderActions}
-      content={renderContent}
+      content={RenderContent}
       title="Login required"
     />
   );

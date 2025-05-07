@@ -1,49 +1,26 @@
 import { Card, Avatar, CardFooter, Button, Input } from "@heroui/react";
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 
+import { useUserMutations } from "../profileMutations";
+
 import { UpdateUser, User } from "@/types";
-import { apiRequest, formatDateTime } from "@/utils";
+import { formatDateTime } from "@/utils";
 import toast from "@/utils/toast";
-const updateUserProfile = async ({
-  userId,
-  data,
-}: {
-  userId: string;
-  data: Partial<UpdateUser>;
-}) => {
-  const response = await apiRequest<Partial<UpdateUser>>({
-    url: `/user/${userId}`,
-    method: "PATCH",
-    data: data,
-    config: {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    },
-  });
 
-  return response;
-};
-const deleteUserProfile = async () => {
-  const response = await apiRequest({
-    url: "/user",
-    method: "DELETE",
-  });
-
-  console.log(response);
-
-  return response;
-};
-
+interface PersonalDataProps extends User {
+  onOpen: () => void;
+}
 export default function PersonalData({
   firstName,
   lastName,
   email,
   phone,
   createdAt,
-}: User) {
+  profileImage,
+  onOpen,
+}: PersonalDataProps) {
+  const { updateMutation } = useUserMutations();
   const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [formData, setFormData] = useState<Partial<UpdateUser>>({
@@ -53,29 +30,6 @@ export default function PersonalData({
     phone,
   });
   const formattedDate = formatDateTime(createdAt);
-  const updateMutation = useMutation({
-    mutationFn: updateUserProfile,
-    onSuccess: (response) => {
-      toast.success(
-        "Success",
-        response.message ?? "Profile updated successfully",
-      );
-    },
-    onError: (error) => {
-      toast.error("Error", error.message);
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteUserProfile,
-    onSuccess: (response) => {
-      if (response.message)
-        toast.success("Profile deleted successfully", response.message);
-    },
-    onError: (error) => {
-      toast.error("Failed to delete profile", error.message);
-    },
-  });
 
   const handleUpdate = (data: Partial<UpdateUser>) => {
     const userId = session?.user?.id;
@@ -87,10 +41,6 @@ export default function PersonalData({
     }
 
     updateMutation.mutate({ userId, data });
-  };
-
-  const handleDelete = () => {
-    deleteMutation.mutate();
   };
 
   return (
@@ -152,7 +102,12 @@ export default function PersonalData({
 
       <CardFooter className="bg-gray-50 p-6 flex flex-col md:flex-row md:justify-between gap-4">
         <div className="flex gap-2 w-full">
-          <Button className="w-full md:w-auto" color="danger" variant="ghost">
+          <Button
+            className="w-full md:w-auto"
+            color="danger"
+            variant="ghost"
+            onPress={onOpen}
+          >
             Delete Profile
           </Button>
         </div>

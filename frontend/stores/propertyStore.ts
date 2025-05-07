@@ -57,7 +57,6 @@ const usePropertyStore = create<Store>((set, get) => ({
         },
       });
 
-      console.log(response);
       set({
         properties: response.properties,
         loading: false,

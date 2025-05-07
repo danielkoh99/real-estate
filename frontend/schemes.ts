@@ -4,7 +4,7 @@ import { PropertyType, Roles } from "./types";
 export const signinScheme = z.object({
   email: z
     .string()
-    .min(3, "Your email is requires")
+    .min(3, "Your email is required")
     .email("invalid Email address"),
   password: z.string().min(3, "Password is required"),
 });
@@ -13,7 +13,7 @@ export const signupScheme = z.object({
   name: z.string().min(3, "Name is required"),
   email: z
     .string()
-    .min(3, "Your email is requires")
+    .min(3, "Your email is required")
     .email("invalid Email address"),
   password: z.string().min(3, "Password is required"),
   phone: z.string().min(3, "Phone is required"),
@@ -47,7 +47,7 @@ export const passwordSchema = z
       .regex(/[0-9]/, "Password must contain at least one number")
       .regex(
         /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character"
+        "Password must contain at least one special character",
       ),
     confirmPassword: z.string(),
   })

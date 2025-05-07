@@ -7,7 +7,7 @@ const createToast =
     title: string,
     message: string,
     endContent?: ReactNode,
-    timeout: number = 1000,
+    timeout: number = 3000,
   ) =>
     addToast({ title, description: message, color, endContent, timeout });
 

@@ -1,5 +1,5 @@
 {
-	"name": "next-pages-template",
+	"name": "real-estate",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.2.0",
-		"@heroui/react": "^2.6.14",
+		"@heroui/react": "^2.7.8",
 		"@hookform/resolvers": "^3.9.0",
 		"@react-aria/visually-hidden": "3.8.12",
 		"@tanstack/react-query": "^5.64.2",
@@ -60,7 +60,7 @@
 		"tailwindcss": "3.4.3",
 		"typescript": "5.0.4"
 	},
-	"description": "This is a template for creating applications using Next.js 14 (pages directory) and NextUI (v2).",
+	"description": "",
 	"main": "next.config.js",
 	"keywords": [],
 	"author": "",

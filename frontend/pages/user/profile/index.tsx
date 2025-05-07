@@ -1,9 +1,12 @@
-import { Skeleton, Tab, Tabs } from "@heroui/react";
+import { Button, Skeleton, Tab, Tabs, useDisclosure } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { signOut } from "next-auth/react";
 
 import PasswordChange from "./components/PasswordChange";
 import PersonalData from "./components/PersonalData";
+import DeleteModal from "./components/DeleteModal";
+import { useUserMutations } from "./profileMutations";
 
 import DefaultLayout from "@/layouts/default";
 import { User, UserInfoResponse } from "@/types";
@@ -36,6 +39,10 @@ export default function UserProfilePage() {
     refetchOnMount: true,
     staleTime: 0,
   });
+
+  const { deleteMutation } = useUserMutations();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const tabs = useMemo<TabDefinition[]>(() => {
     if (!data) return [];
 
@@ -49,6 +56,8 @@ export default function UserProfilePage() {
           email: data.email,
           phone: data.phone,
           createdAt: data.createdAt,
+          profileImage: data.profileImage,
+          onOpen: onOpen,
         },
       },
       {
@@ -62,7 +71,19 @@ export default function UserProfilePage() {
   }, [data]);
 
   if (error) return <Error error_message={error.message} />;
-  if (!data) return <div>No data found</div>;
+  if (!data)
+    return (
+      <div>
+        No user found sign out{" "}
+        <Button color="primary" onPress={() => signOut()}>
+          here
+        </Button>
+      </div>
+    );
+  const onDelete = async () => {
+    await deleteMutation.mutateAsync(data.id.toString());
+    await signOut();
+  };
 
   return (
     <DefaultLayout>
@@ -94,6 +115,11 @@ export default function UserProfilePage() {
           })}
         </Tabs>
       </div>
+      <DeleteModal
+        isOpen={isOpen}
+        onConfirm={onDelete}
+        onOpenChange={onOpenChange}
+      />
     </DefaultLayout>
   );
 }
