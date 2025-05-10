@@ -20,6 +20,8 @@ interface PropertyAttributes {
   listedByUserId?: number;
   images?: PropertyImageAttributes[];
   locationId: number;
+  oldPrice?: number;
+  priceChange?: number;
 }
 interface LocationData {
   lat: string;
@@ -58,6 +60,7 @@ enum PropertyType {
 }
 enum PropertyCategory {
   USED = "Used",
+  NEW = "New",
   NEWLY_BUILT = "Newly Built",
   UNDER_CONSTRUCTION = "Under Construction",
   RENOVATED = "Renovated",

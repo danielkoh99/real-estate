@@ -18,6 +18,7 @@ import path from "path";
 import { __dirname } from "../utils";
 import { createLocation } from "../services/location.service";
 import { nanoid } from "nanoid";
+import PropertyPriceHistory from "./models/PropertyPriceHistory/PropertyPriceHistory";
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -40,6 +41,19 @@ async function generateRandomImages(propertyId: string) {
     });
   }
   return await PropertyImage.bulkCreate(images);
+}
+async function generatePriceHistory(property: Property) {
+  const priceHistory = [];
+  for (let i = 0; i < randomInt(2, 5); i++) {
+    // +/- 10%
+    const newPrice = property.price * (1 + randomInt(-10, 10) / 100);
+    priceHistory.push({
+      propertyId: property.id,
+      price: newPrice,
+      changedAt: new Date(),
+    });
+  }
+  return await PropertyPriceHistory.bulkCreate(priceHistory);
 }
 const generateRandomLocation = () => {
   const lat = faker.location.latitude({ precision: 6 }).toString();
@@ -98,7 +112,7 @@ async function seed() {
       role: Roles.user,
     });
     const createdUsers = await User.bulkCreate(users, { returning: true });
-    const properties: PropertyAttributes[] = [];
+    const properties = [];
 
     const locationPromises = Array.from({ length: 200 }).map(async () => {
       const { lat, lon, boundingbox } = generateRandomLocation();
@@ -106,7 +120,7 @@ async function seed() {
     });
     const locations = await Promise.all(locationPromises);
 
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 2; i++) {
       const location = locations[i];
       const price = parseFloat(faker.commerce.price());
       const size = randomInt(15, 200);
@@ -117,8 +131,7 @@ async function seed() {
           ? faker.helpers.arrayElement(Object.values(BPDistricts))
           : null;
 
-      const property: PropertyAttributes = {
-        id: nanoid(10),
+      const property = {
         listedByUserId: faker.helpers.arrayElement(createdUsers).id,
         size,
         city: randomCity,
@@ -153,6 +166,7 @@ async function seed() {
 
     for (const property of createdProperties) {
       await generateRandomImages(property.id);
+      await generatePriceHistory(property);
     }
     for (const user of createdUsers) {
       const userProperties = createdProperties.filter(

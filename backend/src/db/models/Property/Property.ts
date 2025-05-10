@@ -10,6 +10,7 @@ import db from "../../config_postgres";
 
 import PropertyImage from "../Image/Image";
 import Location from "../Location/Location";
+import PropertyPriceHistory from "../PropertyPriceHistory/PropertyPriceHistory";
 interface PropertyCreationAttributes
   extends Optional<PropertyAttributes, "id"> { }
 
@@ -34,9 +35,13 @@ class Property
   public yearBuilt!: number;
   public locationId!: number;
   public location?: LocationData;
+  public priceHistory?: PropertyPriceHistory[];
+  public priceChange?: number;
+  public oldPrice?: number;
+  public readonly images?: PropertyImage[];
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
-  public readonly images?: PropertyImage[];
+  public readonly deletedAt!: Date;
   public getImages!: HasManyGetAssociationsMixin<PropertyImage>;
 }
 Property.init(
@@ -99,6 +104,14 @@ Property.init(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    oldPrice: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    priceChange: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
     size: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -109,7 +122,32 @@ Property.init(
     },
   },
   { tableName: "properties", timestamps: true, sequelize: db, paranoid: true }
+
 );
+Property.addHook("beforeCreate", async (property) => {
+  console.log("beforeCreate property")
+  property.dataValues.oldPrice = property.dataValues.price;
+  property.dataValues.priceChange = 0;
+})
+
+Property.addHook("beforeUpdate", async (property) => {
+  const oldPrice = property.previous('price') as number;
+  property.dataValues.priceChange = ((property.dataValues.price - oldPrice) / oldPrice) * 100
+  await PropertyPriceHistory.create({
+    propertyId: property.getDataValue('id'),
+    price: property.dataValues.price,
+    changedAt: new Date(),
+  });
+})
+Property.hasMany(PropertyPriceHistory, {
+  foreignKey: "propertyId",
+  as: "priceHistory",
+});
+
+PropertyPriceHistory.belongsTo(Property, {
+  foreignKey: "propertyId",
+  as: "property",
+});
 Property.hasMany(PropertyImage, {
   foreignKey: "propertyId",
   as: "images",
