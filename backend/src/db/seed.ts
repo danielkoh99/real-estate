@@ -1,12 +1,10 @@
 import fs from "fs"
-// import db from "./config";
 import db from "./config_postgres";
 import { faker } from "@faker-js/faker";
 import Property from "./models/Property/Property";
 import User from "./models/User/User";
 import {
   BPDistricts,
-  PropertyAttributes,
   PropertyCategory,
   PropertyType,
 } from "./models/Property/property.interface";
@@ -17,8 +15,8 @@ import PropertyImage from "./models/Image/Image";
 import path from "path";
 import { __dirname } from "../utils";
 import { createLocation } from "../services/location.service";
-import { nanoid } from "nanoid";
 import PropertyPriceHistory from "./models/PropertyPriceHistory/PropertyPriceHistory";
+import "./models/associations"
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }

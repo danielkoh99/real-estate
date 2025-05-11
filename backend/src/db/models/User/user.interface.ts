@@ -8,6 +8,7 @@ interface UserAttributes {
   createdAt?: Date;
   updatedAt?: Date;
   role: Roles;
+  verified?: boolean;
   profileImage?: string;
   savedProperties?: string[];
   listedProperties?: string[];

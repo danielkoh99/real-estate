@@ -139,24 +139,4 @@ Property.addHook("beforeUpdate", async (property) => {
     changedAt: new Date(),
   });
 })
-Property.hasMany(PropertyPriceHistory, {
-  foreignKey: "propertyId",
-  as: "priceHistory",
-});
-
-PropertyPriceHistory.belongsTo(Property, {
-  foreignKey: "propertyId",
-  as: "property",
-});
-Property.hasMany(PropertyImage, {
-  foreignKey: "propertyId",
-  as: "images",
-});
-
-PropertyImage.belongsTo(Property, {
-  foreignKey: "propertyId",
-  as: "property",
-});
-Property.belongsTo(Location, { foreignKey: "locationId", as: "location" });
-Location.hasMany(Property, { foreignKey: "locationId", as: "properties" });
 export default Property;

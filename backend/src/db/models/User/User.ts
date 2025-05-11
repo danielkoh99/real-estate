@@ -27,6 +27,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> {
   public email!: string;
   public role!: Roles;
   public phone!: string;
+  public verified!: boolean;
   public profileImage?: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -118,6 +119,11 @@ User.init(
       type: DataTypes.STRING,
       unique: true,
     },
+    verified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    }
   },
   {
     tableName: "users",
@@ -126,21 +132,6 @@ User.init(
     paranoid: true,
   }
 );
-User.hasMany(Property, {
-  as: "listedProperties",
-  foreignKey: "listedByUserId",
-});
-User.belongsToMany(Property, {
-  through: "UserSavedProperties",
-  as: "savedProperties",
-  foreignKey: "userId",
-});
 
-Property.belongsTo(User, { as: "listedByUser", foreignKey: "listedByUserId" });
-Property.belongsToMany(User, {
-  through: "UserSavedProperties",
-  as: "savedByUsers",
-  foreignKey: "propertyId",
-});
 
 export default User;

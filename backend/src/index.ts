@@ -12,6 +12,7 @@ import { logRequest } from "./middlewares/logRequest.middleware";
 import session from "express-session";
 import helmet from "helmet";
 import { __dirname } from "./utils";
+import dbInit from "./db/init";
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes window
@@ -63,7 +64,7 @@ app.use(errorMiddleware);
 
 app.listen(port, async () => {
   try {
-    await db.authenticate();
+    await dbInit();
     logger.info(`Database connected to discover`);
     logger.info(`[server]: Server is running at http://localhost:${port}`);
     logger.info(path.join(__dirname, '../../', 'uploads'));
