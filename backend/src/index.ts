@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import cookieParser from "cookie-parser";
-import db from "./db/config";
-import router from "./api/routes";
+import v1routes from "./api/routes/v1";
 import path from "path";
 import logger from "./logger/logger";
 import { errorMiddleware } from "./middlewares/error.middleware";
@@ -48,7 +47,7 @@ app.use(
     },
   })
 );
-app.use("/api", router);
+app.use("/api/v1", v1routes);
 app.use("/uploads", express.static(path.join(__dirname, '../../', 'uploads')));
 
 app.get("/", (req: Request, res: Response) => {

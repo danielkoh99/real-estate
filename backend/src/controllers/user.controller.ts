@@ -1,7 +1,16 @@
 import { Request, Response } from "express";
-import { getAll, getOne, deleteOne, updateOne } from "../services/user.service";
+import { getAll, getOne, deleteOne, updateOne, createOne } from "../services/user.service";
 import logger from "../logger/logger";
 import Property from "../db/models/Property/Property";
+const createUser = async (req: Request, res: Response) => {
+  try {
+    const user = await createOne(req.body);
+    return res.status(200).send(user);
+  } catch (err) {
+    logger.error(err);
+    return res.status(500).send(err);
+  }
+}
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await getAll();
@@ -93,4 +102,4 @@ const changePassword = async (req: Request<{}, {}, { oldPassword: string, newPas
   }
 };
 
-export { getAllUsers, deleteUserById, getUserById, updateUserById, getSessionUser, changePassword, deleteProfile };
+export { getAllUsers, deleteUserById, getUserById, updateUserById, getSessionUser, changePassword, deleteProfile, createUser };

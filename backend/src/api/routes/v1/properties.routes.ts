@@ -1,16 +1,8 @@
 import { Router } from "express";
-import {
-  createProperty,
-  getProperties,
-  getPropertyById,
-  updatePropertyById,
-  deletePropertyById,
-  relatedProperties,
-  savePropertyListing,
-  getSavedProperties
-} from "../../controllers/property.controller";
-import { uploadAndOptimizeImages } from "../../middlewares/upload.middleware";
-import { auth } from "../../middlewares/auth.middleware";
+import { getProperties, getSavedProperties, savePropertyListing, createProperty, getPropertyById, relatedProperties, updatePropertyById, deletePropertyById } from "../../../controllers/property.controller";
+import { auth } from "../../../middlewares/auth.middleware";
+import { uploadAndOptimizeImages } from "../../../middlewares/upload.middleware";
+
 
 const propertyRouter = Router();
 propertyRouter.get("/", getProperties);
