@@ -1,5 +1,9 @@
 import { SVGProps } from "react";
 
+export enum PublicRoles {
+  User = "user",
+  Agent = "agent",
+}
 export enum Roles {
   agent = "agent",
   user = "user",
@@ -61,7 +65,10 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export interface FileWithPreview extends File {
   url: string;
 }
-
+export interface CreateUser extends User {
+  password: string;
+  message?: string;
+}
 export interface User {
   id: number;
   email: string;
@@ -70,7 +77,7 @@ export interface User {
   createdAt: string;
   updatedAt?: string;
   profileImage?: string;
-  role?: Roles;
+  role?: Roles | PublicRoles;
   name?: string;
   phone?: string;
 }
@@ -111,6 +118,7 @@ export interface ListedByUser {
   lastName: string;
   phone: string;
   email: string;
+  profileImage?: string;
 }
 export interface AddProperty extends BaseProperty {
   images: FileWithPreview[];

@@ -4,6 +4,7 @@ import { hashPassword, verifyPassword } from "../utils/auth.utils";
 import { UserRequestBody, UResponseBody } from "../types/types";
 import { Roles } from "../db/models/User/user.interface";
 import { signToken } from "../middlewares/auth.middleware";
+import logger from "../logger/logger";
 const registerUser = async (
   req: Request<{}, {}, UserRequestBody>,
   res: Response<UResponseBody>
@@ -29,6 +30,7 @@ const registerUser = async (
     });
     return res.status(200).send({ message: "Registration successful" });
   } catch (err) {
+    logger.error(err);
     return res.status(500).send({ message: "Error in registering user" });
   }
 };
@@ -55,7 +57,7 @@ const signInUser = async (
     }
     // Authenticate user with jwt
     const token = signToken({ userId: user.id, role: user.role });
-    res.cookie("token", token, { httpOnly: true, secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.cookie("token", token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 60 * 60 * 1000 });
 
     return res.status(200).send({
       id: user.id,
@@ -65,6 +67,7 @@ const signInUser = async (
       accessToken: token,
     });
   } catch (err) {
+    logger.error(err);
     return res.status(500).send({ message: "Sign in error" });
   }
 };

@@ -3,18 +3,17 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { passwordSchema } from "@/schemes";
+import { passwordResetScheme } from "@/schemes";
 
-type PasswordFormData = z.infer<typeof passwordSchema>;
+type PasswordFormData = z.infer<typeof passwordResetScheme>;
 
 export default function PasswordChange() {
   const {
     register,
     handleSubmit,
-
     formState: { errors, isSubmitting },
   } = useForm<PasswordFormData>({
-    resolver: zodResolver(passwordSchema),
+    resolver: zodResolver(passwordResetScheme),
   });
 
   const onSubmit = async (data: PasswordFormData) => {

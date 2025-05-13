@@ -3,7 +3,7 @@ import {
   ChatBubbleBottomCenterTextIcon,
   PhoneIcon,
 } from "@heroicons/react/24/outline";
-import { Card, CardBody, Avatar, Button } from "@heroui/react";
+import { Card, CardBody, Button, User } from "@heroui/react";
 import Link from "next/link";
 
 import { PropertyResponse } from "@/types";
@@ -16,6 +16,7 @@ export default function ContactUploader({
   if (!listedByUser) return null;
   const mailtoLink = `mailto:${listedByUser.email}`;
   const callPhoneLink = `tel:${listedByUser.phone}`;
+  const name = `${listedByUser.firstName} ${listedByUser.lastName}`;
 
   return (
     <Card>
@@ -25,12 +26,15 @@ export default function ContactUploader({
           className="flex items-center gap-4 mb-4 transition duration-300 hover:bg-gray-100 hover:shadow-md p-2 rounded-lg"
           href={`/user/${listedByUser.id}`}
         >
-          <Avatar isFocusable name={listedByUser.firstName} size="lg" />
-          <div>
-            <p className="font-medium text-gray-800 hover:text-gray-900">
-              {listedByUser.firstName} {listedByUser.lastName}
-            </p>
-          </div>
+          <User
+            avatarProps={{
+              src:
+                listedByUser.profileImage ||
+                "https://i.pravatar.cc/150?u=a04258114e29026702d",
+            }}
+            name={name}
+            // description="Product Designer"
+          />
         </Link>
 
         <Button className="w-full mb-4 text-white" color="primary">

@@ -88,7 +88,6 @@ async function seed() {
 
     for (let i = 0; i < 10; i++) {
       users.push({
-        id: i + 1,
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         email: faker.internet.email({
@@ -101,7 +100,6 @@ async function seed() {
       });
     }
     users.push({
-      id: 11,
       firstName: "John",
       lastName: "Doe",
       phone: "+1234567890",

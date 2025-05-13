@@ -1,14 +1,15 @@
-import { Card, Avatar, CardFooter, Button, Input } from "@heroui/react";
+import type { UpdateUser, User as U } from "@/types";
+
+import { Card, CardFooter, Button, Input, User } from "@heroui/react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useUserMutations } from "../profileMutations";
 
-import { UpdateUser, User } from "@/types";
 import { formatDateTime } from "@/utils";
 import toast from "@/utils/toast";
 
-interface PersonalDataProps extends User {
+interface PersonalDataProps extends U {
   onOpen: () => void;
 }
 export default function PersonalData({
@@ -48,12 +49,14 @@ export default function PersonalData({
       <div className="relative h-48 bg-gradient-to-r from-blue-500 to-indigo-600">
         <div className="absolute inset-0 bg-black/20" />
         <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-          <Avatar
-            isBordered
-            alt="Profile Picture"
-            className="w-24 h-24"
-            name={firstName}
-            size="lg"
+          <User
+            avatarProps={{
+              src:
+                profileImage ||
+                "https://i.pravatar.cc/150?u=a04258114e29026702d",
+            }}
+            name={`${firstName} ${lastName}`}
+            // description="Product Designer"
           />
         </div>
       </div>

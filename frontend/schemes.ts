@@ -1,6 +1,18 @@
 import { z } from "zod";
 
-import { PropertyType, Roles } from "./types";
+import { PropertyType, PublicRoles } from "./types";
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters long.")
+  .max(100, "Password is too long.")
+  .regex(/[A-Z]/, "Password must include at least one uppercase letter.")
+  .regex(/[a-z]/, "Password must include at least one lowercase letter.")
+  .regex(/[0-9]/, "Password must include at least one number.")
+  .regex(
+    /[!@#$%^&*(),.?":{}|<>]/,
+    "Password must contain at least one special character",
+  );
+
 export const signinScheme = z.object({
   email: z
     .string()
@@ -10,14 +22,15 @@ export const signinScheme = z.object({
 });
 
 export const signupScheme = z.object({
-  name: z.string().min(3, "Name is required"),
   email: z
     .string()
     .min(3, "Your email is required")
     .email("invalid Email address"),
-  password: z.string().min(3, "Password is required"),
+  firstName: z.string().min(3, "First name is required"),
+  lastName: z.string().min(3, "Last name is required"),
+  password: passwordSchema,
   phone: z.string().min(3, "Phone is required"),
-  role: z.nativeEnum(Roles),
+  role: z.nativeEnum(PublicRoles),
 });
 
 export const propertySchema = z.object({
@@ -33,22 +46,12 @@ export const propertySchema = z.object({
   city: z.string().min(2, "City is required"),
   district: z.string().optional(),
   yearBuilt: z.coerce.number().optional(),
-
   description: z.string().min(10, "Description must be at least 10 characters"),
 });
 
-export const passwordSchema = z
+export const passwordResetScheme = z
   .object({
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[0-9]/, "Password must contain at least one number")
-      .regex(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character",
-      ),
+    password: passwordSchema,
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {

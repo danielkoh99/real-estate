@@ -1,4 +1,4 @@
-import { UpdateUser } from "@/types";
+import { CreateUser, UpdateUser } from "@/types";
 import { apiRequest } from "@/utils";
 
 const updateUserProfile = async ({
@@ -29,5 +29,14 @@ const deleteUserProfile = async (userId: string) => {
 
     return response;
 };
+const signUpUser = async (data: Partial<CreateUser>) => {
+    const response = await apiRequest<Partial<CreateUser>>({
+        url: "/auth/signup",
+        method: "POST",
+        data: data,
+    });
 
-export { updateUserProfile, deleteUserProfile };
+    return response;
+};
+
+export { updateUserProfile, deleteUserProfile, signUpUser };
