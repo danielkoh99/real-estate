@@ -1,10 +1,42 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import User from "../db/models/User/User";
-import { hashPassword, verifyPassword } from "../utils/auth.utils";
+import { hashPassword, sendNewVerificationLink, verifyPassword } from "../utils/auth.utils";
 import { UserRequestBody, UResponseBody } from "../types/types";
 import { Roles } from "../db/models/User/user.interface";
-import { signToken } from "../middlewares/auth.middleware";
+import { signToken, verifyToken } from "../middlewares/auth.middleware";
 import logger from "../logger/logger";
+const verifyEmail = async (req: Request<{ token: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { token } = req.params;
+
+    if (typeof token !== "string") {
+      throw new Error("Missing or invalid token");
+    }
+
+    const payload = verifyToken<{ email: string }>(token);
+
+    if (!payload) {
+      console.log("Invalid or expired token")
+      throw new Error("Invalid or expired token");
+    }
+
+    const { email } = payload;
+    const user = await User.findOne({ where: { email: email } });
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    if (user.verified) {
+      return res.status(200).send({ message: "Email already verified" });
+    }
+    user.verified = true;
+    await user.save();
+
+    return res.status(200).send({ message: "Email verified successfully" });
+  } catch (err: any) {
+    return next(err);
+  }
+};
 const registerUser = async (
   req: Request<{}, {}, UserRequestBody>,
   res: Response<UResponseBody>
@@ -28,6 +60,7 @@ const registerUser = async (
       password: hashedPassword,
       phone: phone
     });
+    await sendNewVerificationLink(email, firstName);
     return res.status(200).send({ message: "Registration successful" });
   } catch (err) {
     logger.error(err);
@@ -47,7 +80,9 @@ const signInUser = async (
     if (!user) {
       return res.status(404).json({ message: "Email not found" });
     }
-
+    if (!user.verified) {
+      return res.status(401).json({ message: "Email not verified" });
+    }
     // Verify password
     const passwordValid = verifyPassword(password, user.password);
     if (!passwordValid) {
@@ -83,4 +118,4 @@ const signOutUser = async (
   }
   return res.status(400).json({ message: "No token provided" });
 };
-export { registerUser, signInUser, signOutUser };
+export { registerUser, signInUser, signOutUser, verifyEmail };

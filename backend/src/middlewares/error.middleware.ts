@@ -9,7 +9,6 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  logger.error("runs")
   const statusCode = err.status || 500;
   const errorMessage = err.message || "Something went wrong";
 

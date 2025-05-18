@@ -105,11 +105,12 @@ User.init(
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     phone: {
       type: DataTypes.STRING,
       unique: true,
+      allowNull: true
     },
     profileImage: {
       type: DataTypes.STRING,

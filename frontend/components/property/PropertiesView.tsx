@@ -9,8 +9,8 @@ const PropertiesView: React.FC<{
   properties: PropertyResponse[] | undefined;
   error: any;
   loading: boolean;
-  ref: React.RefObject<HTMLDivElement|null>;
-}> = ({ properties, error, loading,ref }): JSX.Element => {
+  ref: React.RefObject<HTMLDivElement | null>;
+}> = ({ properties, error, loading, ref }): JSX.Element => {
   const [delayedLoading, setDelayedLoading] = useState(false);
 
   useEffect(() => {
@@ -28,7 +28,11 @@ const PropertiesView: React.FC<{
   return (
     <>
       {!properties?.length && <NotFound />}
-      <PropertyList ref={ref} delayedLoading={delayedLoading} properties={properties} />
+      <PropertyList
+        ref={ref}
+        delayedLoading={delayedLoading}
+        properties={properties}
+      />
     </>
   );
 };

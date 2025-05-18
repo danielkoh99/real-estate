@@ -90,7 +90,7 @@ const changePassword = async (req: Request<{}, {}, { oldPassword: string, newPas
   const { oldPassword, newPassword } = req.body;
   const { userId } = req.session;
   try {
-    if (!userId) return res.status(404).json({ message: "User not found" });
+    if (!userId) return res.status(404).json({ message: "UserID not provided" });
     const user = await getOne(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
     if (user.password !== oldPassword) return res.status(400).json({ message: "Old password is incorrect" });

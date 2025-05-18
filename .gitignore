@@ -28,5 +28,6 @@ database.sqlite
 
 #local image uploads
 backend/uploads
+backend/src/react-email-starter
 .env
 *.env

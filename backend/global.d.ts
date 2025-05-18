@@ -8,5 +8,9 @@ declare namespace NodeJS {
     DB_PORT: string;
     DB_USER: string;
     DB_PASSWORD: string;
+    SERVER_URL: string;
+    FRONTEND_URL: string;
+    GMAIL_USER: string;
+    GMAIL_PASS: string;
   }
 }

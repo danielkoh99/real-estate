@@ -49,7 +49,7 @@ app.use(
 );
 app.use("/api/v1", v1routes);
 app.use("/uploads", express.static(path.join(__dirname, '../../', 'uploads')));
-
+app.use("/static", express.static(path.join(__dirname, '../../src/emails', 'static')))
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running");
 });

@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
+import { useState } from "react";
+import Link from "next/link";
 
 import { signinScheme } from "@/schemes";
 import toast from "@/utils/toast";
@@ -12,6 +14,7 @@ import toast from "@/utils/toast";
 type Schema = z.infer<typeof signinScheme>;
 
 const LoginForm = () => {
+  const [retries, setRetries] = useState<number>(0);
   const router = useRouter();
   const {
     register,
@@ -36,7 +39,7 @@ const LoginForm = () => {
     } else {
       router.push(callbackUrl);
     }
-
+    setRetries((prev) => prev + 1);
     reset();
   };
 
@@ -45,6 +48,7 @@ const LoginForm = () => {
       className="flex flex-col gap-5 w-full"
       onSubmit={handleSubmit(handleLogin)}
     >
+      {retries}
       <Input
         {...register("email")}
         fullWidth
@@ -64,6 +68,11 @@ const LoginForm = () => {
       <Button color="primary" type="submit">
         Login
       </Button>
+      {retries > 3 && (
+        <Link className="text-sm text-blue-500" href="/forgot-password">
+          Forgot passwod? Click here to change it.
+        </Link>
+      )}
     </form>
   );
 };

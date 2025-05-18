@@ -33,7 +33,6 @@ export default function ContactUploader({
                 "https://i.pravatar.cc/150?u=a04258114e29026702d",
             }}
             name={name}
-            // description="Product Designer"
           />
         </Link>
 
