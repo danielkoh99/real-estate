@@ -14,12 +14,12 @@ import { __dirname } from "./utils";
 import dbInit from "./db/init";
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes window
-  max: 10000,
-  message: "Too many requests from this IP, please try again after 15 minutes",
-  headers: true, // Send rate limit info back in the response headers
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+ windowMs: 15 * 60 * 1000, // 15 minutes window
+ max: 10000,
+ message: "Too many requests from this IP, please try again after 15 minutes",
+ headers: true, // Send rate limit info back in the response headers
+ standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+ legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
 const app: Express = express();
@@ -32,42 +32,44 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(limiter);
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'fallbackSecret',  // Replace with your secret key
+app.use(
+ session({
+  secret: process.env.SESSION_SECRET || "fallbackSecret", // Replace with your secret key
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set secure: true if using HTTPS
-}));
+  cookie: { secure: false }, // Set secure: true if using HTTPS
+ })
+);
 app.use(
-  "/docs",
-  swaggerUi.serve,
-  swaggerUi.setup(undefined, {
-    swaggerOptions: {
-      url: "/swagger.json",
-    },
-  })
+ "/docs",
+ swaggerUi.serve,
+ swaggerUi.setup(undefined, {
+  swaggerOptions: {
+   url: "/swagger.json",
+  },
+ })
 );
 app.use("/api/v1", v1routes);
-app.use("/uploads", express.static(path.join(__dirname, '../../', 'uploads')));
-app.use("/static", express.static(path.join(__dirname, '../../src/emails', 'static')))
+app.use("/uploads", express.static(path.join(__dirname, "../../", "uploads")));
+app.use("/static", express.static(path.join(__dirname, "../../src/emails", "static")));
 app.get("/", (req: Request, res: Response) => {
-  res.send("Server is running");
+ res.send("Server is running");
 });
 // app.get("*", (req, res) => {
 //   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 // });
 app.use((req, res, next) => {
-  res.status(404).json({ message: "Route not found" });
+ res.status(404).json({ message: "Route not found" });
 });
 app.use(errorMiddleware);
 
 app.listen(port, async () => {
-  try {
-    await dbInit();
-    logger.info(`Database connected to discover`);
-    logger.info(`[server]: Server is running at http://localhost:${port}`);
-    logger.info(path.join(__dirname, '../../', 'uploads'));
-  } catch (err) {
-    logger.error(err);
-  }
+ try {
+  await dbInit();
+  logger.info(`Database connected to discover`);
+  logger.info(`[server]: Server is running at http://localhost:${port}`);
+  logger.info(path.join(__dirname, "../../", "uploads"));
+ } catch (err) {
+  logger.error(err);
+ }
 });

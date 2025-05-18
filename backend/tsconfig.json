@@ -1,36 +1,36 @@
 {
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "module": "ESNext",
-    "target": "ES6",
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "baseUrl": "./src",
-    "strict": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "@/*": ["src/*"],
-      "@emails/*": ["react-email-starter/emails/*"]
-    }
-  },
-  "include": ["src/**/**/*", "global.d.ts","types/**/*.d.ts"],
-  "exclude": ["./node_modules"],
-  "ts-node": {
-    "files": true,
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
+ "compilerOptions": {
+  "jsx": "react-jsx",
+  "module": "ESNext",
+  "target": "ES6",
+  "esModuleInterop": true,
+  "moduleResolution": "node",
+  "outDir": "./dist",
+  "rootDir": "./src",
+  "baseUrl": "./src",
+  "strict": true,
+  "experimentalDecorators": true,
+  "emitDecoratorMetadata": true,
+  "noImplicitAny": true,
+  "strictNullChecks": true,
+  "strictFunctionTypes": true,
+  "strictBindCallApply": true,
+  "strictPropertyInitialization": true,
+  "noImplicitThis": true,
+  "alwaysStrict": true,
+  "noImplicitReturns": true,
+  "noFallthroughCasesInSwitch": true,
+  "forceConsistentCasingInFileNames": true,
+  "paths": {
+   "@/*": ["src/*"],
+   "@emails/*": ["react-email-starter/emails/*"]
   }
+ },
+ "include": ["src/**/**/*", "global.d.ts", "types/**/*.d.ts"],
+ "exclude": ["./node_modules"],
+ "ts-node": {
+  "files": true,
+  "esm": true,
+  "experimentalSpecifierResolution": "node"
+ }
 }

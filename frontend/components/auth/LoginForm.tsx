@@ -48,7 +48,6 @@ const LoginForm = () => {
       className="flex flex-col gap-5 w-full"
       onSubmit={handleSubmit(handleLogin)}
     >
-      {retries}
       <Input
         {...register("email")}
         fullWidth
