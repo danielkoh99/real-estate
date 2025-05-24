@@ -9,7 +9,6 @@ const createOne = async (data: UserAttributes) => {
   return user;
  } catch (error) {
   if (error instanceof UniqueConstraintError) {
-   console.log(error.errors[0].message);
    throw new Error(error.errors[0].message);
   } else {
    throw new Error("not found");

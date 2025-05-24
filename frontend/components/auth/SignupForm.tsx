@@ -35,7 +35,6 @@ const SignupForm = () => {
   });
 
   const onSignup = (data: Schema) => {
-    console.log(data);
     mutate(data);
   };
 
