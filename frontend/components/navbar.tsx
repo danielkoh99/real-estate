@@ -17,7 +17,6 @@ import { useRouter } from "next/navigation";
 
 import UserAvatar from "@/components/auth/UserAvatar";
 import { siteConfig, useFilteredNavItems } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
 
 export const Navbar = () => {
@@ -53,7 +52,7 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <ThemeSwitch />
+        {/* <ThemeSwitch /> */}
         <NavbarMenuToggle className="lg:hidden" />
         {session ? (
           <UserAvatar />
