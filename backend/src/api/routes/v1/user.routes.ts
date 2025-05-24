@@ -5,7 +5,6 @@ import {
  getAllUsers,
  updateUserById,
  deleteUserById,
- changePassword,
  createUser,
 } from "../../../controllers/user.controller";
 import { auth } from "../../../middlewares/auth.middleware";
@@ -31,5 +30,4 @@ userRouter.patch(
  updateUserById
 );
 userRouter.delete("/:id", [auth], deleteUserById);
-userRouter.post("/change-password", [auth], changePassword);
 export default userRouter;

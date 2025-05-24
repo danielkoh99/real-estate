@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { getAll, getOne, deleteOne, updateOne, createOne } from "../services/user.service";
 import logger from "../logger/logger";
 import Property from "../db/models/Property/Property";
+import User from "db/models/User/User";
+import { verifyToken } from "middlewares/auth.middleware";
 const createUser = async (req: Request, res: Response) => {
  try {
   const user = await createOne(req.body);
@@ -89,33 +91,12 @@ const deleteUserById = async (req: Request<{ id: number }>, res: Response) => {
  }
 };
 
-const changePassword = async (
- req: Request<{}, {}, { oldPassword: string; newPassword: string }, {}>,
- res: Response
-) => {
- const { oldPassword, newPassword } = req.body;
- const { userId } = req.session;
- try {
-  if (!userId) return res.status(404).json({ message: "UserID not provided" });
-  const user = await getOne(userId);
-  if (!user) return res.status(404).json({ message: "User not found" });
-  if (user.password !== oldPassword)
-   return res.status(400).json({ message: "Old password is incorrect" });
-  await updateOne(userId, { password: newPassword });
-  return res.status(200).json({ message: "Password changed successfully" });
- } catch (err) {
-  logger.error(err);
-  return res.status(500).send(err);
- }
-};
-
 export {
  getAllUsers,
  deleteUserById,
  getUserById,
  updateUserById,
  getSessionUser,
- changePassword,
  deleteProfile,
  createUser,
 };

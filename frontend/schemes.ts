@@ -10,7 +10,7 @@ const passwordSchema = z
   .regex(/[0-9]/, "Password must include at least one number.")
   .regex(
     /[!@#$%^&*(),.?":{}|<>]/,
-    "Password must contain at least one special character",
+    "Password must contain at least one special character"
   );
 
 export const signinScheme = z.object({
@@ -58,3 +58,7 @@ export const passwordResetScheme = z
     path: ["confirmPassword"],
     message: "Passwords do not match",
   });
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});

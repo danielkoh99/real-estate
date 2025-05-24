@@ -16,7 +16,6 @@ const verifyEmail = async (req: Request<{ token: string }>, res: Response, next:
   const payload = verifyToken<{ email: string }>(token);
 
   if (!payload) {
-   console.log("Invalid or expired token");
    throw new Error("Invalid or expired token");
   }
 
@@ -111,4 +110,24 @@ const signOutUser = async (req: Request, res: Response<{ message: string }>) => 
  }
  return res.status(400).json({ message: "No token provided" });
 };
-export { registerUser, signInUser, signOutUser, verifyEmail };
+const forgotPassword = async (
+ req: Request<{}, {}, { token: string; newPassword: string }, {}>,
+ res: Response
+) => {
+ const { token, newPassword } = req.body;
+ try {
+  const payload = verifyToken<{ email: string }>(token);
+  if (!payload) {
+   throw new Error("Invalid or expired token");
+  }
+  const user = await User.findOne({ where: { email: payload.email } });
+  if (!user) return res.status(404).json({ message: "User not found" });
+  user.password = newPassword;
+  await user.save();
+  return res.status(200).json({ message: "Password changed successfully" });
+ } catch (err) {
+  logger.error(err);
+  return res.status(500).send(err);
+ }
+};
+export { registerUser, signInUser, signOutUser, verifyEmail, forgotPassword };
