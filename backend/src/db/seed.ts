@@ -38,7 +38,6 @@ async function generateRandomImages(propertyId: string) {
 async function generatePriceHistory(property: Property) {
  const priceHistory = [];
  for (let i = 0; i < randomInt(2, 5); i++) {
-  // +/- 10%
   const newPrice = property.price * (1 + randomInt(-10, 10) / 100);
   priceHistory.push({
    propertyId: property.id,
@@ -48,16 +47,18 @@ async function generatePriceHistory(property: Property) {
  }
  return await PropertyPriceHistory.bulkCreate(priceHistory);
 }
-const generateRandomLocation = () => {
- const lat = faker.location.latitude({ precision: 6 }).toString();
- const lon = faker.location.longitude({ precision: 6 }).toString();
- // 1 km bounding area
- const minLat = parseFloat(lat) - 0.01;
- const maxLat = parseFloat(lat) + 0.01;
- const minLon = parseFloat(lon) - 0.01;
- const maxLon = parseFloat(lon) + 0.01;
- const boundingbox = [minLat, maxLat, minLon, maxLon];
- return { lat, lon, boundingbox };
+const generateNearbyLocation = (baseLat: number, baseLon: number, offset = 0.01) => {
+ const latOffset = (Math.random() - 0.5) * 2 * offset;
+ const lonOffset = (Math.random() - 0.5) * 2 * offset;
+
+ const lat = baseLat + latOffset;
+ const lon = baseLon + lonOffset;
+
+ return {
+  lat: lat.toFixed(6),
+  lon: lon.toFixed(6),
+  boundingbox: [lat - offset, lat + offset, lon - offset, lon + offset],
+ };
 };
 async function removeUploads() {
  const uploadDirectory = path.join(__dirname, "../../uploads");
@@ -104,14 +105,15 @@ async function seed() {
   });
   const createdUsers = await User.bulkCreate(users, { returning: true });
   const properties = [];
-
+  const baseLat = 47.4979;
+  const baseLon = 19.0402;
   const locationPromises = Array.from({ length: 200 }).map(async () => {
-   const { lat, lon, boundingbox } = generateRandomLocation();
+   const { lat, lon, boundingbox } = generateNearbyLocation(baseLat, baseLon);
    return await createLocation({ lat, lon, boundingbox });
   });
   const locations = await Promise.all(locationPromises);
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 100; i++) {
    const location = locations[i];
    const price = parseFloat(faker.commerce.price());
    const size = randomInt(15, 200);

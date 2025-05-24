@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import L, { LatLngBoundsLiteral } from "leaflet";
+import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 
-import { LocationData } from "@/types";
+import { MapLocationData } from "@/types";
 
 const customIcon = L.icon({
   iconUrl: markerIconPng.src,
@@ -17,60 +17,61 @@ const customIcon = L.icon({
   popupAnchor: [1, -34],
 });
 
-const FitBounds = ({
-  boundingbox,
+interface MapComponentProps {
+  locations: MapLocationData[];
+}
+
+const FitAllBounds = ({
+  locations,
 }: {
-  boundingbox: [number, number, number, number];
+  locations: MapComponentProps["locations"];
 }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (!boundingbox || boundingbox.length !== 4) return;
+    if (!locations || locations.length === 0) return;
 
-    const bounds: LatLngBoundsLiteral = [
-      [boundingbox[0], boundingbox[2]],
-      [boundingbox[1], boundingbox[3]],
-    ];
+    const bounds = L.latLngBounds(
+      locations.map((loc) => [loc.lat, loc.lon] as [number, number]),
+    );
 
     map.fitBounds(bounds, { padding: [50, 50] });
-  }, [map, boundingbox]);
+  }, [map, locations]);
 
   return null;
 };
 
-interface MapComponentProps extends LocationData {
-  lat: number;
-  lon: number;
-  display_name: string;
-  boundingbox: [number, number, number, number];
-}
+const MapComponent: React.FC<MapComponentProps> = ({ locations }) => {
+  const initialCenter = locations[0]
+    ? [locations[0].lat, locations[0].lon]
+    : [0, 0];
 
-const MapComponent: React.FC<MapComponentProps> = ({
-  lat,
-  lon,
-  display_name,
-  boundingbox,
-}) => {
   return (
     <MapContainer
-      center={[lat, lon]}
+      center={initialCenter as [number, number]}
       maxZoom={18}
       style={{
-        height: "400px",
+        height: "100%",
         width: "100%",
         borderRadius: "10px",
         overflow: "hidden",
       }}
-      zoom={16}
+      zoom={13}
     >
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker icon={customIcon} position={[lat, lon]}>
-        <Popup>{display_name}</Popup>
-      </Marker>
-      <FitBounds boundingbox={boundingbox} />
+      {locations.map((location, idx) => (
+        <Marker
+          key={idx}
+          icon={customIcon}
+          position={[location.lat, location.lon]}
+        >
+          <Popup>{location.display_name}</Popup>
+        </Marker>
+      ))}
+      <FitAllBounds locations={locations} />
     </MapContainer>
   );
 };

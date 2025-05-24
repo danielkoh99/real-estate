@@ -9,7 +9,8 @@ const PropertyList: React.FC<{
   properties: PropertyResponse[] | undefined;
   delayedLoading?: boolean;
   ref: React.RefObject<HTMLDivElement | null>;
-}> = ({ properties, delayedLoading, ref }) => {
+  showMap: boolean;
+}> = ({ properties, delayedLoading, ref, showMap }) => {
   const { currentUser, fetchSavedProperties } = useUserStore();
 
   useEffect(() => {
@@ -25,16 +26,16 @@ const PropertyList: React.FC<{
   return (
     <div
       ref={ref}
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full justify-center place-items-center"
+      className={`grid grid-cols-1 ${showMap ? "md:grid-cols-2" : "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"} gap-4 w-full`}
     >
-      {properties &&
-        properties.map((property) => (
-          <SingleRealEstate
-            key={property.id}
-            loading={delayedLoading}
-            property={property}
-          />
-        ))}
+      {properties?.map((property) => (
+        <div
+          key={property.id}
+          className="w-full flex justify-center items-center"
+        >
+          <SingleRealEstate loading={delayedLoading} property={property} />
+        </div>
+      ))}
     </div>
   );
 };

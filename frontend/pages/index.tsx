@@ -1,4 +1,4 @@
-import { Card } from "@heroui/react";
+import { Card, Switch } from "@heroui/react";
 import { useRef } from "react";
 
 import PropertiesView from "@/components/property/PropertiesView";
@@ -10,7 +10,8 @@ import SortFilters from "@/components/search/SortFilters";
 import TotalPropertiesCount from "@/components/property/TotalPropertiesCount";
 
 export default function IndexPage() {
-  const { properties, loading, error } = usePropertyStore();
+  const { properties, loading, error, showMap, setShowMap } =
+    usePropertyStore();
 
   const propertiesViewRef = useRef<HTMLDivElement>(null);
 
@@ -20,15 +21,27 @@ export default function IndexPage() {
         className={`flex flex-col gap-4 h-full ${error ? "" : "justify-between"}`}
       >
         <SearchFilters />
-        <Card className="flex flex-1 flex-col p-4 gap-4">
+        <Card
+          className={`flex flex-col p-4 gap-4 ${showMap ? "h-screen" : "flex-1"} overflow-hidden`}
+        >
           <SortFilters />
-          <TotalPropertiesCount />
-          <PropertiesView
-            ref={propertiesViewRef}
-            error={error}
-            loading={loading}
-            properties={properties}
-          />
+          <div className="w-full flex flex-row justify-between">
+            <TotalPropertiesCount />
+            <Switch isSelected={showMap} onValueChange={setShowMap}>
+              {showMap ? "Hide Map" : "Show Map"}
+            </Switch>
+          </div>
+
+          <div className="flex-1 min-h-0">
+            <PropertiesView
+              ref={propertiesViewRef}
+              error={error}
+              loading={loading}
+              properties={properties}
+              showMap={showMap}
+            />
+          </div>
+
           <PaginationComponent propertiesViewRef={propertiesViewRef} />
         </Card>
       </div>

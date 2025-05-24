@@ -29,6 +29,10 @@ export default function PropertyDetailsView({
   const title = `${property.type} for sale`;
   const hasListedByUser = "listedByUser" in property && property.listedByUser;
 
+  if (!preview) {
+    (property as PropertyForDisplay).location.display_name = property.address;
+  }
+
   return (
     <div className="flex flex-col md:flex-row gap-8 w-full relative">
       <div
@@ -97,15 +101,12 @@ export default function PropertyDetailsView({
         </Card>
       </div>
       {hasListedByUser && !preview && (
-        <div className="w-full md:w-2/5 relative">
-          <div className="flex gap-10 flex-col-reverse md:flex-col sticky top-0 ">
+        <div className="w-full md:w-2/5">
+          <div className="sticky top-0 h-screen flex flex-col gap-5">
             <ContactUploader listedByUser={property.listedByUser} />
-            <Map
-              boundingbox={property.location.boundingbox}
-              display_name={property.address}
-              lat={property.location.lat}
-              lon={property.location.lon}
-            />
+            <div className="flex-1">
+              <Map locations={[property.location]} />
+            </div>
           </div>
         </div>
       )}

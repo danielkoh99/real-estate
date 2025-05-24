@@ -234,6 +234,11 @@ export const getPropertiesByFilter = async (filters: PropertyParams) => {
     as: "images",
     required: false,
    },
+   {
+    model: Location,
+    as: "location",
+    attributes: ["lat", "lon", "boundingbox"],
+   },
   ],
   limit,
   offset: (page - 1) * limit,

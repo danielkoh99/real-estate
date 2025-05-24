@@ -111,7 +111,9 @@ export interface LocationData {
   lon: number;
   boundingbox: [number, number, number, number];
 }
-
+export interface MapLocationData extends LocationData {
+  display_name: string;
+}
 export interface ListedByUser {
   id: number;
   firstName: string;
@@ -165,7 +167,7 @@ export interface PropertyRes {
 export type PropertyForDisplay = BaseProperty & {
   images: FileWithPreview[] | PropertyImageAttributes[];
   listedByUser?: ListedByUser;
-  location: LocationData;
+  location: MapLocationData;
   squarMeterPrice?: number;
 };
 export interface PropertyFilters {

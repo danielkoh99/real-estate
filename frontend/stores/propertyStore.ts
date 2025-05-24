@@ -19,6 +19,8 @@ interface Store {
   page: number;
   totalPages: number;
   totalItems: number;
+  showMap: boolean;
+  setShowMap: (value: boolean) => void;
   fetchProperties: () => Promise<PropertyRes | null>;
   getAvalaibleCities: () => string[];
   getAvailabelYearsBuilt: () => number[];
@@ -28,7 +30,6 @@ interface Store {
   getTotalItems: () => number;
   getIsSaved: (propertyId: string) => boolean;
 }
-
 const usePropertyStore = create<Store>((set, get) => ({
   properties: [],
   loading: false,
@@ -38,6 +39,7 @@ const usePropertyStore = create<Store>((set, get) => ({
   page: 1,
   totalPages: 1,
   totalItems: 0,
+  showMap: false,
 
   fetchProperties: async () => {
     const { filters } = useQueryStore.getState();
@@ -89,6 +91,9 @@ const usePropertyStore = create<Store>((set, get) => ({
       set({ error: error.message, loading: false });
     }
   },
+  setShowMap: (value: boolean) => {
+    set({ showMap: value });
+  },
   getAvalaibleCities: () => {
     const cities = get().properties.map((property) => property.city);
 
@@ -109,6 +114,7 @@ const usePropertyStore = create<Store>((set, get) => ({
   getError: () => get().error,
   getFilters: () => get().filters,
   getTotalItems: () => get().totalItems,
+  getShowMap: () => get().showMap,
 }));
 
 export default usePropertyStore;
