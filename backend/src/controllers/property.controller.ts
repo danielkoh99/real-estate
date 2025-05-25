@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
  getOne,
  deleteOne,
@@ -93,13 +93,13 @@ const deletePropertyById = async (req: Request, res: Response) => {
  }
 };
 
-const relatedProperties = async (req: Request, res: Response) => {
+const relatedProperties = async (req: Request, res: Response, next: NextFunction) => {
  const { id } = req.params;
  try {
   const relatedProperties = await getRelatedProperties(id);
   res.status(200).send(relatedProperties);
  } catch (err) {
-  res.status(500).json(err);
+  next(err);
  }
 };
 

@@ -27,11 +27,10 @@ const useUserStore = create<UserStore>((set, get) => ({
       if (response) {
         set({ savedProperties: response });
       } else {
-        console.warn("No properties found in API response.");
         set({ savedProperties: [] });
       }
-    } catch (err) {
-      console.error("Unexpected error fetching saved properties:", err);
+    } catch (error) {
+      throw error;
     }
   },
   setCurrentUser: (user) => set({ currentUser: user }),
@@ -48,7 +47,7 @@ const useUserStore = create<UserStore>((set, get) => ({
 
       if (error) throw error;
     } catch (error) {
-      console.error("Error saving property:", error);
+      throw error;
     }
   },
   clearUser: () => set({ currentUser: undefined }),

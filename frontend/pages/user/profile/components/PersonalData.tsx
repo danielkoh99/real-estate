@@ -4,7 +4,7 @@ import { Card, CardFooter, Button, Input, User } from "@heroui/react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { useUserMutations } from "../profileMutations";
+import useUserMutations from "../profileMutations";
 
 import { formatDateTime } from "@/utils";
 import toast from "@/utils/toast";

@@ -22,36 +22,45 @@ const PropertyPage: React.FC<{
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params as { id: string };
 
+  // eslint-disable-next-line no-console
+  console.log(id);
+  if (!id) {
+    return {
+      redirect: {
+        destination: "/404",
+        permanent: false,
+      },
+    };
+  }
+
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/property/${id}`,
-    );
+    const apiUrl = process.env.API_URL;
+
+    // eslint-disable-next-line no-console
+    console.log(apiUrl);
+    if (!apiUrl) throw new Error("API_URL is not defined");
+
+    const response = await fetch(`${apiUrl}/property/${id}`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch property data: ${response.statusText}`);
     }
 
-    const relatedResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/property/${id}/related`,
-    );
-
-    if (!relatedResponse.ok) {
-      throw new Error(
-        `Failed to fetch related properties data: ${relatedResponse.statusText}`,
-      );
-    }
-
     const property: PropertyResponse = await response.json();
-    const relatedProperties: PropertyResponse[] = await relatedResponse.json();
 
-    if (!property) {
-      return {
-        redirect: {
-          destination: "/404",
-          permanent: false,
-        },
-      };
+    let relatedProperties: PropertyResponse[] = [];
+
+    try {
+      const relatedResponse = await fetch(`${apiUrl}/property/${id}/related`);
+
+      if (relatedResponse.ok) {
+        relatedProperties = await relatedResponse.json();
+      }
+    } catch (relatedError) {
+      // eslint-disable-next-line no-console
+      console.warn("Failed to fetch related properties:", relatedError);
     }
+
     property.lastUpdated = new Date(property.updatedAt).toLocaleString();
 
     return {
@@ -61,6 +70,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+
     return {
       redirect: {
         destination: "/404",

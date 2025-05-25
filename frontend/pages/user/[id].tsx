@@ -40,9 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default UserProfile;
 
 async function fetchUserById(id: string) {
-  const userResponse = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/${id}`,
-  );
+  const userResponse = await fetch(`${process.env.API_URL}/user/${id}`);
   const user: User = await userResponse.json();
 
   return user;

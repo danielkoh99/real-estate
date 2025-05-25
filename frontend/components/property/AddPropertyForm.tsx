@@ -61,7 +61,6 @@ export default function AddPropertyForm({
       );
     },
     onError: (error) => {
-      console.error("Mutation error:", error.message);
       toast.error("Error", error.message);
       setSaving(false);
     },

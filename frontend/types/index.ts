@@ -112,7 +112,7 @@ export interface LocationData {
   boundingbox: [number, number, number, number];
 }
 export interface MapLocationData extends LocationData {
-  display_name: string;
+  display_name?: string;
 }
 export interface ListedByUser {
   id: number;

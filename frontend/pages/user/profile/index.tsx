@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 import PasswordChange from "./components/PasswordChange";
 import PersonalData from "./components/PersonalData";
 import DeleteModal from "./components/DeleteModal";
-import { useUserMutations } from "./profileMutations";
+import useUserMutations from "./profileMutations";
 
 import DefaultLayout from "@/layouts/default";
 import { User, UserInfoResponse } from "@/types";

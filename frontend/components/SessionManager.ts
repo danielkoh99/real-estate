@@ -31,12 +31,9 @@ export default function SessionManager() {
       const currentTime = Date.now();
       const timeRemaining = expirationTime - currentTime;
 
-      console.log("Session expires in:", timeRemaining / 1000, "seconds");
-
       if (timeRemaining > 1000) {
         // Ensures it's not logging out immediately
         const timer = setTimeout(() => {
-          console.log("Session expired, logging out...");
           signOut();
         }, timeRemaining);
 

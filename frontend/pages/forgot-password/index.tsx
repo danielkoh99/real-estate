@@ -21,15 +21,12 @@ export default function ForgotPassword() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit = async (data: ForgotPasswordForm) => {
+  const onSubmit = async (_data: ForgotPasswordForm) => {
     try {
       // Simulate API call
       await new Promise((res) => setTimeout(res, 1000));
       setSubmitted(true);
-    } catch (err) {
-      // handle API error
-      console.error("Submission error", err);
-    }
+    } catch (err) {}
   };
 
   return (

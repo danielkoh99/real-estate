@@ -10,7 +10,7 @@ const Custom404: React.FC = () => {
           404 - Page Not Found
         </h1>
         <p className="mt-2 text-gray-600">
-          Oops! The page you're looking for doesn't exist.
+          Oops! The page you&apos;re looking for doesn&apos;t exist.
         </p>
         <Link
           className="mt-6 inline-block px-6 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-full transition duration-300"

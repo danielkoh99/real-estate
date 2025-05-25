@@ -3,11 +3,11 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
 import Image from "next/image";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import { FileWithPreview } from "@/types";
 
 import "swiper/css/bundle";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const heic2any = typeof window !== "undefined" ? require("heic2any") : null;
 
@@ -42,8 +42,6 @@ const Upload = ({
                 url: URL.createObjectURL(convertedFile),
               });
             } catch (error) {
-              console.error("Error converting HEIC file:", error);
-
               return null;
             }
           }

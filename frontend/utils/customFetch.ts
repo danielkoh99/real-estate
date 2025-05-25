@@ -1,4 +1,4 @@
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig } from "axios";
 import { getSession } from "next-auth/react";
 
 import api from "@/utils/axiosInstance";
@@ -13,11 +13,11 @@ interface ApiRequestProps {
   timeout?: number;
 }
 
-interface ApiResponse<T> {
-  response: AxiosResponse<T> | null;
-  error: any;
-  loading: boolean;
-}
+// interface ApiResponse<T> {
+//   response: AxiosResponse<T> | null;
+//   error: any;
+//   loading: boolean;
+// }
 
 export const apiRequest = async <T = any>({
   url,

@@ -1,8 +1,7 @@
 import type { AppProps } from "next/app";
 
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-
 import "@/styles/globals.css";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

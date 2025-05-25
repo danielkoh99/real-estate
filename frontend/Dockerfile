@@ -13,7 +13,11 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the Next.js application
+# Copy the production environment file and rename it to .env
+COPY .env.production .env
+RUN rm -f .env.local
+
+# Build the Next.js application using the production environment
 RUN npm run build
 
 # Start a new, minimal image
@@ -21,15 +25,17 @@ FROM node:18-slim AS runner
 
 # Set working directory
 WORKDIR /app
+
 # Copy only the build files from the builder stage
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/.env .env
 
 # Expose the port that Next.js runs on
 EXPOSE 3000
 
-# Start Next.js
+# Start Next.js in production
 CMD ["npm", "start"]

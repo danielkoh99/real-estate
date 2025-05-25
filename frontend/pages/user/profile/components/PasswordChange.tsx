@@ -16,9 +16,7 @@ export default function PasswordChange() {
     resolver: zodResolver(passwordResetScheme),
   });
 
-  const onSubmit = async (data: PasswordFormData) => {
-    console.log("Password changed:", data.password);
-  };
+  const onSubmit = async (_data: PasswordFormData) => {};
 
   return (
     <Card className="max-w-md mx-auto p-6 shadow-xl rounded-2xl space-y-6">
