@@ -10,7 +10,6 @@ import {
 import db from "../../config_postgres";
 
 import PropertyImage from "../Image/Image";
-import Location from "../Location/Location";
 import PropertyPriceHistory from "../PropertyPriceHistory/PropertyPriceHistory";
 interface PropertyCreationAttributes extends Optional<PropertyAttributes, "id"> {}
 

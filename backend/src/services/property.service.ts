@@ -124,7 +124,7 @@ const getAll = async () => {
  });
  return property;
 };
-const getOne = async (id: any) => {
+const getOne = async (id: string) => {
  const property = await Property.findByPk(id, {
   include: [
    {
@@ -241,7 +241,7 @@ export const getPropertiesByFilter = async (filters: PropertyParams) => {
    },
   ],
   limit,
-  offset: (page - 1) * limit,
+  offset,
   order,
  });
 
@@ -255,7 +255,11 @@ export const getPropertiesByFilter = async (filters: PropertyParams) => {
 const getRelatedProperties = async (propertyId: string) => {
  // !TODO get related properties based on location
  // Fetch the main property
- const mainProperty = await Property.findByPk(propertyId);
+ const mainProperty = await Property.findByPk(propertyId, {
+  raw: true,
+  attributes: ["type", "price", "size"],
+ });
+ console.log(mainProperty);
  if (!mainProperty) {
   throw new Error("Property not found");
  }
