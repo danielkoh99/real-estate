@@ -22,8 +22,6 @@ const PropertyPage: React.FC<{
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params as { id: string };
 
-  // eslint-disable-next-line no-console
-  console.log(id);
   if (!id) {
     return {
       redirect: {
@@ -36,8 +34,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const apiUrl = process.env.API_URL;
 
-    // eslint-disable-next-line no-console
-    console.log(apiUrl);
     if (!apiUrl) throw new Error("API_URL is not defined");
 
     const response = await fetch(`${apiUrl}/property/${id}`);
@@ -70,9 +66,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
-
     return {
       redirect: {
         destination: "/404",

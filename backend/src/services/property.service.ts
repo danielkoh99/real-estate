@@ -259,7 +259,6 @@ const getRelatedProperties = async (propertyId: string) => {
   raw: true,
   attributes: ["type", "price", "size"],
  });
- console.log(mainProperty);
  if (!mainProperty) {
   throw new Error("Property not found");
  }
