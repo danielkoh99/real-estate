@@ -56,6 +56,7 @@ const registerUser = async (
    email: email,
    password: hashedPassword,
    phone: phone,
+   verified: false,
   });
   await sendNewVerificationLink(email, firstName);
   return res.status(200).send({ message: "Registration successful" });

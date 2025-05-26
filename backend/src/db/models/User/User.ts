@@ -1,8 +1,10 @@
 import {
  Model,
  DataTypes,
- Optional,
- Association,
+ InferAttributes,
+ InferCreationAttributes,
+ CreationOptional,
+ NonAttribute,
  BelongsToManyAddAssociationMixin,
  BelongsToManyAddAssociationsMixin,
  BelongsToManyCountAssociationsMixin,
@@ -13,100 +15,102 @@ import {
  BelongsToManyRemoveAssociationsMixin,
  BelongsToManySetAssociationsMixin,
 } from "sequelize";
-
 import db from "../../config_postgres";
 import Property from "../Property/Property";
-import { UserAttributes, Roles } from "./user.interface";
-// Define creation attributes for the User model
-interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
-class User extends Model<UserAttributes, UserCreationAttributes> {
- public id!: number;
- public password!: string;
- public firstName!: string;
- public lastName!: string;
- public email!: string;
- public role!: Roles;
- public phone!: string;
- public verified!: boolean;
- public profileImage?: string;
- public readonly createdAt!: Date;
- public readonly updatedAt!: Date;
- // Association methods for listed properties
- public addListedProperty!: BelongsToManyAddAssociationMixin<Property, number>;
- public addListedProperties!: BelongsToManyAddAssociationsMixin<Property, number>;
- public getListedProperties!: BelongsToManyGetAssociationsMixin<Property>;
- public hasListedProperty!: BelongsToManyHasAssociationMixin<Property, number>;
- public countListedProperties!: BelongsToManyCountAssociationsMixin;
- public createListedProperty!: BelongsToManyCreateAssociationMixin<Property>;
- public removeListedProperty!: BelongsToManyRemoveAssociationMixin<Property, number>;
- public removeListedProperties!: BelongsToManyRemoveAssociationsMixin<Property, number>;
- public setListedProperties!: BelongsToManySetAssociationsMixin<Property, number>;
+import { Roles } from "./user.interface";
 
- // Association methods for saved properties
- public addSavedProperty!: BelongsToManyAddAssociationMixin<Property, number>;
- public addSavedProperties!: BelongsToManyAddAssociationsMixin<Property, number>;
- public getSavedProperties!: BelongsToManyGetAssociationsMixin<Property>;
- public hasSavedProperty!: BelongsToManyHasAssociationMixin<Property, number>;
- public countSavedProperties!: BelongsToManyCountAssociationsMixin;
- public createSavedProperty!: BelongsToManyCreateAssociationMixin<Property>;
- public removeSavedProperty!: BelongsToManyRemoveAssociationMixin<Property, number>;
- public removeSavedProperties!: BelongsToManyRemoveAssociationsMixin<Property, number>;
- public setSavedProperties!: BelongsToManySetAssociationsMixin<Property, number>;
+class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+ declare id: CreationOptional<number>;
+ declare firstName: string;
+ declare lastName: string;
+ declare email: string;
+ declare password: string;
+ declare role: Roles;
+ declare phone: string;
+ declare profileImage?: string;
+ declare verified: boolean;
+ declare createdAt: CreationOptional<Date>;
+ declare updatedAt: CreationOptional<Date>;
+ declare deletedAt: CreationOptional<Date>;
 
- // Possible inclusions
- public readonly savedProperties?: Property[];
- public readonly listedProperties?: Property[];
+ declare addListedProperty: BelongsToManyAddAssociationMixin<Property, number>;
+ declare addListedProperties: BelongsToManyAddAssociationsMixin<Property, number>;
+ declare getListedProperties: BelongsToManyGetAssociationsMixin<Property>;
+ declare hasListedProperty: BelongsToManyHasAssociationMixin<Property, number>;
+ declare countListedProperties: BelongsToManyCountAssociationsMixin;
+ declare createListedProperty: BelongsToManyCreateAssociationMixin<Property>;
+ declare removeListedProperty: BelongsToManyRemoveAssociationMixin<Property, number>;
+ declare removeListedProperties: BelongsToManyRemoveAssociationsMixin<Property, number>;
+ declare setListedProperties: BelongsToManySetAssociationsMixin<Property, number>;
 
- public static associations: {
-  listedProperties: Association<User, Property>;
-  savedProperties: Association<User, Property>;
- };
+ declare addSavedProperty: BelongsToManyAddAssociationMixin<Property, number>;
+ declare addSavedProperties: BelongsToManyAddAssociationsMixin<Property, number>;
+ declare getSavedProperties: BelongsToManyGetAssociationsMixin<Property>;
+ declare hasSavedProperty: BelongsToManyHasAssociationMixin<Property, number>;
+ declare countSavedProperties: BelongsToManyCountAssociationsMixin;
+ declare createSavedProperty: BelongsToManyCreateAssociationMixin<Property>;
+ declare removeSavedProperty: BelongsToManyRemoveAssociationMixin<Property, number>;
+ declare removeSavedProperties: BelongsToManyRemoveAssociationsMixin<Property, number>;
+ declare setSavedProperties: BelongsToManySetAssociationsMixin<Property, number>;
+
+ // Associations
+ declare savedProperties?: NonAttribute<Property[]>;
+ declare listedProperties?: NonAttribute<Property[]>;
 }
+
 User.init(
  {
   id: {
    type: DataTypes.INTEGER,
-   primaryKey: true,
    autoIncrement: true,
+   primaryKey: true,
+  },
+  firstName: {
+   type: DataTypes.STRING,
+   allowNull: false,
+  },
+  lastName: {
+   type: DataTypes.STRING,
+   allowNull: false,
+  },
+  email: {
+   type: DataTypes.STRING,
    unique: true,
    allowNull: false,
   },
-  firstName: DataTypes.STRING,
-  lastName: DataTypes.STRING,
-  role: {
-   type: DataTypes.ENUM,
-   values: Object.values(Roles),
-   defaultValue: Roles.user,
-   allowNull: true,
-  },
   password: {
    type: DataTypes.STRING,
-   allowNull: true,
+   allowNull: false,
   },
   phone: {
    type: DataTypes.STRING,
-   unique: true,
    allowNull: true,
+   unique: true,
   },
   profileImage: {
    type: DataTypes.STRING,
    allowNull: true,
   },
-  email: {
-   type: DataTypes.STRING,
-   unique: true,
+  role: {
+   type: DataTypes.ENUM(...Object.values(Roles)),
+   defaultValue: Roles.user,
+   allowNull: false,
   },
   verified: {
    type: DataTypes.BOOLEAN,
    allowNull: false,
    defaultValue: false,
   },
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+  deletedAt: DataTypes.DATE,
  },
  {
+  sequelize: db,
+  modelName: "User",
   tableName: "users",
   timestamps: true,
-  sequelize: db,
-  paranoid: true,
+  paranoid: true, // enables deletedAt
  }
 );
 

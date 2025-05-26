@@ -93,6 +93,7 @@ async function seed() {
     phone: faker.phone.number({ style: "international" }),
     password: hashedPassword,
     role: faker.helpers.arrayElement<Roles>([Roles.agent, Roles.user]),
+    verified: false,
    });
   }
   users.push({
@@ -101,6 +102,7 @@ async function seed() {
    phone: "+1234567890",
    email: "admin@admin.com",
    password: hashedPassword,
+   verified: true,
    role: Roles.user,
   });
   const createdUsers = await User.bulkCreate(users, { returning: true });

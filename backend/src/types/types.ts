@@ -44,5 +44,8 @@ interface PropertyParams {
  sortBy?: string;
  sortDirection?: string;
 }
-
-export { UserRequestBody, UResponseBody, ErrorResponse, CustomRequest, PropertyParams };
+interface JwtPayload {
+ id: number;
+ role: Roles;
+}
+export { UserRequestBody, UResponseBody, ErrorResponse, CustomRequest, PropertyParams, JwtPayload };

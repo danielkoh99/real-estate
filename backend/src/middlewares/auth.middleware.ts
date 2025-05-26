@@ -1,18 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { Roles } from "../db/models/User/user.interface";
+import { JwtPayload } from "types/types";
 const SECRET_KEY = process.env.JWT_SECRET || "secret";
-interface JwtPayload {
- userId: number;
- role: Roles;
-}
+
 const auth = (req: Request<{}, {}, JwtPayload>, res: Response, next: NextFunction) => {
  const token = req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
  if (token) {
   const payload = verifyToken<JwtPayload>(token);
   if (payload) {
-   req.session.userId = payload.userId;
-   req.session.role = payload.role;
+   req.user = payload;
    return next();
   }
  }
