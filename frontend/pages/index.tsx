@@ -1,5 +1,6 @@
 import { Card, Switch } from "@heroui/react";
 import { useRef } from "react";
+import { MapIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import PropertiesView from "@/components/property/PropertiesView";
 import SearchFilters from "@/components/search/SearchFilters";
@@ -27,7 +28,17 @@ export default function IndexPage() {
           <SortFilters />
           <div className="w-full flex flex-row justify-between">
             <TotalPropertiesCount />
-            <Switch isSelected={showMap} onValueChange={setShowMap}>
+            <Switch
+              isSelected={showMap}
+              thumbIcon={({ isSelected, className }) =>
+                isSelected ? (
+                  <XMarkIcon className={className} />
+                ) : (
+                  <MapIcon className={className} />
+                )
+              }
+              onValueChange={setShowMap}
+            >
               {showMap ? "Hide Map" : "Show Map"}
             </Switch>
           </div>

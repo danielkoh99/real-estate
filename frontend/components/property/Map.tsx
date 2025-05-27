@@ -6,6 +6,8 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
+import Image from "next/image";
+import Link from "next/link";
 
 import { MapLocationData } from "@/types";
 
@@ -17,15 +19,7 @@ const customIcon = L.icon({
   popupAnchor: [1, -34],
 });
 
-interface MapComponentProps {
-  locations: MapLocationData[];
-}
-
-const FitAllBounds = ({
-  locations,
-}: {
-  locations: MapComponentProps["locations"];
-}) => {
+const FitAllBounds = ({ locations }: { locations: MapLocationData[] }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -41,15 +35,21 @@ const FitAllBounds = ({
   return null;
 };
 
-const MapComponent: React.FC<MapComponentProps> = ({ locations }) => {
+const MapComponent = ({
+  locations,
+  clickHandler,
+}: {
+  locations: MapLocationData[];
+  clickHandler?: (id: string) => void;
+}) => {
   const initialCenter = locations[0]
     ? [locations[0].lat, locations[0].lon]
     : [0, 0];
 
   return (
     <MapContainer
+      boxZoom={false}
       center={initialCenter as [number, number]}
-      maxZoom={18}
       style={{
         height: "100%",
         width: "100%",
@@ -65,10 +65,39 @@ const MapComponent: React.FC<MapComponentProps> = ({ locations }) => {
       {locations.map((location, idx) => (
         <Marker
           key={idx}
+          eventHandlers={{
+            click: () => {
+              clickHandler && clickHandler(location.propertyId);
+            },
+          }}
           icon={customIcon}
           position={[location.lat, location.lon]}
         >
-          <Popup>{location.display_name}</Popup>
+          <Popup>
+            {locations.length > 1 ? (
+              <Link href={`/property/${location.propertyId}`} target="_blank">
+                {location.display_name}
+
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "150px",
+                  }}
+                >
+                  <Image
+                    fill
+                    alt="Property Image"
+                    sizes="100%"
+                    src="https://loremflickr.com/400/400/apartment"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              </Link>
+            ) : (
+              <p>{location.display_name}</p>
+            )}
+          </Popup>
         </Marker>
       ))}
       <FitAllBounds locations={locations} />

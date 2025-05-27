@@ -10,7 +10,16 @@ const PropertyList: React.FC<{
   delayedLoading?: boolean;
   ref: React.RefObject<HTMLDivElement | null>;
   showMap: boolean;
-}> = ({ properties, delayedLoading, ref, showMap }) => {
+  activePropertyId?: string;
+  itemRefs?: React.RefObject<Record<string, HTMLDivElement | null>>;
+}> = ({
+  properties,
+  delayedLoading,
+  ref,
+  showMap,
+  activePropertyId,
+  itemRefs,
+}) => {
   const { currentUser, fetchSavedProperties } = useUserStore();
 
   useEffect(() => {
@@ -31,9 +40,20 @@ const PropertyList: React.FC<{
       {properties?.map((property) => (
         <div
           key={property.id}
-          className="w-full flex justify-center items-center"
+          ref={(el) => {
+            if (itemRefs && el) itemRefs.current[property.id] = el;
+          }}
+          className={`w-full flex justify-center items-center transition duration-300 ${
+            activePropertyId === property.id
+              ? "ring-2 ring-blue-500 rounded-lg"
+              : ""
+          }`}
         >
-          <SingleRealEstate loading={delayedLoading} property={property} />
+          <SingleRealEstate
+            isActive={activePropertyId === property.id}
+            loading={delayedLoading}
+            property={property}
+          />
         </div>
       ))}
     </div>

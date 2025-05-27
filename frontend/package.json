@@ -3,9 +3,9 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev -p $FRONTEND_PORT",
+		"dev": "next dev -p ${FRONTEND_PORT:-3001}",
 		"build": "next build",
-		"start": "next start -p $FRONTEND_PORT",
+		"start": "next start -p ${FRONTEND_PORT:-3001}",
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
 	},
 	"dependencies": {

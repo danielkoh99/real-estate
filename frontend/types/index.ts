@@ -113,6 +113,8 @@ export interface LocationData {
 }
 export interface MapLocationData extends LocationData {
   display_name?: string;
+  propertyId: string;
+  image: string;
 }
 export interface ListedByUser {
   id: number;
@@ -167,7 +169,7 @@ export interface PropertyRes {
 export type PropertyForDisplay = BaseProperty & {
   images: FileWithPreview[] | PropertyImageAttributes[];
   listedByUser?: ListedByUser;
-  location: MapLocationData;
+  location: LocationData;
   squarMeterPrice?: number;
 };
 export interface PropertyFilters {

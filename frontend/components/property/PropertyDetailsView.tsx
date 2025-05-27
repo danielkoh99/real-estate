@@ -8,7 +8,7 @@ import SaveListingBtn from "./SaveListingBtn";
 import GoToMaps from "./GoToMaps";
 
 import ImageSwiperThumbnail from "@/components/global/ImageSwiperThumbnail";
-import { AddProperty, PropertyForDisplay } from "@/types";
+import { AddProperty, MapLocationData, PropertyForDisplay } from "@/types";
 
 interface PropertyDetailsProps {
   property: PropertyForDisplay | AddProperty;
@@ -28,10 +28,18 @@ export default function PropertyDetailsView({
   );
   const title = `${property.type} for sale`;
   const hasListedByUser = "listedByUser" in property && property.listedByUser;
+  const locationObj = useMemo<MapLocationData>(() => {
+    const p = property as PropertyForDisplay;
 
-  if (!preview) {
-    (property as PropertyForDisplay).location.display_name = property.address;
-  }
+    return {
+      lat: p.location.lat,
+      lon: p.location.lon,
+      boundingbox: p.location.boundingbox,
+      display_name: p.address,
+      propertyId: p.id,
+      image: p.images[0].url,
+    };
+  }, [property]);
 
   return (
     <div className="flex flex-col md:flex-row gap-8 w-full relative">
@@ -105,7 +113,7 @@ export default function PropertyDetailsView({
           <div className="sticky top-0 h-screen flex flex-col gap-5">
             <ContactUploader listedByUser={property.listedByUser} />
             <div className="flex-1">
-              <Map locations={[property.location]} />
+              <Map locations={[locationObj]} />
             </div>
           </div>
         </div>

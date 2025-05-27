@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
-import { JSX, useState, useMemo, useEffect } from "react";
+import { JSX, useState, useMemo, useEffect, useRef } from "react";
 
+import { Spinner } from "@heroui/react";
 import Error from "../global/Error";
 
 import NotFound from "./NotFound";
@@ -16,12 +17,27 @@ const PropertiesView: React.FC<{
   showMap: boolean;
 }> = ({ properties, error, loading, ref, showMap }): JSX.Element => {
   const [delayedLoading, setDelayedLoading] = useState(false);
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [activePropertyId, setActivePropertyId] = useState<string>();
 
+  const scrollToProperty = (id: string) => {
+    const element = itemRefs.current[id];
+
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    setActivePropertyId(id);
+  };
   const Map = useMemo(
     () =>
       dynamic(() => import("../property/Map"), {
-        loading: () => <p>Map is loading...</p>,
         ssr: false,
+        loading: () => (
+          <div className="flex items-center justify-center h-full w-full">
+            <Spinner color="primary" label="Loading map..." size="lg" />
+          </div>
+        ),
       }),
     [],
   );
@@ -42,6 +58,8 @@ const PropertiesView: React.FC<{
       return {
         ...property.location,
         display_name: property.address,
+        image: property.images[0].url,
+        propertyId: property.id,
       };
     });
   }, [properties]);
@@ -56,10 +74,14 @@ const PropertiesView: React.FC<{
           showMap ? "w-1/2" : "w-full"
         }`}
       >
-        <div className={`h-full ${showMap ? "overflow-y-auto" : ""}`}>
+        <div
+          className={`h-full px-2 py-1 rounded-lg ${showMap ? "overflow-y-auto" : ""}`}
+        >
           <PropertyList
             ref={ref}
+            activePropertyId={activePropertyId}
             delayedLoading={delayedLoading}
+            itemRefs={itemRefs}
             properties={properties}
             showMap={showMap}
           />
@@ -68,7 +90,10 @@ const PropertiesView: React.FC<{
 
       {showMap && (
         <div className="flex w-1/2 h-full">
-          <Map locations={propertiesLocations} />
+          <Map
+            clickHandler={scrollToProperty}
+            locations={propertiesLocations}
+          />
         </div>
       )}
     </div>
