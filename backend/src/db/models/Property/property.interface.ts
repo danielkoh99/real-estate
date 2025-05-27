@@ -1,7 +1,7 @@
 import { PropertyImageAttributes } from "../Image/image.interface";
 
 interface PropertyAttributes {
- id: string;
+ id?: string;
  createdAt?: Date;
  updatedAt?: Date;
  price: number;
@@ -12,12 +12,12 @@ interface PropertyAttributes {
  type: PropertyType;
  category: PropertyCategory;
  city: string;
- district?: BPDistricts | null;
+ district: BPDistricts;
  squarMeterPrice?: number;
- yearBuilt?: number;
- description?: string;
- savedByUserId?: number[];
- listedByUserId?: number;
+ yearBuilt: number;
+ description: string;
+ savedByUserId: number[];
+ listedByUserId: number;
  images?: PropertyImageAttributes[];
  locationId: number;
  oldPrice?: number;

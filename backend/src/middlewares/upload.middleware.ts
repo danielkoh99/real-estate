@@ -63,7 +63,7 @@ export const uploadAndOptimizeImages = (options: UploadOptions) => {
    }
 
    try {
-    const userId = req.user?.id;
+    const userId = req.user.id;
     if (!userId) {
      return next(createError(401, "User ID is required for file upload"));
     }

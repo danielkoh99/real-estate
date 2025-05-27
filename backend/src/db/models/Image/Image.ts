@@ -1,17 +1,20 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import {
+ Model,
+ DataTypes,
+ InferAttributes,
+ InferCreationAttributes,
+ CreationOptional,
+} from "sequelize";
 
 import db from "../../config_postgres";
 
-import { PropertyImageAttributes } from "./image.interface";
-interface PropertyImageCreationAttributes extends Optional<PropertyImageAttributes, "id"> {}
-
-class PropertyImage
- extends Model<PropertyImageAttributes, PropertyImageCreationAttributes>
- implements PropertyImageAttributes
-{
- public id!: string;
- public url!: string;
- public propertyId!: string;
+class PropertyImage extends Model<
+ InferAttributes<PropertyImage>,
+ InferCreationAttributes<PropertyImage>
+> {
+ declare id: CreationOptional<string>;
+ declare url: string;
+ declare propertyId: string;
 }
 
 PropertyImage.init(

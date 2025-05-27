@@ -3,7 +3,12 @@ import db from "./config_postgres";
 import { faker } from "@faker-js/faker";
 import Property from "./models/Property/Property";
 import User from "./models/User/User";
-import { BPDistricts, PropertyCategory, PropertyType } from "./models/Property/property.interface";
+import {
+ BPDistricts,
+ PropertyAttributes,
+ PropertyCategory,
+ PropertyType,
+} from "./models/Property/property.interface";
 import { Roles, UserAttributes } from "./models/User/user.interface";
 import { hashPassword } from "../utils/auth.utils";
 import logger from "../logger/logger";
@@ -134,11 +139,13 @@ async function seed() {
     bathrooms: faker.number.int({ min: 1, max: 3 }),
     yearBuilt: faker.number.int({ min: 1900, max: 2024 }),
     description: faker.lorem.paragraphs(2),
+    price,
     squarMeterPrice: parseFloat((price / size).toFixed(2)),
     category: faker.helpers.arrayElement(Object.values(PropertyCategory)),
-    price,
     locationId: location.id,
-    type: faker.helpers.arrayElement<PropertyType>([PropertyType.APARTMENT, PropertyType.HOUSE]),
+    type: faker.helpers.arrayElement([PropertyType.APARTMENT, PropertyType.HOUSE]),
+    oldPrice: parseFloat(faker.commerce.price()),
+    priceChange: parseFloat(faker.commerce.price()),
    };
 
    properties.push(property);

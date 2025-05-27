@@ -9,17 +9,16 @@ import {
 import { getOne as getUser } from "../services/user.service";
 import logger from "../logger/logger";
 import { CustomRequest, PropertyParams } from "../types/types";
-import {
- BPDistricts,
- PropertyAttributes,
- PropertyType,
-} from "../db/models/Property/property.interface";
-import Property from "../db/models/Property/Property";
-const createProperty = async (req: CustomRequest, res: Response) => {
+import { BPDistricts, PropertyType } from "../db/models/Property/property.interface";
+import Property, { PropertyAttributes } from "../db/models/Property/Property";
+const createProperty = async (
+ req: Request<{}, {}, PropertyAttributes & { imagePaths: string[] }>,
+ res: Response
+) => {
  try {
-  const data = req.body as PropertyAttributes;
+  const data = req.body;
   const files = req.body.imagePaths as string[];
-  const userId = req.user?.id;
+  const userId = req.user.id;
   data.listedByUserId = userId;
   const response = await createOne(data, files);
   if (response.error) {
@@ -104,7 +103,7 @@ const relatedProperties = async (req: Request, res: Response, next: NextFunction
 };
 
 const savePropertyListing = async (req: CustomRequest, res: Response) => {
- const userId = req.user?.id;
+ const userId = req.user.id;
  logger.info(userId);
  try {
   const { propertyId, userId } = req.body;
@@ -123,7 +122,7 @@ const savePropertyListing = async (req: CustomRequest, res: Response) => {
 };
 
 const getSavedProperties = async (req: Request, res: Response) => {
- const userId = req.user?.id;
+ const userId = req.user.id;
  if (!userId) return res.status(404).json({ message: "User not found" });
  try {
   const user = await getUser(userId);

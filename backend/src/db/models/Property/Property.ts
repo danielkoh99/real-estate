@@ -1,48 +1,49 @@
-import { Model, DataTypes, HasManyGetAssociationsMixin, Optional } from "sequelize";
-import { nanoid } from "nanoid";
 import {
- BPDistricts,
- LocationData,
- PropertyAttributes,
- PropertyCategory,
- PropertyType,
-} from "./property.interface";
+ Model,
+ DataTypes,
+ HasManyGetAssociationsMixin,
+ InferCreationAttributes,
+ InferAttributes,
+ CreationOptional,
+ NonAttribute,
+} from "sequelize";
+import { nanoid } from "nanoid";
+import { BPDistricts, LocationData, PropertyCategory, PropertyType } from "./property.interface";
 import db from "../../config_postgres";
 
 import PropertyImage from "../Image/Image";
 import PropertyPriceHistory from "../PropertyPriceHistory/PropertyPriceHistory";
-interface PropertyCreationAttributes extends Optional<PropertyAttributes, "id"> {}
+export type PropertyAttributes = InferCreationAttributes<Property>;
+class Property extends Model<InferAttributes<Property>, InferCreationAttributes<Property>> {
+ declare id: CreationOptional<string>;
+ declare type: PropertyType;
+ declare address: string;
+ declare city: string;
+ declare locationId: number;
+ declare bedrooms: number;
+ declare squarMeterPrice: number;
+ declare description: string;
+ declare bathrooms: number;
+ declare category: PropertyCategory;
+ declare district: CreationOptional<BPDistricts | null>;
+ declare yearBuilt: number;
+ declare price: number;
+ declare size: number;
+ declare listedByUserId: number;
 
-export interface PropertyOutput extends Required<PropertyAttributes> {}
-class Property
- extends Model<PropertyAttributes, PropertyCreationAttributes>
- implements PropertyAttributes
-{
- public size!: number;
- public id!: string;
- public listedByUserId?: number;
- public savedByUserId?: number[];
- public address!: string;
- public price!: number;
- public type!: PropertyType;
- public bedrooms!: number;
- public bathrooms!: number;
- public city!: string;
- public district?: BPDistricts;
- public squarMeterPrice?: number;
- public category!: PropertyCategory;
- public description?: string;
- public yearBuilt!: number;
- public locationId!: number;
- public location?: LocationData;
- public priceHistory?: PropertyPriceHistory[];
- public priceChange?: number;
- public oldPrice?: number;
- public readonly images?: PropertyImage[];
- public readonly createdAt!: Date;
- public readonly updatedAt!: Date;
- public readonly deletedAt!: Date;
- public getImages!: HasManyGetAssociationsMixin<PropertyImage>;
+ declare oldPrice: CreationOptional<number>;
+ declare priceChange: CreationOptional<number>;
+ declare createdAt: CreationOptional<Date>;
+ declare updatedAt: CreationOptional<Date>;
+ declare deletedAt: CreationOptional<Date>;
+
+ // Non-database fields
+ declare location?: NonAttribute<LocationData>;
+ declare priceHistory?: NonAttribute<PropertyPriceHistory[]>;
+ declare readonly images?: NonAttribute<PropertyImage[]>;
+
+ // Association mixins
+ declare getImages: HasManyGetAssociationsMixin<PropertyImage>;
 }
 Property.init(
  {
@@ -54,8 +55,7 @@ Property.init(
    defaultValue: () => nanoid(10),
   },
   type: {
-   type: DataTypes.ENUM,
-   values: Object.values(PropertyType),
+   type: DataTypes.ENUM(...Object.values(PropertyType)),
    allowNull: false,
   },
   address: {
@@ -87,13 +87,11 @@ Property.init(
    allowNull: false,
   },
   category: {
-   type: DataTypes.ENUM,
-   values: Object.values(PropertyCategory),
+   type: DataTypes.ENUM(...Object.values(PropertyCategory)),
    allowNull: false,
   },
   district: {
-   type: DataTypes.ENUM,
-   values: Object.values(BPDistricts),
+   type: DataTypes.ENUM(...Object.values(BPDistricts)),
    allowNull: true,
   },
   yearBuilt: {
@@ -120,8 +118,16 @@ Property.init(
    type: DataTypes.INTEGER,
    allowNull: false,
   },
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+  deletedAt: DataTypes.DATE,
  },
- { tableName: "properties", timestamps: true, sequelize: db, paranoid: true }
+ {
+  sequelize: db,
+  tableName: "properties",
+  timestamps: true,
+  paranoid: true,
+ }
 );
 Property.addHook("beforeCreate", async (property) => {
  console.log("beforeCreate property");

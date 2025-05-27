@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Roles } from "../db/models/User/user.interface";
 import { JwtPayload } from "types/types";
 const SECRET_KEY = process.env.JWT_SECRET || "secret";
 

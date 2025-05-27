@@ -1,15 +1,14 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import { Model, DataTypes, InferCreationAttributes, InferAttributes } from "sequelize";
 
 import db from "../../config_postgres";
 
-interface LocationCreationAttributes extends Optional<LocationAttributes, "id"> {}
-export interface LocationOutput extends Required<LocationAttributes> {}
-class Location extends Model<LocationAttributes, LocationCreationAttributes> {
- public id!: number;
- public lat!: number;
- public lon!: number;
- public readonly createdAt!: Date;
- public readonly updatedAt!: Date;
+class Location extends Model<InferAttributes<Location>, InferCreationAttributes<Location>> {
+ declare id: number;
+ declare lat: number;
+ declare lon: number;
+ declare boundingbox: number[];
+ declare readonly createdAt: Date;
+ declare readonly updatedAt: Date;
 }
 
 Location.init(
@@ -27,11 +26,12 @@ Location.init(
    type: DataTypes.DOUBLE,
    allowNull: false,
   },
-
   boundingbox: {
    type: DataTypes.ARRAY(DataTypes.DOUBLE),
    allowNull: true,
   },
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
  },
  {
   tableName: "locations",

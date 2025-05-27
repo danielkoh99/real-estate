@@ -1,6 +1,5 @@
 import PropertyImage from "../db/models/Image/Image";
-import Property from "../db/models/Property/Property";
-import { PropertyAttributes } from "../db/models/Property/property.interface";
+import Property, { PropertyAttributes } from "../db/models/Property/Property";
 import logger from "../logger/logger";
 import User from "../db/models/User/User";
 import { Op } from "sequelize";

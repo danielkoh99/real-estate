@@ -1,18 +1,20 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import {
+ Model,
+ DataTypes,
+ InferAttributes,
+ InferCreationAttributes,
+ CreationOptional,
+} from "sequelize";
 import db from "../../config_postgres";
-import Property from "../Property/Property";
-import { PropertyHistoryAttributes } from "./propertyPriceHistory.interface";
-interface PropertyHistoryCreationAttributes extends Optional<PropertyHistoryAttributes, "id"> {}
 
-export interface PropertyOutput extends Required<PropertyHistoryAttributes> {}
-class PropertyPriceHistory
- extends Model<PropertyHistoryAttributes, PropertyHistoryCreationAttributes>
- implements PropertyHistoryAttributes
-{
- public id!: number;
- public propertyId!: string;
- public price!: number;
- public changedAt!: Date;
+class PropertyPriceHistory extends Model<
+ InferAttributes<PropertyPriceHistory>,
+ InferCreationAttributes<PropertyPriceHistory>
+> {
+ declare id: CreationOptional<number>;
+ declare propertyId: string;
+ declare price: number;
+ declare changedAt: Date;
 }
 
 PropertyPriceHistory.init(
