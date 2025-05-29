@@ -5,9 +5,9 @@ import {
   parseAsString,
   parseAsArrayOf,
 } from "nuqs";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { useRef } from "react";
+import _ from "lodash";
 
 import usePropertyStore from "@/stores/propertyStore";
 import { useQueryStore } from "@/stores/queryStore";
@@ -18,17 +18,41 @@ import {
   BPDistricts,
 } from "@/types";
 
+const defaultParams = {
+  page: 1,
+  limit: 10,
+  sortBy: "createdAt",
+  sortDirection: SortDirection.asc,
+};
+
 const useFilterParams = () => {
   const { fetchProperties } = usePropertyStore();
-  const { updateFilters } = useQueryStore();
+  const { updateFilters, filters } = useQueryStore();
   const router = useRouter();
 
-  const defaultParams = {
-    page: 1,
-    limit: 10,
-    sortBy: "createdAt",
-    sortDirection: SortDirection.asc,
-  };
+  const [queryParams, setQueryParams] = useQueryStates(
+    {
+      page: parseAsInteger,
+      limit: parseAsInteger,
+      priceMin: parseAsInteger,
+      priceMax: parseAsInteger,
+      sizeMax: parseAsInteger,
+      type: parseAsStringEnum<PropertyType>(Object.values(PropertyType)),
+      sortBy: parseAsString,
+      yearBuilt: parseAsInteger,
+      sortDirection: parseAsStringEnum<SortDirection>(
+        Object.values(SortDirection)
+      ),
+      districts: parseAsArrayOf<BPDistricts>(
+        parseAsStringEnum<BPDistricts>(Object.values(BPDistricts)),
+        ","
+      ),
+    },
+    { history: "push" }
+  );
+
+  const prevQueryParams = useRef(queryParams);
+  const prevFilters = useRef(filters);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -42,7 +66,7 @@ const useFilterParams = () => {
 
         return acc;
       },
-      {} as Record<string, any>,
+      {} as Record<string, any>
     );
 
     if (Object.keys(missingParams).length > 0) {
@@ -52,64 +76,49 @@ const useFilterParams = () => {
           query: { ...urlQuery, ...missingParams },
         },
         undefined,
-        { shallow: true },
+        { shallow: true }
       );
     }
   }, [router.isReady]);
-  const [queryParams, setQueryParams] = useQueryStates(
-    {
-      page: parseAsInteger,
-      limit: parseAsInteger,
-      priceMin: parseAsInteger,
-      priceMax: parseAsInteger,
-      sizeMax: parseAsInteger,
-      type: parseAsStringEnum<PropertyType>(Object.values(PropertyType)),
-      sortBy: parseAsString,
-      yearBuilt: parseAsInteger,
-      sortDirection: parseAsStringEnum<SortDirection>(
-        Object.values(SortDirection),
-      ),
-      districts: parseAsArrayOf<BPDistricts>(
-        parseAsStringEnum<BPDistricts>(Object.values(BPDistricts)),
-        ",",
-      ),
-    },
-    { history: "push" },
-  );
 
-  const prevQueryParams = useRef(queryParams);
-
-  // Synchronize filters, query params, and fetched data with debounce
+  //  Sync Zustand store with URL query params
   useEffect(() => {
     if (router.pathname !== "/") return;
-    const fetchAndSync = async () => {
-      updateFilters(queryParams as Partial<PropertyFilters>); // Sync filters in the store
 
-      const res = await fetchProperties(); // Fetch properties based on current query params
+    const queryChanged = !_.isEqual(prevQueryParams.current, queryParams);
 
-      if (res) {
-        if (res.currentPage !== queryParams.page) {
-          setQueryParams((prev) => {
-            if (prev.page !== res.currentPage) {
-              return { ...prev, page: res.currentPage };
-            }
+    if (!queryChanged) return;
 
-            return prev;
-          });
-        }
+    prevQueryParams.current = queryParams;
+
+    const syncAndFetch = async () => {
+      updateFilters(queryParams as Partial<PropertyFilters>);
+      const res = await fetchProperties();
+
+      if (res && res.currentPage !== queryParams.page) {
+        setQueryParams((prev) => ({
+          ...prev,
+          page: res.currentPage,
+        }));
       }
     };
 
-    if (prevQueryParams.current !== queryParams) {
-      fetchAndSync();
-      prevQueryParams.current = queryParams;
-    }
+    syncAndFetch();
   }, [queryParams, fetchProperties, setQueryParams, updateFilters]);
 
-  return {
-    queryParams,
-    setQueryParams,
-  };
+  // Sync URL query params from Zustand store
+  useEffect(() => {
+    const filtersChanged = !_.isEqual(prevFilters.current, filters);
+
+    if (!filtersChanged) return;
+
+    prevFilters.current = filters;
+
+    setQueryParams((prev) => ({
+      ...prev,
+      ...filters,
+    }));
+  }, [filters, setQueryParams]);
 };
 
 export default useFilterParams;

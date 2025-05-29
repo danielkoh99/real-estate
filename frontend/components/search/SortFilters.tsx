@@ -1,13 +1,11 @@
 import { Select, SelectItem } from "@heroui/react";
 import { ChangeEvent, useEffect, useState } from "react";
 
-import useFilterParams from "@/hooks/useFilterParams";
 import { SortDirection } from "@/types";
 import { useQueryStore } from "@/stores/queryStore";
 
 const SortFilters = () => {
-  const { filters } = useQueryStore();
-  const { setQueryParams } = useFilterParams();
+  const { filters, updateFilters } = useQueryStore();
 
   const [safeFilters, setSafeFilters] = useState({
     limit: filters.limit ?? 10,
@@ -30,10 +28,7 @@ const SortFilters = () => {
 
     setSafeFilters((prev) => ({ ...prev, limit: newLimit }));
 
-    setQueryParams((prev) => ({
-      ...prev,
-      limit: newLimit,
-    }));
+    updateFilters({ limit: newLimit });
   };
 
   const handleSelectFilter = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -47,12 +42,7 @@ const SortFilters = () => {
       sortBy: sortByKey,
       sortDirection: newSortDirection,
     }));
-
-    setQueryParams((prev) => ({
-      ...prev,
-      sortBy: sortByKey,
-      sortDirection: newSortDirection,
-    }));
+    updateFilters({ sortBy: sortByKey, sortDirection: newSortDirection });
   };
 
   const selectedSortKey = `${safeFilters.sortBy}-${safeFilters.sortDirection.toLowerCase()}`;

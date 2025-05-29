@@ -3,12 +3,10 @@ import { ChangeEvent, useEffect, useState } from "react";
 
 import { BPDistricts, PropertyFilters, PropertyType } from "@/types";
 import { capitalizeFirst } from "@/utils/stringUtils";
-import useFilterParams from "@/hooks/useFilterParams";
 import { useQueryStore } from "@/stores/queryStore";
 
 const SearchFilter = () => {
-  const { filters } = useQueryStore();
-  const { setQueryParams } = useFilterParams();
+  const { filters, updateFilters } = useQueryStore();
   const [query, setQuery] = useState<Partial<PropertyFilters>>({
     ...filters,
   });
@@ -140,15 +138,7 @@ const SearchFilter = () => {
         </div>
 
         <div className="flex justify-end w-full">
-          <Button
-            variant="ghost"
-            onPress={() =>
-              setQueryParams((prev) => ({
-                ...prev,
-                ...query,
-              }))
-            }
-          >
+          <Button variant="ghost" onPress={() => updateFilters(query)}>
             Search
           </Button>
         </div>

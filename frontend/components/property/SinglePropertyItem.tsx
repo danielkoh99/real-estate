@@ -18,8 +18,7 @@ const SingleRealEstate: React.FC<{
   small?: boolean;
   loading?: boolean;
   classes?: string;
-  isActive?: boolean;
-}> = ({ property, loading, classes, small = false, isActive }) => {
+}> = ({ property, loading, classes, small = false }) => {
   return (
     <Link
       className="w-full text-white text-center rounded-lg h-full flex items-center"

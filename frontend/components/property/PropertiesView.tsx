@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { JSX, useState, useMemo, useEffect, useRef } from "react";
-
 import { Spinner } from "@heroui/react";
+
 import Error from "../global/Error";
 
 import NotFound from "./NotFound";

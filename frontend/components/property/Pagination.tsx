@@ -1,8 +1,8 @@
 import React from "react";
 import { Pagination } from "@heroui/react";
 
+import { useQueryStore } from "@/stores/queryStore";
 import usePropertyStore from "@/stores/propertyStore";
-import useFilterParams from "@/hooks/useFilterParams";
 
 export default function PaginationComponent({
   propertiesViewRef,
@@ -10,7 +10,7 @@ export default function PaginationComponent({
   propertiesViewRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const { totalPages, page, properties } = usePropertyStore();
-  const { setQueryParams } = useFilterParams();
+  const { updateFilters } = useQueryStore();
   const handlePageChange = (page: number) => {
     if (propertiesViewRef.current) {
       propertiesViewRef.current.scrollIntoView({
@@ -19,10 +19,7 @@ export default function PaginationComponent({
       });
     }
 
-    setQueryParams((prev) => ({
-      ...prev,
-      page: page,
-    }));
+    updateFilters({ page: page });
   };
 
   if (!totalPages || !properties.length) {

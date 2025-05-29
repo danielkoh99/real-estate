@@ -9,8 +9,10 @@ import usePropertyStore from "@/stores/propertyStore";
 import PaginationComponent from "@/components/property/Pagination";
 import SortFilters from "@/components/search/SortFilters";
 import TotalPropertiesCount from "@/components/property/TotalPropertiesCount";
+import useFilterParams from "@/hooks/useFilterParams";
 
 export default function IndexPage() {
+  useFilterParams();
   const { properties, loading, error, showMap, setShowMap } =
     usePropertyStore();
 

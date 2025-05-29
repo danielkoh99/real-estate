@@ -8,8 +8,8 @@ import useUserStore from "@/stores/userStore";
 const PropertyList: React.FC<{
   properties: PropertyResponse[] | undefined;
   delayedLoading?: boolean;
-  ref: React.RefObject<HTMLDivElement | null>;
-  showMap: boolean;
+  ref?: React.RefObject<HTMLDivElement | null>;
+  showMap?: boolean;
   activePropertyId?: string;
   itemRefs?: React.RefObject<Record<string, HTMLDivElement | null>>;
 }> = ({
@@ -49,11 +49,7 @@ const PropertyList: React.FC<{
               : ""
           }`}
         >
-          <SingleRealEstate
-            isActive={activePropertyId === property.id}
-            loading={delayedLoading}
-            property={property}
-          />
+          <SingleRealEstate loading={delayedLoading} property={property} />
         </div>
       ))}
     </div>
