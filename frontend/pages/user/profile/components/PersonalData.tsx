@@ -116,6 +116,18 @@ export default function PersonalData({
 
         <Button
           className="w-full md:w-auto"
+          color="warning"
+          isDisabled={!isEditing}
+          variant="shadow"
+          onPress={() => {
+            setIsEditing(false);
+          }}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          className="w-full md:w-auto"
           color="primary"
           variant="shadow"
           onPress={() => {

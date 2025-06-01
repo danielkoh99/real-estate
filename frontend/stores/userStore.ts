@@ -1,25 +1,30 @@
 import { create } from "zustand";
 
-import { BaseProperty, User } from "@/types";
+import { PropertyResponse, User } from "@/types";
 import { apiRequest } from "@/utils";
 interface UserStore {
-  savedProperties: BaseProperty[];
+  savedProperties: PropertyResponse[];
   listedProperties: string[];
   currentUser?: User;
   fetchSavedProperties: () => Promise<void>;
-  getSavedProperties: () => BaseProperty[];
+  getSavedProperties: () => PropertyResponse[];
   getSavedPropertiesIds: () => string[];
   saveProperty: (propertyId: string, userId: string) => Promise<void>;
   setCurrentUser: (user: User) => void;
   clearUser: () => void;
+  loading: boolean;
+  error: string | null;
 }
 const useUserStore = create<UserStore>((set, get) => ({
+  loading: false,
+  error: null,
   savedProperties: [],
   listedProperties: [],
   currentUser: undefined,
   fetchSavedProperties: async () => {
     try {
-      const response = await apiRequest<BaseProperty[]>({
+      set({ loading: true });
+      const response = await apiRequest<PropertyResponse[]>({
         url: "/property/saved",
         method: "GET",
       });
@@ -31,6 +36,8 @@ const useUserStore = create<UserStore>((set, get) => ({
       }
     } catch (error) {
       throw error;
+    } finally {
+      set({ loading: false });
     }
   },
   setCurrentUser: (user) => set({ currentUser: user }),
@@ -46,8 +53,8 @@ const useUserStore = create<UserStore>((set, get) => ({
       });
 
       if (error) throw error;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
     }
   },
   clearUser: () => set({ currentUser: undefined }),

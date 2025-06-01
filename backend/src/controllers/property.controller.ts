@@ -11,6 +11,7 @@ import logger from "../logger/logger";
 import { CustomRequest, PropertyParams } from "../types/types";
 import { BPDistricts, PropertyType } from "../db/models/Property/property.interface";
 import Property, { PropertyAttributes } from "../db/models/Property/Property";
+import { Location, PropertyImage } from "db/models";
 const createProperty = async (
  req: Request<{}, {}, PropertyAttributes & { imagePaths: string[] }>,
  res: Response
@@ -122,9 +123,10 @@ const savePropertyListing = async (req: CustomRequest, res: Response) => {
 };
 
 const getSavedProperties = async (req: Request, res: Response) => {
- const userId = req.user.id;
- if (!userId) return res.status(404).json({ message: "User not found" });
+ logger.info(JSON.stringify(req.user));
  try {
+  const userId = req.user.id;
+  if (!userId) return res.status(404).json({ message: "User id found" });
   const user = await getUser(userId);
   if (!user) return res.status(404).json({ message: "User not found" });
   const userSavedProperties = await user.getSavedProperties({
@@ -142,6 +144,17 @@ const getSavedProperties = async (req: Request, res: Response) => {
     "bedrooms",
     "bathrooms",
     "squarMeterPrice",
+   ],
+   include: [
+    {
+     model: PropertyImage,
+     as: "images",
+    },
+    {
+     model: Location,
+     as: "location",
+     attributes: ["lat", "lon", "boundingbox"],
+    },
    ],
   });
   return res.status(200).send(userSavedProperties);

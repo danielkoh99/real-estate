@@ -18,7 +18,7 @@ const SaveListingBtn: React.FC<{
   const [clicked, setClicked] = useState(isSaved);
   const [isAnimating, setIsAnimating] = useState(false);
   const { data: session } = useSession();
-  const { saveProperty } = useUserStore();
+  const { saveProperty, fetchSavedProperties } = useUserStore();
   const { openModal } = useModal();
   const { currentUser } = useUserStore();
   const fetch = async () => {
@@ -39,6 +39,7 @@ const SaveListingBtn: React.FC<{
         setIsAnimating(true);
         setTimeout(() => setIsAnimating(false), 1000);
       }
+      await fetchSavedProperties();
     }
   };
 
