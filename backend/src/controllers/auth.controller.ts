@@ -84,7 +84,7 @@ const signInUser = async (req: Request<{}, {}, UserRequestBody>, res: Response<U
    return res.status(404).json({ message: "Incorrect email and password combination" });
   }
   // Authenticate user with jwt
-  const token = signToken({ userId: user.id, role: user.role });
+  const token = signToken({ id: user.id, role: user.role });
   res.cookie("token", token, {
    httpOnly: true,
    secure: process.env.NODE_ENV === "production",
