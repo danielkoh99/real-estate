@@ -2,7 +2,7 @@ import axios from "axios";
 import { signOut } from "next-auth/react";
 // Set up an Axios instance
 const api = axios.create({
-  baseURL: process.env.API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 // Axios interceptor to handle 401 errors
@@ -13,7 +13,7 @@ api.interceptors.response.use(
       signOut();
     }
 
-    return Promise.reject(error);
+    return Promise.reject, error;
   }
 );
 export default api;
