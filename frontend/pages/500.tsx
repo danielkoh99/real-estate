@@ -1,13 +1,13 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
-const Custom404: React.FC = () => {
+const Custom500: React.FC = () => {
   return (
     <div className="flex h-screen justify-center items-center bg-gray-100">
       <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
         <ExclamationTriangleIcon className="mx-auto h-16 w-16 text-red-500" />
         <h1 className="mt-4 text-3xl font-semibold text-gray-800">
-          404 - Page Not Found
+          500 - Server error
         </h1>
         <p className="mt-2 text-gray-600">
           Oops! The page you&apos;re looking for doesn&apos;t exist.
@@ -23,4 +23,4 @@ const Custom404: React.FC = () => {
   );
 };
 
-export default Custom404;
+export default Custom500;
