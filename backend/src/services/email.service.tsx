@@ -2,7 +2,7 @@ import React from "react";
 import nodemailer from "nodemailer";
 import logger from "../logger/logger";
 import { render } from "@react-email/components";
-import { VerifyEmail } from "@emails/verify-email";
+import VerifyEmail from "emails/VerifyEmail";
 const sendEmail = async ({
  from,
  to,

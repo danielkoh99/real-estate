@@ -23,8 +23,7 @@
   "noFallthroughCasesInSwitch": true,
   "forceConsistentCasingInFileNames": true,
   "paths": {
-   "@/*": ["src/*"],
-   "@emails/*": ["react-email-starter/emails/*"]
+   "@/*": ["src/*"]
   }
  },
  "include": ["src/**/**/*", "global.d.ts", "types/**/*.d.ts"],
