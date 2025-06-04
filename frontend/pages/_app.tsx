@@ -1,7 +1,6 @@
 import type { AppProps } from "next/app";
 
 import "@/styles/globals.css";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -35,19 +34,19 @@ export default function App({
   return (
     <QueryClientProvider client={queryClient}>
       <UIProviders>
-        <NextThemesProvider>
-          <SessionProvider session={session}>
-            <SessionManager />
-            <NuqsAdapter>
-              <ModalProvider>
-                <LayoutTransition transitionKey={router.pathname}>
-                  <Component {...pageProps} />
-                  <LoginRequiredModal />
-                </LayoutTransition>
-              </ModalProvider>
-            </NuqsAdapter>
-          </SessionProvider>
-        </NextThemesProvider>
+        {/* <NextThemesProvider> */}
+        <SessionProvider session={session}>
+          <SessionManager />
+          <NuqsAdapter>
+            <ModalProvider>
+              <LayoutTransition transitionKey={router.pathname}>
+                <Component {...pageProps} />
+                <LoginRequiredModal />
+              </LayoutTransition>
+            </ModalProvider>
+          </NuqsAdapter>
+        </SessionProvider>
+        {/* </NextThemesProvider> */}
       </UIProviders>
     </QueryClientProvider>
   );

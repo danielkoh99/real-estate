@@ -8,6 +8,7 @@ import {
  relatedProperties,
  updatePropertyById,
  deletePropertyById,
+ getListedProperties,
 } from "../../../controllers/property.controller";
 import { auth } from "../../../middlewares/auth.middleware";
 import { uploadAndOptimizeImages } from "../../../middlewares/upload.middleware";
@@ -15,6 +16,7 @@ import { uploadAndOptimizeImages } from "../../../middlewares/upload.middleware"
 const propertyRouter = Router();
 propertyRouter.get("/", getProperties);
 propertyRouter.get("/saved", [auth], getSavedProperties);
+propertyRouter.get("/listed", [auth], getListedProperties);
 propertyRouter.post("/save", [auth], savePropertyListing);
 propertyRouter.post(
  "/",

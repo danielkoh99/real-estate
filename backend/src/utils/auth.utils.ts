@@ -17,7 +17,7 @@ function verifyPassword(password: string, hash: string) {
 }
 
 async function sendNewVerificationLink(email: string, firstName: string) {
- const token = signToken({ email: email }, "1h");
+ const token = signToken({ email: email }, "24h");
  const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
  // Send verification email
  await sendVerificationEmail(email, firstName, verifyUrl);

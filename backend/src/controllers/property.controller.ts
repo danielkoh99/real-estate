@@ -103,22 +103,24 @@ const relatedProperties = async (req: Request, res: Response, next: NextFunction
  }
 };
 
-const savePropertyListing = async (req: CustomRequest, res: Response) => {
- const userId = req.user.id;
- logger.info(userId);
+const savePropertyListing = async (req: CustomRequest, res: Response, next: NextFunction) => {
  try {
   const { propertyId, userId } = req.body;
   const user = await getUser(userId);
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) throw new Error("User not found");
   const isSaved = await user.hasSavedProperty(propertyId);
+  const isListed = await user.hasListedProperty(propertyId);
+  if (isListed) {
+   throw new Error("Property listed cannot be saved");
+  }
   if (isSaved) {
    await user.removeSavedProperty(propertyId);
-   return res.status(200).json({ message: "Property unsaved successfully" });
+   res.status(200).json({ message: "Property unsaved successfully" });
   }
   await user.addSavedProperty(propertyId);
-  return res.status(200).json({ message: "Property saved successfully" });
+  res.status(200).json({ message: "Property saved successfully" });
  } catch (error) {
-  return res.status(500).json({ message: "Failed to save property", error });
+  next(error);
  }
 };
 
@@ -163,24 +165,28 @@ const getSavedProperties = async (req: Request, res: Response) => {
   return res.status(500).send(err);
  }
 };
-const getListedProperties = async (req: Request<{ userId: number }>, res: Response) => {
- const { userId } = req.params;
+const getListedProperties = async (req: Request, res: Response, next: NextFunction) => {
+ const userId = req.user.id;
  try {
-  const user = await getUser(
-   userId,
-   ["password"],
-   [
+  const user = await getUser(userId);
+  if (!user) throw new Error("User not found");
+  const listedProperties = await user?.getListedProperties({
+   include: [
     {
-     model: Property,
-     as: "listedProperties",
+     model: PropertyImage,
+     as: "images",
     },
-   ]
-  );
-  if (!user) return res.status(404).json({ message: "User not found" });
-  return res.status(200).send(user);
+    {
+     model: Location,
+     as: "location",
+     attributes: ["lat", "lon", "boundingbox"],
+    },
+   ],
+  });
+  if (!listedProperties) throw new Error("No listed properties found");
+  res.status(200).send(listedProperties);
  } catch (err) {
-  logger.error(err);
-  return res.status(500).send(err);
+  next(err);
  }
 };
 export {

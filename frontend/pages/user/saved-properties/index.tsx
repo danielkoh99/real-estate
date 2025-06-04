@@ -25,7 +25,6 @@ export default function IndexPage() {
   return (
     <DefaultLayout>
       <div className="flex flex-col h-screen overflow-hidden">
-        {/* Top controls */}
         {savedProperties?.length > 0 && (
           <div className="p-2">
             <Switch
@@ -46,7 +45,6 @@ export default function IndexPage() {
 
         {error && <Error error_message={error} />}
 
-        {/* Main view takes remaining space */}
         <div className="flex-1 min-h-0 overflow-hidden">
           <PropertiesView
             ref={propertiesViewRef}

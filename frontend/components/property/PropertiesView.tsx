@@ -15,7 +15,8 @@ const PropertiesView: React.FC<{
   loading: boolean;
   ref: React.RefObject<HTMLDivElement | null>;
   showMap: boolean;
-}> = ({ properties, error, loading, ref, showMap }): JSX.Element => {
+  canEdit?: boolean;
+}> = ({ properties, error, loading, ref, showMap, canEdit }): JSX.Element => {
   const [delayedLoading, setDelayedLoading] = useState(false);
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [activePropertyId, setActivePropertyId] = useState<string>();
@@ -80,6 +81,7 @@ const PropertiesView: React.FC<{
           <PropertyList
             ref={ref}
             activePropertyId={activePropertyId}
+            canEdit={canEdit}
             delayedLoading={delayedLoading}
             itemRefs={itemRefs}
             properties={properties}

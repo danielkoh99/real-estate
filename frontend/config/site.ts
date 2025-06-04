@@ -10,22 +10,13 @@ export const siteConfig = {
       label: "Home",
       href: "/",
     },
-    {
-      label: "Profile",
-      href: "/user/profile",
-      protected: true,
-    },
+
     { label: "Upload Listing", href: "/property/new", protected: true },
   ],
   navMenuItems: [
     {
       label: "Home",
       href: "/",
-    },
-    {
-      label: "Profile",
-      href: "/profile",
-      protected: true,
     },
     { label: "Upload Listing", href: "/property/new", protected: true },
     {
@@ -42,10 +33,10 @@ export function useFilteredNavItems() {
 
   return {
     navItems: siteConfig.navItems.filter(
-      (item) => !item.protected || isAuthenticated,
+      (item) => !item.protected || isAuthenticated
     ),
     navMenuItems: siteConfig.navMenuItems.filter(
-      (item) => !item.protected || isAuthenticated,
+      (item) => !item.protected || isAuthenticated
     ),
   };
 }

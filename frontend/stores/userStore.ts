@@ -4,9 +4,10 @@ import { PropertyResponse, User } from "@/types";
 import { apiRequest } from "@/utils";
 interface UserStore {
   savedProperties: PropertyResponse[];
-  listedProperties: string[];
+  listedProperties: PropertyResponse[];
   currentUser?: User;
   fetchSavedProperties: () => Promise<void>;
+  fetchListedProperties: () => Promise<void>;
   getSavedProperties: () => PropertyResponse[];
   getSavedPropertiesIds: () => string[];
   saveProperty: (propertyId: string, userId: string) => Promise<void>;
@@ -33,6 +34,25 @@ const useUserStore = create<UserStore>((set, get) => ({
         set({ savedProperties: response });
       } else {
         set({ savedProperties: [] });
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      set({ loading: false });
+    }
+  },
+  fetchListedProperties: async () => {
+    try {
+      set({ loading: true });
+      const response = await apiRequest<PropertyResponse[]>({
+        url: "/property/listed",
+        method: "GET",
+      });
+
+      if (response) {
+        set({ listedProperties: response });
+      } else {
+        set({ listedProperties: [] });
       }
     } catch (error) {
       throw error;

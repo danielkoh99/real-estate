@@ -17,17 +17,12 @@ export default function UserAvatar() {
     [session],
   );
   const handleDropdownAction = (key: Key) => {
-    if (key === "signout") {
+    const keyString = key.toString();
+
+    if (keyString === "signout") {
       signOut();
-    }
-    if (key === "profile") {
-      router.push("/user/profile");
-    }
-    if (key === "saved-listings") {
-      router.push("/user/saved-listings");
-    }
-    if (key === "messages") {
-      router.push("/user/messages");
+    } else {
+      router.push(keyString);
     }
   };
 
@@ -37,9 +32,14 @@ export default function UserAvatar() {
         <User className="cursor-pointer" name={name} />
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions" onAction={handleDropdownAction}>
-        <DropdownItem key="profile">Profile</DropdownItem>
-        <DropdownItem key="saved-listings">Saved Listings</DropdownItem>
-        <DropdownItem key="messages">Messages</DropdownItem>
+        <DropdownItem key="/user/profile">Profile</DropdownItem>
+        <DropdownItem key="/user/listed-properties">
+          Listed properties
+        </DropdownItem>
+        <DropdownItem key="/user/saved-properties">
+          Saved properties
+        </DropdownItem>
+        <DropdownItem key="/user/messages">Messages</DropdownItem>
         <DropdownItem key="signout" className="text-danger">
           Sign out
         </DropdownItem>

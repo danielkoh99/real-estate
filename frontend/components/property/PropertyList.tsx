@@ -12,6 +12,7 @@ const PropertyList: React.FC<{
   showMap?: boolean;
   activePropertyId?: string;
   itemRefs?: React.RefObject<Record<string, HTMLDivElement | null>>;
+  canEdit?: boolean;
 }> = ({
   properties,
   delayedLoading,
@@ -19,6 +20,7 @@ const PropertyList: React.FC<{
   showMap,
   activePropertyId,
   itemRefs,
+  canEdit,
 }) => {
   const { currentUser, fetchSavedProperties } = useUserStore();
 
@@ -49,7 +51,11 @@ const PropertyList: React.FC<{
               : ""
           }`}
         >
-          <SingleRealEstate loading={delayedLoading} property={property} />
+          <SingleRealEstate
+            canEdit={canEdit}
+            loading={delayedLoading}
+            property={property}
+          />
         </div>
       ))}
     </div>

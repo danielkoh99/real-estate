@@ -18,11 +18,16 @@ const SingleRealEstate: React.FC<{
   small?: boolean;
   loading?: boolean;
   classes?: string;
-}> = ({ property, loading, classes, small = false }) => {
+  canEdit?: boolean;
+}> = ({ property, loading, classes, canEdit, small = false }) => {
+  const href = canEdit
+    ? `/property/edit/${property.id}`
+    : `/property/${property.id}`;
+
   return (
     <Link
       className="w-full text-white text-center rounded-lg h-full flex items-center"
-      href={`/property/${property.id}`}
+      href={href}
     >
       <div
         className={twMerge(
@@ -32,7 +37,7 @@ const SingleRealEstate: React.FC<{
       >
         <Card className="shadow-sm rounded-lg overflow-hidden border border-slate-200 transition-all duration-300 transform hover:shadow-lg w-full min-h-[400px] flex flex-col h-full">
           <CardHeader className="p-0 relative h-[200px] ">
-            {!loading && (
+            {!loading && !canEdit && (
               <>
                 <div className="absolute top-0 right-0 bg-gray-800 text-white text-xs rounded-bl-lg px-2 py-1 flex items-center opacity-80">
                   <CameraIcon className="h-8 w-8 mr-1" />
