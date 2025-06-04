@@ -24,6 +24,7 @@
 		"lodash": "^4.17.21",
 		"next": "^15.2.0-canary.31",
 		"next-auth": "^4.24.7",
+		"next-runtime-env": "^3.3.0",
 		"next-themes": "^0.2.1",
 		"nuqs": "^2.2.1",
 		"react": "19.0.0",

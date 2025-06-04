@@ -1,5 +1,6 @@
 import axios from "axios";
 import { signOut } from "next-auth/react";
+console.log(process.env.NEXT_PUBLIC_API_URL);
 // Set up an Axios instance
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
