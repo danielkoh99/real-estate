@@ -13,10 +13,6 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Copy the production environment file and rename it to .env
-COPY .env.production .env
-RUN rm -f .env.local
-
 # Build the Next.js application using the production environment
 RUN npm run build
 
