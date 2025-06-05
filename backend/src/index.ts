@@ -24,9 +24,19 @@ const limiter = rateLimit({
 const app: Express = express();
 const port = process.env.PORT || 3000;
 app.use(helmet());
+const allowedOrigins = [
+ `http://localhost:${process.env.FRONTEND_PORT || 3001}`,
+ "https://daningatlan.duckdns.org",
+];
 app.use(
  cors({
-  origin: `http://localhost:${process.env.FRONTEND_PORT || 3001}`,
+  origin: (origin, callback) => {
+   if (!origin || allowedOrigins.includes(origin)) {
+    callback(null, true);
+   } else {
+    callback(new Error("Not allowed by CORS"));
+   }
+  },
   credentials: true,
  })
 );

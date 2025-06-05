@@ -16,7 +16,12 @@ const nextConfig = {
         port: "3000",
         pathname: "/uploads/**",
       },
-
+      {
+        protocol: "https",
+        hostname: "daningatlan.duckdns.org",
+        port: "3000",
+        pathname: "/uploads/**",
+      },
     ],
   },
 };
