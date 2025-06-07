@@ -11,6 +11,7 @@ import { logRequest } from "./middlewares/logRequest.middleware";
 import helmet from "helmet";
 import { __dirname } from "./utils";
 import dbInit from "./db/init";
+import db from "db/config_postgres";
 
 const limiter = rateLimit({
  windowMs: 15 * 60 * 1000,
@@ -61,7 +62,14 @@ app.use("/static", express.static(path.join(__dirname, "../../src/emails", "stat
 app.get("/", (req: Request, res: Response) => {
  res.send("Server is running");
 });
-
+app.get("/health", async (req: Request, res: Response) => {
+ try {
+  await db.authenticate();
+  res.status(200).json({ status: "ok", db: "connected" });
+ } catch (error) {
+  res.status(500).json({ status: "error", db: "disconnected" });
+ }
+});
 app.use((req: Request, res: Response, next: NextFunction) => {
  res.status(404).json({ message: "Route not found" });
 });
