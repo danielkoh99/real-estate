@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:18 AS builder
+FROM node:20 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -20,7 +20,7 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN npm run build
 
 # Start a new, minimal image
-FROM node:18-slim AS runner
+FROM node:20-slim AS runner
 
 # Set working directory
 WORKDIR /app
