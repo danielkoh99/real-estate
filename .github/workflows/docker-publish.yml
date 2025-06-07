@@ -1,11 +1,11 @@
-name: Build and Push Docker Image
+name: Build and Push Docker Images (Frontend & Backend)
 
 on:
   push:
     branches:
-      - main  # Or your preferred branch
+      - main
     tags:
-      - 'v*'  # Also runs on version tags like v1.0.0
+      - 'v*'  # For versioned releases like v1.0.0
 
 jobs:
   build-and-push:
@@ -24,17 +24,29 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract tag or commit SHA
+      - name: Determine tag
         id: vars
         run: |
-          echo "TAG=${GITHUB_REF##*/}" >> "$GITHUB_ENV"
-          echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            echo "TAG=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          else
+            echo "TAG=latest" >> "$GITHUB_ENV"
+          fi
 
-      - name: Build and push Docker image
+      - name: Build & Push Frontend Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
           tags: |
-            danielkohari/real-estate:${{ env.TAG }}
-            danielkohari/real-estate:latest
+            danielkohari/real-estate-frontend:${{ env.TAG }}
+
+      - name: Build & Push Backend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            danielkohari/real-estate-backend:${{ env.TAG }}
