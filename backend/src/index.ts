@@ -12,6 +12,9 @@ import helmet from "helmet";
 import { __dirname } from "./utils";
 import dbInit from "./db/init";
 import db from "db/config_postgres";
+const app: Express = express();
+
+app.set("trust proxy", 1);
 
 const limiter = rateLimit({
  windowMs: 15 * 60 * 1000,
@@ -22,7 +25,6 @@ const limiter = rateLimit({
  legacyHeaders: false,
 });
 
-const app: Express = express();
 const port = process.env.PORT || 3000;
 app.use(helmet());
 const allowedOrigins = [
