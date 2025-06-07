@@ -8,15 +8,10 @@ export default function GoToMaps({ address }: { address: string | undefined }) {
 
   return (
     <Tooltip content="Open in Google Maps">
-      <div className="p-2 border hover:shadow-md rounded-md transition-all cursor-pointer">
-        <button
-          className="flex items-center space-x-1 text-sm lg:text-lg"
-          onClick={(e) => goToMapsUrl(e, address)}
-        >
-          <MapPinIcon className="h-4 w-4 text-gray-500" />
-          <p className="truncate">Show in maps</p>
-        </button>
-      </div>
+      <MapPinIcon
+        className="h-8 w-8 text-gray-500 cursor-pointer transition opacity-85 hover:opacity-100"
+        onClick={(e) => goToMapsUrl(e, address)}
+      />
     </Tooltip>
   );
 }

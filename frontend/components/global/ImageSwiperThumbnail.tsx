@@ -28,7 +28,7 @@ export default function ImageSwiperThumbnail({
       <Swiper
         loop
         navigation
-        className="rounded-md mb-4 w-full max-w-[700px] mx-auto"
+        className="w-full max-w-[700px] md:max-w-[800px] lg:max-w-[900px] mx-auto rounded-md mb-6"
         modules={[FreeMode, Navigation, Thumbs]}
         spaceBetween={10}
         thumbs={{
@@ -37,11 +37,11 @@ export default function ImageSwiperThumbnail({
       >
         {images.map((image, index) => (
           <SwiperSlide key={image.url + index}>
-            <div className="relative w-full aspect-square rounded-md overflow-hidden max-h-[500px]">
+            <div className="relative w-full aspect-[4/3] md:aspect-video lg:aspect-[3/2] max-h-[500px] rounded-md overflow-hidden bg-gray-100">
               <Image
                 fill
                 alt={`Image ${index + 1}`}
-                className="object-cover rounded-md"
+                className="object-cover md:object-contain rounded-md"
                 sizes="(max-width: 768px) 100vw, 700px"
                 src={image.url}
               />
@@ -51,22 +51,24 @@ export default function ImageSwiperThumbnail({
       </Swiper>
 
       <Swiper
-        freeMode
         watchSlidesProgress
-        className="mt-4 cursor-grab"
-        modules={[FreeMode, Navigation, Thumbs]}
+        className="w-full mx-auto cursor-grab"
+        modules={[FreeMode, Thumbs]}
         slidesPerView={Math.min(images.length, 5)}
         spaceBetween={8}
         onSwiper={setThumbsSwiper}
       >
         {images.map((image, index) => (
-          <SwiperSlide key={image.url + "-" + index} className="!w-20">
-            <div className="relative group w-20 aspect-square rounded-md overflow-hidden border border-gray-200">
+          <SwiperSlide
+            key={image.url + "-" + index}
+            className="!w-20 sm:!w-24 md:!w-28 lg:!w-32"
+          >
+            <div className="relative w-full aspect-square rounded-md overflow-hidden border border-gray-200 bg-white hover:border-primary-500 transition">
               <Image
                 fill
                 alt={`Thumbnail ${index + 1}`}
                 className="object-cover"
-                sizes="(max-width: 640px) 80px, (max-width: 1024px) 96px, (max-width: 1440px) 112px, 144px"
+                sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, (max-width: 1024px) 112px, 128px"
                 src={image.url}
               />
             </div>
