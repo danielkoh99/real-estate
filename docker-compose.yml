@@ -1,26 +1,26 @@
 services:
   db:
     image: postgres
-    container_name: postgres
+    container_name: real-estate-db
     restart: unless-stopped
     ports:
       - "${DB_PORT}:${DB_PORT}"
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_USER: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - data:/var/lib/postgresql/data
   backend:
     image: danielkohari/real-estate-backend:latest
-    container_name: backend
+    container_name: real-estate-backend
     restart: unless-stopped
     depends_on:
       - db
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     environment:
-      - DB_HOST=${DB_PASSWORD}
+      - DB_HOST=db
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
@@ -34,10 +34,8 @@ services:
 
   frontend:
     image: danielkohari/real-estate-frontend:latest
-    container_name: frontend
+    container_name: real-estate-frontend
     restart: unless-stopped
-    depends_on:
-      - backend
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     environment:
@@ -46,5 +44,6 @@ services:
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
       - API_URL=${API_URL}
+
 volumes:
   data:
