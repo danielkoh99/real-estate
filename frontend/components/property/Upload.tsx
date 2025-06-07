@@ -130,19 +130,18 @@ const Upload = ({
         <div className="mt-4 flex space-x-4 overflow-x-auto pb-2">
           {files.map((file) => (
             <div
-              key={file.name + Date.now()}
-              className="relative group w-28 md:w-36 flex-shrink-0"
+              key={file.name}
+              className="relative group w-36 aspect-square flex-shrink-0 rounded-md overflow-hidden"
             >
               <Image
+                fill
                 alt={file.name}
-                className="object-cover w-full h-full rounded-md"
-                height={200}
+                className="object-cover"
                 src={file.url}
-                width={200}
               />
-
               <button
                 className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                type="button"
                 onClick={() => removeFile(file)}
               >
                 <XMarkIcon className="w-5 h-5" />

@@ -27,49 +27,47 @@ export default function ImageSwiperThumbnail({
     <>
       <Swiper
         loop
-        className="rounded-md mb-4 h-[300px] md:h-[500px] w-full"
+        navigation
+        className="rounded-md mb-4 w-full max-w-[700px] mx-auto"
         modules={[FreeMode, Navigation, Thumbs]}
-        navigation={true}
         spaceBetween={10}
         thumbs={{
           swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
         }}
       >
-        {images?.map((image, index) => (
+        {images.map((image, index) => (
           <SwiperSlide key={image.url + index}>
-            <div className="flex w-full h-[300px] md:h-[500px] justify-center items-center ">
+            <div className="relative w-full aspect-square rounded-md overflow-hidden max-h-[500px]">
               <Image
-                alt={image.url}
-                className="object-contain rounded-md w-full"
-                height={500}
+                fill
+                alt={`Image ${index + 1}`}
+                className="object-cover rounded-md"
+                sizes="(max-width: 768px) 100vw, 700px"
                 src={image.url}
-                width={500}
               />
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
+
       <Swiper
-        className="mt-4 h-[100px] md:h-[150px] cursor-grab w-full"
-        freeMode={true}
+        freeMode
+        watchSlidesProgress
+        className="mt-4 cursor-grab"
         modules={[FreeMode, Navigation, Thumbs]}
-        slidesPerView={4}
-        spaceBetween={10}
-        watchSlidesProgress={true}
+        slidesPerView={Math.min(images.length, 5)}
+        spaceBetween={8}
         onSwiper={setThumbsSwiper}
       >
-        {images?.map((image, index) => (
-          <SwiperSlide
-            key={image.url + index}
-            className="rounded-md overflow-hidden"
-          >
-            <div className="relative w-full h-[100px] md:h-[150px] overflow-hidden rounded-md">
+        {images.map((image, index) => (
+          <SwiperSlide key={image.url + "-" + index} className="!w-20">
+            <div className="relative group w-20 aspect-square rounded-md overflow-hidden border border-gray-200">
               <Image
-                alt={image.url}
-                className="object-cover w-full h-full"
-                height={200}
+                fill
+                alt={`Thumbnail ${index + 1}`}
+                className="object-cover"
+                sizes="(max-width: 640px) 80px, (max-width: 1024px) 96px, (max-width: 1440px) 112px, 144px"
                 src={image.url}
-                width={200}
               />
             </div>
           </SwiperSlide>
