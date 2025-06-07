@@ -21,6 +21,7 @@ const SignupForm = () => {
     reset,
   } = useForm<Schema>({
     resolver: zodResolver(signupScheme),
+    mode: "onChange",
   });
   const { mutate } = useMutation({
     mutationFn: signUpUser,

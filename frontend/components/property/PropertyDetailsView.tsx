@@ -28,17 +28,21 @@ export default function PropertyDetailsView({
   );
   const title = `${property.type} for sale`;
   const hasListedByUser = "listedByUser" in property && property.listedByUser;
-  const locationObj = useMemo<MapLocationData>(() => {
+  const locationObj = useMemo<MapLocationData | undefined>(() => {
     const p = property as PropertyForDisplay;
 
-    return {
-      lat: p.location.lat,
-      lon: p.location.lon,
-      boundingbox: p.location.boundingbox,
-      display_name: p.address,
-      propertyId: p.id,
-      image: p.images[0].url,
-    };
+    if (!preview) {
+      return {
+        lat: p.location.lat,
+        lon: p.location.lon,
+        boundingbox: p.location.boundingbox,
+        display_name: p.address,
+        propertyId: p.id,
+        image: p.images[0].url,
+      };
+    }
+
+    return undefined;
   }, [property]);
 
   return (
@@ -108,7 +112,7 @@ export default function PropertyDetailsView({
           </CardBody>
         </Card>
       </div>
-      {hasListedByUser && !preview && (
+      {hasListedByUser && locationObj && (
         <div className="w-full md:w-2/5">
           <div className="sticky top-0 h-screen flex flex-col gap-5">
             <ContactUploader listedByUser={property.listedByUser} />

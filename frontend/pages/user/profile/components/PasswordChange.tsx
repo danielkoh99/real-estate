@@ -14,6 +14,7 @@ export default function PasswordChange() {
     formState: { errors, isSubmitting },
   } = useForm<PasswordFormData>({
     resolver: zodResolver(passwordResetScheme),
+    mode: "onChange",
   });
 
   const onSubmit = async (_data: PasswordFormData) => {};

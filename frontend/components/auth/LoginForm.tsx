@@ -21,6 +21,7 @@ const LoginForm = () => {
     reset,
   } = useForm<Schema>({
     resolver: zodResolver(signinScheme),
+    mode: "onChange",
   });
   const handleLogin = async (data: Schema) => {
     const { email, password } = data;

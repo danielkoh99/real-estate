@@ -74,6 +74,7 @@ export default function AddPropertyForm({
   } = useForm<AddProperty>({
     resolver: zodResolver(propertySchema),
     defaultValues: formData,
+    mode: "onChange",
   });
 
   useEffect(() => {

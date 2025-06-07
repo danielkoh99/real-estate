@@ -1,5 +1,7 @@
 # Real Estate Web App
 
+**Live Site**: 🌐 [https://daningatlan.duckdns.org](https://daningatlan.duckdns.org)
+
 A modern and user-friendly real estate web application that allows users to view, search, and filter property listings, as well as upload and manage their own listings. Built with cutting-edge web technologies for a smooth and seamless experience.
 
 ## System architecture
