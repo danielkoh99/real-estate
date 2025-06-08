@@ -1,8 +1,11 @@
 # Real Estate Web App
+A modern and user-friendly real estate web application that allows users to view, search, and filter property listings, as well as upload and manage their own listings. Built with cutting-edge web technologies for a smooth and seamless experience.
 
 **Live Site**: 🌐 [https://daningatlan.duckdns.org](https://daningatlan.duckdns.org)
 
-A modern and user-friendly real estate web application that allows users to view, search, and filter property listings, as well as upload and manage their own listings. Built with cutting-edge web technologies for a smooth and seamless experience.
+
+**Build status** [![Build and Push Docker Images (Frontend & Backend)](https://github.com/danielkoh99/real-estate/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/danielkoh99/real-estate/actions/workflows/docker-publish.yml)
+
 
 ## System architecture
 
