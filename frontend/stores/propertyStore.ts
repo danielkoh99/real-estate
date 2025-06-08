@@ -23,6 +23,7 @@ interface Store {
   showMap: boolean;
   setShowMap: (value: boolean) => void;
   fetchProperties: () => Promise<PropertyRes | null>;
+  fetchUserProperties: () => Promise<void>;
   getAvalaibleCities: () => string[];
   getAvailabelYearsBuilt: () => number[];
   getProperties: () => PropertyResponse[];
@@ -34,7 +35,7 @@ interface Store {
 
 const usePropertyStore = create<Store>()(
   persist(
-    (set, get) => ({
+    (set, get): Store => ({
       properties: [],
       loading: false,
       error: null,

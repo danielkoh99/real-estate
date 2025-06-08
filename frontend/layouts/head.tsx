@@ -1,6 +1,5 @@
 import React from "react";
 import NextHead from "next/head";
-import { PublicEnvScript } from "next-runtime-env";
 
 import { siteConfig } from "@/config/site";
 
@@ -17,7 +16,6 @@ export const Head = () => {
         name="viewport"
       />
       <link href="/favicon.ico" rel="icon" />
-      <PublicEnvScript />
     </NextHead>
   );
 };

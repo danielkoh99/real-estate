@@ -34,7 +34,6 @@ export default function App({
   return (
     <QueryClientProvider client={queryClient}>
       <UIProviders>
-        {/* <NextThemesProvider> */}
         <SessionProvider session={session}>
           <SessionManager />
           <NuqsAdapter>
@@ -46,7 +45,6 @@ export default function App({
             </ModalProvider>
           </NuqsAdapter>
         </SessionProvider>
-        {/* </NextThemesProvider> */}
       </UIProviders>
     </QueryClientProvider>
   );
