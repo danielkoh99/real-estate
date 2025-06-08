@@ -3,7 +3,7 @@ import { signOut } from "next-auth/react";
 import { env } from "next-runtime-env";
 // Set up an Axios instance
 const api = axios.create({
-  baseURL: env("NEXT_PUBLIC_API_URL") || process.env.NEXT_PUBLIC_API_URL,
+  baseURL: env("NEXT_PUBLIC_API_URL"),
 });
 
 // Axios interceptor to handle 401 errors
