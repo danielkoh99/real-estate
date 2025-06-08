@@ -36,6 +36,8 @@ services:
     image: danielkohari/real-estate-frontend:latest
     container_name: real-estate-frontend
     restart: unless-stopped
+    depends_on:
+      - backend
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     environment:
