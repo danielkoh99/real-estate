@@ -1,10 +1,11 @@
-import PropertyImage from "../db/models/Image/Image";
-import Property, { PropertyAttributes } from "../db/models/Property/Property";
-import logger from "../logger/logger";
-import User from "../db/models/User/User";
 import { Op } from "sequelize";
-import { PropertyParams } from "../types/types";
+
+import PropertyImage from "../db/models/Image/Image";
 import Location from "../db/models/Location/Location";
+import Property, { PropertyAttributes } from "../db/models/Property/Property";
+import User from "../db/models/User/User";
+import logger from "../logger/logger";
+import { PropertyParams } from "../types/types";
 import fetchPropertyLocation from "../utils/fetchPropertyLocation";
 import { createLocation, getAllLocations } from "./location.service";
 const getNearbyProperties = async (
@@ -296,4 +297,4 @@ const getRelatedProperties = async (propertyId: string) => {
  });
  return relatedProperties;
 };
-export { createOne, updateOne, getOne, deleteOne, getByUserId, getAll, getRelatedProperties };
+export { createOne, deleteOne, getAll, getByUserId, getOne, getRelatedProperties,updateOne };

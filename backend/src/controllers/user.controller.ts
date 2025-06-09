@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
-import { getAll, getOne, deleteOne, updateOne, createOne } from "../services/user.service";
-import logger from "../logger/logger";
-import Property from "../db/models/Property/Property";
 import User from "db/models/User/User";
+import { Request, Response } from "express";
 import { verifyToken } from "middlewares/auth.middleware";
+
+import Property from "../db/models/Property/Property";
+import logger from "../logger/logger";
+import { createOne,deleteOne, getAll, getOne, updateOne } from "../services/user.service";
 const createUser = async (req: Request, res: Response) => {
  try {
   const user = await createOne(req.body);
@@ -92,11 +93,11 @@ const deleteUserById = async (req: Request<{ id: number }>, res: Response) => {
 };
 
 export {
- getAllUsers,
+ createUser,
+ deleteProfile,
  deleteUserById,
+ getAllUsers,
+ getSessionUser,
  getUserById,
  updateUserById,
- getSessionUser,
- deleteProfile,
- createUser,
 };

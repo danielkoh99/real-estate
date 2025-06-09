@@ -70,4 +70,28 @@ enum PropertyCategory {
  VACATION_HOME = "Vacation Home",
  OTHER = "Other",
 }
-export { PropertyAttributes, PropertyType, PropertyCategory, BPDistricts, LocationData };
+enum BuildingType {
+ APARTMENT = "apartment",
+ HOUSE = "house",
+ TOWNHOUSE = "townhouse",
+ VILLA = "villa",
+ APARTMENT_BLOCK = "apartment block",
+ HOUSE_BLOCK = "house block",
+ TOWNHOUSE_BLOCK = "townhouse block",
+ VILLA_BLOCK = "villa block",
+}
+enum HeatingType {
+ GAS = "gas",
+ ELECTRIC = "electric",
+ CENTRAL = "central",
+ OTHER = "other",
+}
+export {
+ BPDistricts,
+ BuildingType,
+ HeatingType,
+ LocationData,
+ PropertyAttributes,
+ PropertyCategory,
+ PropertyType,
+};

@@ -1,10 +1,11 @@
 import { Router } from "express";
+
 import {
+ forgotPassword,
  registerUser,
  signInUser,
  signOutUser,
  verifyEmail,
- forgotPassword,
 } from "../../../controllers/auth.controller";
 import { auth } from "../../../middlewares/auth.middleware";
 

@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
+
 import User from "../db/models/User/User";
-import { hashPassword, sendNewVerificationLink, verifyPassword } from "../utils/auth.utils";
-import { UserRequestBody, UResponseBody } from "../types/types";
 import { Roles } from "../db/models/User/user.interface";
-import { signToken, verifyToken } from "../middlewares/auth.middleware";
 import logger from "../logger/logger";
+import { signToken, verifyToken } from "../middlewares/auth.middleware";
+import { UResponseBody,UserRequestBody } from "../types/types";
+import { hashPassword, sendNewVerificationLink, verifyPassword } from "../utils/auth.utils";
 const verifyEmail = async (req: Request<{ token: string }>, res: Response, next: NextFunction) => {
  try {
   const { token } = req.params;
@@ -131,4 +132,4 @@ const forgotPassword = async (
   return res.status(500).send(err);
  }
 };
-export { registerUser, signInUser, signOutUser, verifyEmail, forgotPassword };
+export { forgotPassword,registerUser, signInUser, signOutUser, verifyEmail };

@@ -1,17 +1,18 @@
+import { Location, PropertyImage } from "db/models";
 import { NextFunction, Request, Response } from "express";
+
+import Property, { PropertyAttributes } from "../db/models/Property/Property";
+import { BPDistricts, PropertyType } from "../db/models/Property/property.interface";
+import logger from "../logger/logger";
 import {
- getOne,
+ createOne,
  deleteOne,
+ getOne,
  getPropertiesByFilter,
  getRelatedProperties,
- createOne,
 } from "../services/property.service";
 import { getOne as getUser } from "../services/user.service";
-import logger from "../logger/logger";
 import { CustomRequest, PropertyParams } from "../types/types";
-import { BPDistricts, PropertyType } from "../db/models/Property/property.interface";
-import Property, { PropertyAttributes } from "../db/models/Property/Property";
-import { Location, PropertyImage } from "db/models";
 const createProperty = async (
  req: Request<{}, {}, PropertyAttributes & { imagePaths: string[] }>,
  res: Response
@@ -191,12 +192,12 @@ const getListedProperties = async (req: Request, res: Response, next: NextFuncti
 };
 export {
  createProperty,
+ deletePropertyById,
+ getListedProperties,
  getProperties,
  getPropertyById,
- updatePropertyById,
- deletePropertyById,
+ getSavedProperties,
  relatedProperties,
  savePropertyListing,
- getSavedProperties,
- getListedProperties,
+ updatePropertyById,
 };

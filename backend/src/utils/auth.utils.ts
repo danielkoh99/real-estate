@@ -23,4 +23,4 @@ async function sendNewVerificationLink(email: string, firstName: string) {
  await sendVerificationEmail(email, firstName, verifyUrl);
 }
 
-export { hashPassword, verifyPassword, sendNewVerificationLink };
+export { hashPassword, sendNewVerificationLink,verifyPassword };

@@ -1,9 +1,9 @@
 import {
- Model,
+ CreationOptional,
  DataTypes,
  InferAttributes,
  InferCreationAttributes,
- CreationOptional,
+ Model,
 } from "sequelize";
 
 import db from "../../config_postgres";

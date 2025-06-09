@@ -1,23 +1,25 @@
-import fs from "fs";
-import db from "./config_postgres";
+import "./models/associations";
+
 import { faker } from "@faker-js/faker";
+import fs from "fs";
+import path from "path";
+
+import logger from "../logger/logger";
+import { createLocation } from "../services/location.service";
+import { __dirname } from "../utils";
+import { hashPassword } from "../utils/auth.utils";
+import db from "./config_postgres";
+import PropertyImage from "./models/Image/Image";
 import Property from "./models/Property/Property";
-import User from "./models/User/User";
 import {
  BPDistricts,
  PropertyAttributes,
  PropertyCategory,
  PropertyType,
 } from "./models/Property/property.interface";
-import { Roles, UserAttributes } from "./models/User/user.interface";
-import { hashPassword } from "../utils/auth.utils";
-import logger from "../logger/logger";
-import PropertyImage from "./models/Image/Image";
-import path from "path";
-import { __dirname } from "../utils";
-import { createLocation } from "../services/location.service";
 import PropertyPriceHistory from "./models/PropertyPriceHistory/PropertyPriceHistory";
-import "./models/associations";
+import User from "./models/User/User";
+import { Roles, UserAttributes } from "./models/User/user.interface";
 function randomInt(min: number, max: number): number {
  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

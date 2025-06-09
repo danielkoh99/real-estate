@@ -1,11 +1,12 @@
-import multer from "multer";
-import path from "path";
-import fs from "fs";
 import { randomUUID } from "crypto";
 import { NextFunction, Request, Response } from "express";
-import { __dirname, createError } from "../utils";
+import fs from "fs";
+import multer from "multer";
+import path from "path";
 import sharp from "sharp";
+
 import logger from "../logger/logger";
+import { __dirname, createError } from "../utils";
 
 const uploadDirectory = path.join(__dirname, "../../uploads");
 

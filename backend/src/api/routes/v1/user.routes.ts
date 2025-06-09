@@ -1,11 +1,12 @@
 import { Router } from "express";
+
 import {
+ createUser,
+ deleteUserById,
+ getAllUsers,
  getSessionUser,
  getUserById,
- getAllUsers,
  updateUserById,
- deleteUserById,
- createUser,
 } from "../../../controllers/user.controller";
 import { auth } from "../../../middlewares/auth.middleware";
 import { uploadAndOptimizeImages } from "../../../middlewares/upload.middleware";

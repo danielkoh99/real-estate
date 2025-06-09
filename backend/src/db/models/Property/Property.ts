@@ -1,18 +1,19 @@
+import { BPDistricts } from "@shared/types/propertyTypes";
+import { nanoid } from "nanoid";
 import {
- Model,
+ CreationOptional,
  DataTypes,
  HasManyGetAssociationsMixin,
- InferCreationAttributes,
  InferAttributes,
- CreationOptional,
+ InferCreationAttributes,
+ Model,
  NonAttribute,
 } from "sequelize";
-import { nanoid } from "nanoid";
-import { BPDistricts, LocationData, PropertyCategory, PropertyType } from "./property.interface";
-import db from "../../config_postgres";
 
+import db from "../../config_postgres";
 import PropertyImage from "../Image/Image";
 import PropertyPriceHistory from "../PropertyPriceHistory/PropertyPriceHistory";
+import { LocationData, PropertyCategory, PropertyType } from "./property.interface";
 export type PropertyAttributes = InferCreationAttributes<Property>;
 class Property extends Model<InferAttributes<Property>, InferCreationAttributes<Property>> {
  declare id: CreationOptional<string>;
@@ -30,6 +31,14 @@ class Property extends Model<InferAttributes<Property>, InferCreationAttributes<
  declare price: number;
  declare size: number;
  declare listedByUserId: number;
+ declare dogFriendly: boolean;
+ declare level: number;
+ declare buildingType: "panel" | "brick";
+ declare hasGarden: boolean;
+ declare hasTerrace: boolean;
+ declare heatingType: "gas" | "electric" | "central" | "other";
+ declare parkingSpace: boolean;
+ declare hasElevator: boolean;
 
  declare oldPrice: CreationOptional<number>;
  declare priceChange: CreationOptional<number>;
@@ -116,6 +125,38 @@ Property.init(
   },
   listedByUserId: {
    type: DataTypes.INTEGER,
+   allowNull: false,
+  },
+  dogFriendly: {
+   type: DataTypes.BOOLEAN,
+   allowNull: false,
+  },
+  level: {
+   type: DataTypes.INTEGER,
+   allowNull: false,
+  },
+  buildingType: {
+   type: DataTypes.ENUM("panel", "brick"),
+   allowNull: false,
+  },
+  hasGarden: {
+   type: DataTypes.BOOLEAN,
+   allowNull: false,
+  },
+  hasTerrace: {
+   type: DataTypes.BOOLEAN,
+   allowNull: false,
+  },
+  heatingType: {
+   type: DataTypes.ENUM("gas", "electric", "central", "other"),
+   allowNull: false,
+  },
+  parkingSpace: {
+   type: DataTypes.BOOLEAN,
+   allowNull: false,
+  },
+  hasElevator: {
+   type: DataTypes.BOOLEAN,
    allowNull: false,
   },
   createdAt: DataTypes.DATE,

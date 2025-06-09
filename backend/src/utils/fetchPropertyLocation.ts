@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from "axios";
-import { LocationData } from "../db/models/Property/property.interface";
+
+import { LocationData } from "@/db/models/Property/property.interface";
+import logger from "@/logger/logger";
 interface LocationSuccessResponse {
  lat: number;
  lon: number;
@@ -35,6 +37,7 @@ const fetchPropertyLocation = async (address: string): Promise<LocationResponse>
    boundingbox: mappedBoundingBox,
   };
  } catch (error) {
+  logger.error(error);
   return { message: "Error fetching location" };
  }
 };

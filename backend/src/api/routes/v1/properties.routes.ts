@@ -1,14 +1,15 @@
 import { Router } from "express";
+
 import {
- getProperties,
- getSavedProperties,
- savePropertyListing,
  createProperty,
- getPropertyById,
- relatedProperties,
- updatePropertyById,
  deletePropertyById,
  getListedProperties,
+ getProperties,
+ getPropertyById,
+ getSavedProperties,
+ relatedProperties,
+ savePropertyListing,
+ updatePropertyById,
 } from "../../../controllers/property.controller";
 import { auth } from "../../../middlewares/auth.middleware";
 import { uploadAndOptimizeImages } from "../../../middlewares/upload.middleware";

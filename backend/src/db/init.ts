@@ -1,6 +1,7 @@
-import db from "./config_postgres";
 import "../db/models";
 import "../db/models/associations";
+
+import db from "./config_postgres";
 
 const isDev = process.env.NODE_ENV === "development";
 

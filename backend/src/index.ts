@@ -1,17 +1,18 @@
-import express, { Express, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
-import v1routes from "./api/routes/v1";
+import cors from "cors";
+import express, { Express, NextFunction, Request, Response } from "express";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
 import path from "path";
+import swaggerUi from "swagger-ui-express";
+
+import v1routes from "./api/routes/v1";
+import db from "./db/config_postgres";
+import dbInit from "./db/init";
 import logger from "./logger/logger";
 import { errorMiddleware } from "./middlewares/error.middleware";
-import rateLimit from "express-rate-limit";
-import cors from "cors";
-import swaggerUi from "swagger-ui-express";
 import { logRequest } from "./middlewares/logRequest.middleware";
-import helmet from "helmet";
 import { __dirname } from "./utils";
-import dbInit from "./db/init";
-import db from "db/config_postgres";
 const app: Express = express();
 
 app.set("trust proxy", 1);

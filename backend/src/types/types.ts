@@ -1,6 +1,7 @@
 import { Request } from "express";
-import { Roles } from "../db/models/User/user.interface";
+
 import { BPDistricts, PropertyType } from "../db/models/Property/property.interface";
+import { Roles } from "../db/models/User/user.interface";
 
 interface UserRequestBody {
  firstName: string;
@@ -48,4 +49,4 @@ interface JwtPayload {
  id: number;
  role: Roles;
 }
-export { UserRequestBody, UResponseBody, ErrorResponse, CustomRequest, PropertyParams, JwtPayload };
+export { CustomRequest, ErrorResponse, JwtPayload,PropertyParams, UResponseBody, UserRequestBody };

@@ -1,7 +1,8 @@
-import s3Client from "../config/awsConfig";
 import { PutObjectCommand, PutObjectCommandInput } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"; // For generating signed URLs
 import { randomUUID as uuidv4 } from "crypto";
+
+import s3Client from "../config/awsConfig";
 interface UploadedFile extends Express.Multer.File {
  originalname: string;
  mimetype: string;

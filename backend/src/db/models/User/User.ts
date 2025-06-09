@@ -1,10 +1,4 @@
 import {
- Model,
- DataTypes,
- InferAttributes,
- InferCreationAttributes,
- CreationOptional,
- NonAttribute,
  BelongsToManyAddAssociationMixin,
  BelongsToManyAddAssociationsMixin,
  BelongsToManyCountAssociationsMixin,
@@ -14,7 +8,14 @@ import {
  BelongsToManyRemoveAssociationMixin,
  BelongsToManyRemoveAssociationsMixin,
  BelongsToManySetAssociationsMixin,
+ CreationOptional,
+ DataTypes,
+ InferAttributes,
+ InferCreationAttributes,
+ Model,
+ NonAttribute,
 } from "sequelize";
+
 import db from "../../config_postgres";
 import Property from "../Property/Property";
 import { Roles } from "./user.interface";

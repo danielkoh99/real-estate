@@ -1,4 +1,5 @@
 import { FindOptions, UniqueConstraintError } from "sequelize";
+
 import Property from "../db/models/Property/Property";
 import User from "../db/models/User/User";
 import { UserAttributes } from "../db/models/User/user.interface";
@@ -64,4 +65,4 @@ const deleteOne = async (id: number) => {
  });
  return user;
 };
-export { getOne, createOne, updateOne, getAll, deleteOne };
+export { createOne, deleteOne,getAll, getOne, updateOne };
