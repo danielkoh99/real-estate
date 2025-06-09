@@ -6,13 +6,17 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { Link as HeroUiLink } from "@heroui/react";
+import React from "react";
 
 import { signinScheme } from "@/schemes";
 import toast from "@/utils/toast";
 
 type Schema = z.infer<typeof signinScheme>;
 
-const LoginForm = () => {
+const LoginForm: React.FC<{
+  setSelected: (key: string) => void;
+}> = ({ setSelected }) => {
   const router = useRouter();
   const {
     register,
@@ -61,7 +65,12 @@ const LoginForm = () => {
         errorMessage={errors.password?.message}
         isInvalid={errors.password ? true : false}
       />
-
+      <p className="text-center text-small">
+        Need to create an account?{" "}
+        <HeroUiLink size="sm" onPress={() => setSelected("sign-up")}>
+          Sign up
+        </HeroUiLink>
+      </p>
       <Button color="primary" type="submit">
         Login
       </Button>

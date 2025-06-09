@@ -1,16 +1,21 @@
 import { Card, CardBody, Tab, Tabs } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import LoginForm from "@/components/auth/LoginForm";
 import SignupForm from "@/components/auth/SignupForm";
 import DefaultLayout from "@/layouts/default";
 
 export default function LoginPage() {
+  const [selected, setSelected] = useState<string>("login");
   const { data: session } = useSession();
   const router = useRouter();
   const callbackUrl = (router.query.callbackUrl as string) || "/";
+
+  const onSelectionChange = (key: string | number) => {
+    setSelected(key as string);
+  };
 
   useEffect(() => {
     if (session) {
@@ -27,13 +32,15 @@ export default function LoginPage() {
               fullWidth
               aria-label="Auth Options"
               className="w-full"
+              selectedKey={selected}
               size="lg"
+              onSelectionChange={onSelectionChange}
             >
               <Tab key="login" title="Login">
-                <LoginForm />
+                <LoginForm setSelected={onSelectionChange} />
               </Tab>
-              <Tab key="signup" title="Sign Up">
-                <SignupForm />
+              <Tab key="sign-up" title="Sign Up">
+                <SignupForm setSelected={onSelectionChange} />
               </Tab>
             </Tabs>
           </CardBody>

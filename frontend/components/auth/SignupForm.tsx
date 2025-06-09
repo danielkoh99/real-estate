@@ -1,5 +1,5 @@
 "use client";
-import { Input, Button, Radio, RadioGroup } from "@heroui/react";
+import { Input, Button, Radio, RadioGroup, Link } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -12,7 +12,9 @@ import { PublicRoles } from "@/types";
 
 type Schema = z.infer<typeof signupScheme>;
 
-const SignupForm = () => {
+const SignupForm: React.FC<{
+  setSelected: (key: string) => void;
+}> = ({ setSelected }) => {
   const {
     control,
     register,
@@ -92,10 +94,11 @@ const SignupForm = () => {
         name="role"
         render={({ field }) => (
           <RadioGroup
+            defaultValue={PublicRoles.User}
             {...field}
             errorMessage={errors.role?.message}
             isInvalid={!!errors.role}
-            label="Select type of user"
+            label="Sign up as"
           >
             {Object.keys(PublicRoles).map((key) => {
               const value = PublicRoles[key as keyof typeof PublicRoles];
@@ -109,6 +112,12 @@ const SignupForm = () => {
           </RadioGroup>
         )}
       />
+      <p className="text-center text-small">
+        Already have an account?{" "}
+        <Link size="sm" onPress={() => setSelected("login")}>
+          Login
+        </Link>
+      </p>
       <Button color="primary" type="submit" variant="ghost">
         Sign Up
       </Button>

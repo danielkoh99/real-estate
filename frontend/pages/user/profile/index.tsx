@@ -2,6 +2,7 @@ import { Button, Skeleton, Tab, Tabs, useDisclosure } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { signOut } from "next-auth/react";
+import { useWindowSize } from "react-use";
 
 import PasswordChange from "./components/PasswordChange";
 import PersonalData from "./components/PersonalData";
@@ -33,6 +34,7 @@ const fetchUserProfile = async () => {
 };
 
 export default function UserProfilePage() {
+  const { width } = useWindowSize();
   const { data, error, isLoading } = useQuery<User>({
     queryKey: ["userProfile"],
     queryFn: fetchUserProfile,
@@ -89,16 +91,15 @@ export default function UserProfilePage() {
     <DefaultLayout>
       <div className="flex w-full">
         <Tabs
-          isVertical
-          aria-label="Options"
+          aria-label="Settings"
           className="flex"
           classNames={{
             tabList: "flex gap-2",
             tab: "flex w-full",
             tabContent: "w-full",
-            tabWrapper: "flex w-full",
+            tabWrapper: "flex flex-col md:flex-row w-full",
           }}
-          placement="start"
+          isVertical={width > 768}
         >
           {tabs.map((tab) => {
             const TabContent = tab.content;
