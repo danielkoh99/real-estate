@@ -57,9 +57,10 @@ Visit `http://localhost:3000` in your browser to see the application.
 - [ ] Chat
 - [ ] Edit/delete property
 - [ ] Analytics [https://umami.is/docs](https://umami.is/docs)
-- [ ] Post property at certain time
+- [ ] Post property at a scheduled time
 - [ ] Admin dashboard
-- [ ] External API
+- [ ] External API(user facing API)
 - [ ] Payment integration
 - [ ] GraphQL endpoint
-- [ ] Upload person profile image
+- [ ] Edit personal info
+- [ ] Create monorepo structure
