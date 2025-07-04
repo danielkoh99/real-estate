@@ -1,0 +1,28 @@
+{
+    "$schema": "https://turborepo.com/schema.json",
+    "tasks": {
+        "db:seed": {
+            "dependsOn": [],
+            "outputs": []
+        },
+        "build": {
+            "dependsOn": [
+                "^build"
+            ],
+            "outputs": [
+                "dist/**",
+                ".next/**",
+                "!.next/cache/**"
+            ]
+        },
+        "lint": {
+            "outputs": []
+        },
+        "dev": {
+            "dependsOn": [
+                "^build"
+            ],
+            "cache": false
+        }
+    }
+}

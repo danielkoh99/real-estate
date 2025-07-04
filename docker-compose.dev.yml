@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres
+    container_name: real-estate-db
+    restart: unless-stopped
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./apps/backend/Dockerfile
+    container_name: real-estate-backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - GMAIL_USER=${GMAIL_USER}
+      - GMAIL_PASS=${GMAIL_PASS}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - SERVER_URL=${SERVER_URL}
+      - FRONTEND_URL=${FRONTEND_URL}
+    networks:
+      - app_network
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/frontend/Dockerfile
+  #   container_name: real-estate-frontend
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - backend
+  #   ports:
+  #     - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+  #   environment:
+  #     - FRONTEND_PORT=${FRONTEND_PORT}
+  #     - NEXTAUTH_URL=${NEXTAUTH_URL}
+  #     - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+  #     - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+  #     - API_URL=${API_URL}
+  #   networks:
+  #     - app_network
+
+volumes:
+  data:
+
+networks:
+  app_network:
+    driver: bridge
