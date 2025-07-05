@@ -30,6 +30,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
  declare phone: string;
  declare profileImage?: string;
  declare verified: boolean;
+ declare numberOfListings: number;
  declare createdAt: CreationOptional<Date>;
  declare updatedAt: CreationOptional<Date>;
  declare deletedAt: CreationOptional<Date>;
@@ -101,6 +102,11 @@ User.init(
    type: DataTypes.BOOLEAN,
    allowNull: false,
    defaultValue: false,
+  },
+  numberOfListings: {
+   type: DataTypes.INTEGER,
+   allowNull: false,
+   defaultValue: 0,
   },
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,

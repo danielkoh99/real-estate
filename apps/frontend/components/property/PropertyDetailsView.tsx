@@ -62,7 +62,7 @@ export default function PropertyDetailsView({
             <div className="flex flex-col justify-start items-start ">
               <h1 className="text-lg font-bold">{title}</h1>
               <p>{property.city}</p>
-              <p>{property.district}</p>
+              <p>{property.district} District</p>
             </div>
             <div className="flex justify-end items-center gap-5">
               <GoToMaps address={property.address} />

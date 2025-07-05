@@ -23,7 +23,8 @@
   "noFallthroughCasesInSwitch": true,
   "forceConsistentCasingInFileNames": true,
   "paths": {
-   "@/*": ["./src/*"]
+   "@/*": ["./src/*"],
+   "@real-estate/shared": ["../../packages/shared/src"]
   }
  },
  "include": ["src/**/*"], // Include shared directory

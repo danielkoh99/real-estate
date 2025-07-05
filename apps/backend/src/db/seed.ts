@@ -5,6 +5,7 @@ import {
  BPDistricts,
  BuildingType,
  HeatingType,
+ PromotionType,
  PropertyCategory,
  PropertyType,
 } from "@real-estate/shared";
@@ -102,6 +103,7 @@ async function seed() {
     role: faker.helpers.arrayElement<Roles>([Roles.agent, Roles.user]),
     verified: false,
     profileImage: faker.image.avatar(),
+    numberOfListings: faker.number.int({ min: 0, max: 5 }),
    });
   }
   users.push({
@@ -112,6 +114,7 @@ async function seed() {
    password: hashedPassword,
    verified: true,
    role: Roles.user,
+   numberOfListings: faker.number.int({ min: 0, max: 5 }),
   });
   const createdUsers = await User.bulkCreate(users, { returning: true });
   const properties = [];
@@ -126,15 +129,30 @@ async function seed() {
   for (let i = 0; i < 100; i++) {
    const location = locations[i];
    const price = parseFloat(faker.commerce.price());
+   const oldPrice = i % 2 === 0 ? null : parseFloat(faker.commerce.price());
+   const priceChange = oldPrice === null ? 0 : ((price - oldPrice) / oldPrice) * 100;
    const size = randomInt(15, 200);
+   const squarMeterPrice = size > 0 ? parseFloat(((oldPrice ?? price) / size).toFixed(2)) : 0;
    const randomCity = getRandomCityOrBudapest();
 
    const district =
     randomCity === "Budapest" ? faker.helpers.arrayElement(Object.values(BPDistricts)) : null;
-
+   let promotionType;
+   if (priceChange === 0) {
+    promotionType = faker.helpers.arrayElement(
+     Object.values(PromotionType).filter((v): v is number => typeof v === "number")
+    );
+   } else if (priceChange > 0) {
+    promotionType = PromotionType.PriceIncrease;
+   } else if (priceChange < 0) {
+    promotionType = PromotionType.PriceDecrease;
+   }
    const property = {
     listedByUserId: faker.helpers.arrayElement(createdUsers).id,
     size,
+    price,
+    oldPrice: oldPrice as number,
+    priceChange,
     city: randomCity,
     district: district as BPDistricts,
     address: faker.location.streetAddress({ useFullAddress: true }),
@@ -142,13 +160,10 @@ async function seed() {
     bathrooms: faker.number.int({ min: 1, max: 3 }),
     yearBuilt: faker.number.int({ min: 1900, max: 2024 }),
     description: faker.lorem.paragraphs(2),
-    price,
-    squarMeterPrice: parseFloat((price / size).toFixed(2)),
+    squarMeterPrice,
     category: faker.helpers.arrayElement(Object.values(PropertyCategory)),
     locationId: location.id,
     type: faker.helpers.arrayElement([PropertyType.APARTMENT, PropertyType.HOUSE]),
-    oldPrice: parseFloat(faker.commerce.price()),
-    priceChange: parseFloat(faker.commerce.price()),
     parkingSpace: faker.datatype.boolean(),
     level: faker.number.int({ min: 1, max: 10 }),
     hasElevator: faker.datatype.boolean(),
@@ -157,6 +172,7 @@ async function seed() {
     heatingType: faker.helpers.arrayElement(Object.values(HeatingType)),
     buildingType: faker.helpers.arrayElement(Object.values(BuildingType)),
     dogFriendly: faker.datatype.boolean(),
+    promotionType: promotionType,
    };
 
    properties.push(property);

@@ -1,3 +1,4 @@
+import { BuildingType, HeatingType, PromotionType } from "@real-estate/shared";
 import { SVGProps } from "react";
 
 export enum PublicRoles {
@@ -156,8 +157,19 @@ export interface PropertyResponse extends BaseProperty {
   lastUpdated?: string;
   images: PropertyImageAttributes[];
   squarMeterPrice: number;
-  listedByUser: ListedByUser;
+  listedByUser?: ListedByUser;
   location: LocationData;
+  oldPrice?: number;
+  priceChange?: number;
+  dogFriendly: boolean;
+  level: number;
+  buildingType: BuildingType;
+  hasGarden: boolean;
+  hasTerrace: boolean;
+  heatingType: HeatingType;
+  parkingSpace: boolean;
+  hasElevator: boolean;
+  promotionType: PromotionType;
 }
 
 export interface PropertyRes {

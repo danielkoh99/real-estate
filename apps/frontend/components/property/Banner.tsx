@@ -2,45 +2,32 @@ import { PromotionType } from "@real-estate/shared";
 interface BannerProps {
   type: PromotionType;
 }
-
+const promotionTypeLabels = {
+  [PromotionType.PriceIncrease]: "Price Increased",
+  [PromotionType.PriceDecrease]: "Price Decreased",
+  [PromotionType.NewListing]: "New Listing!",
+  [PromotionType.Sold]: "Sold!",
+  [PromotionType.LimitedOffer]: "Limited Offer!",
+} as const;
+const promotionTypeClasses = {
+  [PromotionType.PriceIncrease]: "bg-red-500",
+  [PromotionType.PriceDecrease]: "bg-green-500",
+  [PromotionType.NewListing]: "bg-blue-500",
+  [PromotionType.Sold]: "bg-gray-500",
+  [PromotionType.LimitedOffer]: "bg-yellow-500",
+} as const;
 const Banner: React.FC<BannerProps> = ({ type }) => {
-  const getBannerColor = () => {
-    switch (type) {
-      case PromotionType.PriceIncrease:
-        return "bg-green-500";
-      case PromotionType.PriceDecrease:
-        return "bg-red-500";
-      case PromotionType.NewListing:
-        return "bg-blue-500";
-      case PromotionType.Sold:
-        return "bg-gray-500";
-      case PromotionType.LimitedOffer:
-        return "bg-yellow-500";
-      default:
-        return "bg-blue-400";
-    }
-  };
+  const bannerColor = promotionTypeClasses[type];
+
+  if (type === PromotionType.None) return null;
 
   const renderContent = () => {
-    switch (type) {
-      case PromotionType.PriceIncrease:
-        return "Price Increased";
-      case PromotionType.PriceDecrease:
-        return "Price Decreased";
-      case PromotionType.NewListing:
-        return "New Listing!";
-      case PromotionType.Sold:
-        return "Sold Out!";
-      case PromotionType.LimitedOffer:
-        return "Limited Offer!";
-      default:
-        return null;
-    }
+    return promotionTypeLabels[type];
   };
 
   return (
     <div
-      className={`absolute bottom-0 w-full ${getBannerColor()} opacity-80 text-center text-white p-1`}
+      className={`absolute bottom-0 w-full ${bannerColor} opacity-80 text-center text-white p-1`}
     >
       {renderContent()}
     </div>

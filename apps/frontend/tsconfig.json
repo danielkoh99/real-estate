@@ -17,7 +17,8 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@real-estate/shared": ["../../packages/shared/src"]
     },
     "plugins": [
       {

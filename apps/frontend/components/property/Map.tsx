@@ -51,6 +51,7 @@ const MapComponent = ({
       boxZoom={false}
       center={initialCenter as [number, number]}
       style={{
+        zIndex: 1,
         height: "100%",
         width: "100%",
         borderRadius: "10px",

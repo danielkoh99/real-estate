@@ -2,6 +2,7 @@ import {
  BPDistricts,
  BuildingType,
  HeatingType,
+ PromotionType,
  PropertyCategory,
  PropertyType,
 } from "@real-estate/shared";
@@ -45,6 +46,7 @@ class Property extends Model<InferAttributes<Property>, InferCreationAttributes<
  declare heatingType: CreationOptional<HeatingType>;
  declare parkingSpace: boolean;
  declare hasElevator: boolean;
+ declare promotionType: CreationOptional<PromotionType>;
 
  declare oldPrice: CreationOptional<number>;
  declare priceChange: CreationOptional<number>;
@@ -123,6 +125,7 @@ Property.init(
   },
   priceChange: {
    type: DataTypes.FLOAT,
+   defaultValue: 0,
    allowNull: true,
   },
   size: {
@@ -165,6 +168,14 @@ Property.init(
    type: DataTypes.BOOLEAN,
    allowNull: false,
   },
+  promotionType: {
+   type: DataTypes.INTEGER,
+   allowNull: false,
+   defaultValue: PromotionType.None,
+   validate: {
+    isIn: [[...Object.values(PromotionType).filter((v) => typeof v === "number")]],
+   },
+  },
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,
   deletedAt: DataTypes.DATE,
@@ -179,12 +190,13 @@ Property.init(
 Property.addHook("beforeCreate", async (property) => {
  console.log("beforeCreate property");
  property.dataValues.oldPrice = property.dataValues.price;
- property.dataValues.priceChange = 0;
 });
 
 Property.addHook("beforeUpdate", async (property) => {
  const oldPrice = property.previous("price") as number;
- property.dataValues.priceChange = property.dataValues.price - oldPrice;
+ property.dataValues.priceChange = ((property.dataValues.price - oldPrice) / oldPrice) * 100;
+ property.dataValues.promotionType =
+  property.dataValues.price > oldPrice ? PromotionType.PriceIncrease : PromotionType.PriceDecrease;
  await PropertyPriceHistory.create({
   propertyId: property.getDataValue("id"),
   price: property.dataValues.price,

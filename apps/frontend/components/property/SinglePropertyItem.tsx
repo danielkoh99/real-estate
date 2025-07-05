@@ -11,6 +11,7 @@ import Link from "next/link";
 
 import SaveListingBtn from "./SaveListingBtn";
 import Banner from "./Banner";
+import Price from "./Price";
 
 import { PropertyResponse } from "@/types";
 
@@ -49,19 +50,18 @@ const SingleRealEstate: React.FC<{
                 </div>
               </>
             )}
-
             {loading ? (
               <Skeleton className="rounded-lg h-full w-full" />
             ) : (
               <>
                 <Image
-                  alt={property.listedByUser + property.images[0].url}
+                  alt={property.images[0].url}
                   className="object-cover w-full h-full"
                   height={400}
                   src={property.images[0].url}
                   width={400}
                 />
-                <Banner type={1} />
+                <Banner type={property.promotionType} />
               </>
             )}
           </CardHeader>
@@ -71,9 +71,11 @@ const SingleRealEstate: React.FC<{
               <Skeleton isLoaded={!loading}>
                 <div className="flex justify-between">
                   <div className="flex flex-col">
-                    <h2 className="text-lg font-semibold text-slate-800 truncate">
-                      {property.price.toLocaleString()} M Ft
-                    </h2>
+                    <Price
+                      oldPrice={property.oldPrice}
+                      price={property.price}
+                      priceChange={property.priceChange}
+                    />
                     <p className="text-xs text-slate-500">
                       {property.squarMeterPrice.toFixed(2)} M Ft/m²
                     </p>

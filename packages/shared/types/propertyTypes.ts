@@ -56,23 +56,16 @@ enum HeatingType {
   OTHER = "other",
 }
 enum PromotionType {
+  None = 0,
   PriceIncrease = 1,
   PriceDecrease = 2,
   NewListing = 3,
   Sold = 4,
   LimitedOffer = 5,
 }
-const promotionTypeLabels = {
-  [PromotionType.PriceIncrease]: "Price Increased",
-  [PromotionType.PriceDecrease]: "Price Decreased",
-  [PromotionType.NewListing]: "New Listing!",
-  [PromotionType.Sold]: "Sold Out!",
-  [PromotionType.LimitedOffer]: "Limited Offer!",
-} as const;
 
 export {
   PromotionType,
-  promotionTypeLabels,
   BPDistricts,
   PropertyType,
   PropertyCategory,

@@ -19,7 +19,12 @@ const CustomModal: FC<{
   const { isOpen, closeModal } = useModal();
 
   return (
-    <Modal backdrop={"blur"} isOpen={isOpen} onClose={closeModal}>
+    <Modal
+      backdrop={"blur"}
+      className="z-50"
+      isOpen={isOpen}
+      onClose={closeModal}
+    >
       <ModalContent>
         {(onClose) => (
           <>
