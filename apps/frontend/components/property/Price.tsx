@@ -37,10 +37,8 @@ export default function Price({
   }
 
   return (
-    <>
-      <h2 className="text-lg font-semibold text-slate-800 truncate ">
-        {price.toLocaleString()} M Ft
-      </h2>
-    </>
+    <h2 className="text-lg font-semibold text-slate-800 truncate ">
+      {price.toLocaleString()} M Ft
+    </h2>
   );
 }

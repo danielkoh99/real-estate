@@ -1,4 +1,11 @@
-import { BuildingType, HeatingType, PromotionType } from "@real-estate/shared";
+import {
+  BPDistricts,
+  BuildingType,
+  HeatingType,
+  PromotionType,
+  PropertyCategory,
+  PropertyType,
+} from "@real-estate/shared";
 import { SVGProps } from "react";
 
 export enum PublicRoles {
@@ -9,49 +16,6 @@ export enum Roles {
   agent = "agent",
   user = "user",
   admin = "admin",
-}
-
-export enum PropertyType {
-  APARTMENT = "Apartment",
-  HOUSE = "House",
-}
-
-export enum BPDistricts {
-  I = "I",
-  II = "II",
-  III = "III",
-  IV = "IV",
-  V = "V",
-  VI = "VI",
-  VII = "VII",
-  VIII = "VIII",
-  IX = "IX",
-  X = "X",
-  XI = "XI",
-  XII = "XII",
-  XIII = "XIII",
-  XIV = "XIV",
-  XV = "XV",
-  XVI = "XVI",
-  XVII = "XVII",
-  XVIII = "XVIII",
-  XIX = "XIX",
-  XX = "XX",
-  XXI = "XXI",
-  XXII = "XXII",
-  XXIII = "XXIII",
-}
-
-export enum PropertyCategory {
-  USED = "Used",
-  NEWLY_BUILT = "Newly Built",
-  UNDER_CONSTRUCTION = "Under Construction",
-  RENOVATED = "Renovated",
-  LUXURY = "Luxury",
-  COMMERCIAL = "Commercial",
-  INDUSTRIAL = "Industrial",
-  VACATION_HOME = "Vacation Home",
-  OTHER = "Other",
 }
 
 export enum SortDirection {

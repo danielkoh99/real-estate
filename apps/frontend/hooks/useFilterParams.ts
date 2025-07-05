@@ -8,15 +8,11 @@ import {
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import _ from "lodash";
+import { BPDistricts, PropertyType } from "@real-estate/shared";
 
 import usePropertyStore from "@/stores/propertyStore";
 import { useQueryStore } from "@/stores/queryStore";
-import {
-  SortDirection,
-  PropertyType,
-  PropertyFilters,
-  BPDistricts,
-} from "@/types";
+import { SortDirection, PropertyFilters } from "@/types";
 
 const defaultParams = {
   page: 1,
