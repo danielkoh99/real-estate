@@ -1,15 +1,11 @@
 import { Spinner } from "@heroui/react";
 import { useState } from "react";
+import { PropertyCategory, PropertyType } from "@real-estate/shared";
 
 import AddPropertyForm from "./AddPropertyForm";
 import PropertyDetailsView from "./PropertyDetailsView";
 
-import {
-  AddProperty,
-  FileWithPreview,
-  PropertyCategory,
-  PropertyType,
-} from "@/types";
+import { AddProperty, FileWithPreview } from "@/types";
 
 export default function PropertyFormPreview() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);

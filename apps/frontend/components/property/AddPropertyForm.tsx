@@ -16,9 +16,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { PropertyType } from "@real-estate/shared";
 
 import Upload from "@/components/property/Upload";
-import { AddProperty, FileWithPreview, PropertyType } from "@/types";
+import { AddProperty, FileWithPreview } from "@/types";
 import { createProperty } from "@/utils/createProperty";
 import { propertySchema } from "@/schemes";
 import toast from "@/utils/toast";

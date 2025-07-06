@@ -2,14 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Spinner } from "@heroui/react";
+import { PropertyType, PropertyCategory } from "@real-estate/shared";
 
 import DefaultLayout from "@/layouts/default";
-import {
-  FileWithPreview,
-  PropertyType,
-  PropertyCategory,
-  AddProperty,
-} from "@/types";
+import { FileWithPreview, AddProperty } from "@/types";
 import AddPropertyForm from "@/components/property/AddPropertyForm";
 import PropertyDetails from "@/components/property/PropertyDetailsView";
 
