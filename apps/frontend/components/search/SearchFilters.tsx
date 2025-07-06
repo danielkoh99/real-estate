@@ -1,7 +1,8 @@
 import { Button, Card, Input, Select, SelectItem } from "@heroui/react";
 import { ChangeEvent, useEffect, useState } from "react";
+import { PropertyType, BPDistricts } from "@real-estate/shared";
 
-import { BPDistricts, PropertyFilters, PropertyType } from "@/types";
+import { PropertyFilters } from "@/types";
 import { capitalizeFirst } from "@/utils/stringUtils";
 import { useQueryStore } from "@/stores/queryStore";
 
