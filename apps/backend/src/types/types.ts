@@ -1,7 +1,7 @@
 import { Request } from "express";
 
-import { BPDistricts, PropertyType } from "../db/models/Property/property.interface";
 import { Roles } from "../db/models/User/user.interface";
+import { BPDistricts, PropertyType } from "@real-estate/shared";
 
 interface UserRequestBody {
  firstName: string;
@@ -49,4 +49,4 @@ interface JwtPayload {
  id: number;
  role: Roles;
 }
-export { CustomRequest, ErrorResponse, JwtPayload,PropertyParams, UResponseBody, UserRequestBody };
+export { CustomRequest, ErrorResponse, JwtPayload, PropertyParams, UResponseBody, UserRequestBody };

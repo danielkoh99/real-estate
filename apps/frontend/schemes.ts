@@ -1,6 +1,7 @@
 import { z } from "zod";
+import { PropertyType } from "@real-estate/shared";
 
-import { PropertyType, PublicRoles } from "./types";
+import { PublicRoles } from "./types";
 const passwordSchema = z
   .string()
   .min(8, "Password must be at least 8 characters long.")
@@ -10,7 +11,7 @@ const passwordSchema = z
   .regex(/[0-9]/, "Password must include at least one number.")
   .regex(
     /[!@#$%^&*(),.?":{}|<>]/,
-    "Password must contain at least one special character",
+    "Password must contain at least one special character"
   );
 
 export const signinScheme = z.object({
