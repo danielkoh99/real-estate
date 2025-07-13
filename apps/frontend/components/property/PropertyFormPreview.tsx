@@ -1,6 +1,12 @@
 import { Spinner } from "@heroui/react";
 import { useState } from "react";
-import { PropertyCategory, PropertyType } from "@real-estate/shared";
+import {
+  BuildingType,
+  HeatingType,
+  PromotionType,
+  PropertyCategory,
+  PropertyType,
+} from "@real-estate/shared";
 
 import AddPropertyForm from "./AddPropertyForm";
 import PropertyDetailsView from "./PropertyDetailsView";
@@ -25,6 +31,15 @@ export default function PropertyFormPreview() {
     bathrooms: 0,
     bedrooms: 0,
     district: undefined,
+    petFriendly: false,
+    hasElevator: false,
+    hasTerrace: false,
+    hasGarden: false,
+    level: 0,
+    heatingType: HeatingType.GAS,
+    buildingType: BuildingType.APARTMENT,
+    parkingSpace: false,
+    promotionType: PromotionType.None,
   });
 
   return (

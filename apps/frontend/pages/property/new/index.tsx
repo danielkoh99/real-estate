@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Spinner } from "@heroui/react";
-import { PropertyType, PropertyCategory } from "@real-estate/shared";
+import {
+  PropertyType,
+  PropertyCategory,
+  HeatingType,
+  BuildingType,
+  PromotionType,
+} from "@real-estate/shared";
 
 import DefaultLayout from "@/layouts/default";
 import { FileWithPreview, AddProperty } from "@/types";
@@ -27,7 +33,17 @@ export default function CreateListingPage() {
     bathrooms: 0,
     bedrooms: 0,
     district: undefined,
+    petFriendly: false,
+    hasElevator: false,
+    hasTerrace: false,
+    hasGarden: false,
+    level: 0,
+    heatingType: HeatingType.GAS,
+    buildingType: BuildingType.APARTMENT,
+    parkingSpace: false,
+    promotionType: PromotionType.None,
   });
+
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, images: files }));
