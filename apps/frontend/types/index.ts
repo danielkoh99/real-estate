@@ -106,6 +106,17 @@ export interface BaseProperty {
   bathrooms: number;
   yearBuilt: number;
   description: string;
+  oldPrice?: number;
+  priceChange?: number;
+  petFriendly: boolean;
+  level: number;
+  buildingType: BuildingType;
+  hasGarden: boolean;
+  hasTerrace: boolean;
+  heatingType: HeatingType;
+  parkingSpace: boolean;
+  hasElevator: boolean;
+  promotionType: PromotionType;
 }
 
 export type NewProperty = Omit<BaseProperty, "id"> & {
@@ -123,17 +134,6 @@ export interface PropertyResponse extends BaseProperty {
   squarMeterPrice: number;
   listedByUser?: ListedByUser;
   location: LocationData;
-  oldPrice?: number;
-  priceChange?: number;
-  dogFriendly: boolean;
-  level: number;
-  buildingType: BuildingType;
-  hasGarden: boolean;
-  hasTerrace: boolean;
-  heatingType: HeatingType;
-  parkingSpace: boolean;
-  hasElevator: boolean;
-  promotionType: PromotionType;
 }
 
 export interface PropertyRes {

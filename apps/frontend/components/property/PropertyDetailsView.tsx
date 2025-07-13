@@ -7,6 +7,7 @@ import ContactUploader from "./ContactUploader";
 import SaveListingBtn from "./SaveListingBtn";
 import GoToMaps from "./GoToMaps";
 
+import Price from "./Price";
 import { AddProperty, MapLocationData, PropertyForDisplay } from "@/types";
 
 interface PropertyDetailsProps {
@@ -76,7 +77,11 @@ export default function PropertyDetailsView({
             <div className="flex flex-wrap gap-4 text-lg text-gray-800">
               <div className="flex items-center">
                 <CurrencyDollarIcon className="w-5 h-5 text-gray-500 mr-2" />
-                {property.price?.toLocaleString()} Ft
+                <Price
+                  oldPrice={property.oldPrice}
+                  price={property.price}
+                  priceChange={property.priceChange}
+                />
               </div>
               <div className="flex items-center">
                 <CalendarIcon className="w-5 h-5 text-gray-500 mr-2" />
@@ -93,27 +98,28 @@ export default function PropertyDetailsView({
               <div className="flex-1 space-y-2">
                 <DetailItem label="Address" value={property.address} />
                 <DetailItem label="City" value={property.city} />
-                <DetailItem
-                  label="Year Built"
-                  value={property.yearBuilt.toString()}
-                />
-                <DetailItem label="Type" value={property.type} />
-                <DetailItem
-                  label="Bedrooms"
-                  value={property.bedrooms.toString()}
-                />
-              </div>
-              <Divider orientation="vertical" />
-              <div className="flex-1 space-y-2">
-                <DetailItem
-                  label="Bathrooms"
-                  value={property.bathrooms.toString()}
-                />
-                <DetailItem label="Size" value={`${property.size} m²`} />
                 {property.district && (
                   <DetailItem label="District" value={property.district} />
                 )}
+                <DetailItem label="Year Built" value={property.yearBuilt} />
+                <DetailItem label="Type" value={property.type} />
+                <DetailItem label="Bedrooms" value={property.bedrooms} />
+                <DetailItem label="Pet Friendly" value={property.petFriendly} />
+                <DetailItem label="Level" value={property.level} />
+              </div>
+              <Divider orientation="vertical" />
+              <div className="flex-1 space-y-2">
+                <DetailItem label="Bathrooms" value={property.bathrooms} />
+                <DetailItem label="Size" value={`${property.size} m²`} />
+                <DetailItem label="Heating type" value={property.heatingType} />
                 <DetailItem label="Category" value={property.category} />
+                <DetailItem
+                  label="Building type"
+                  value={property.buildingType}
+                />
+                <DetailItem label="Elevator" value={property.hasElevator} />
+                <DetailItem label="Terrace" value={property.hasTerrace} />
+                <DetailItem label="Garden" value={property.hasGarden} />
               </div>
             </div>
           </CardBody>
@@ -134,7 +140,20 @@ export default function PropertyDetailsView({
     </div>
   );
 }
-function DetailItem({ label, value }: { label: string; value: string }) {
+function DetailItem({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | boolean | number;
+}) {
+  if (typeof value === "number") {
+    value = value.toString();
+  }
+  if (typeof value === "boolean") {
+    value = value ? "Yes" : "No";
+  }
+
   return (
     <div className="flex justify-between">
       <span className="text-gray-600">{label}:</span>

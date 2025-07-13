@@ -35,7 +35,6 @@ PropertyPriceHistory.init(
   },
   changedAt: {
    type: DataTypes.DATE,
-   defaultValue: DataTypes.NOW,
   },
  },
  {

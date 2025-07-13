@@ -8,6 +8,7 @@ import logger from "../logger/logger";
 import { PropertyParams } from "../types/types";
 import fetchPropertyLocation from "../utils/fetchPropertyLocation";
 import { createLocation, getAllLocations } from "./location.service";
+import { PropertyPriceHistory } from "@/db/models";
 const getNearbyProperties = async (
  lat: number,
  lon: number,
@@ -44,6 +45,13 @@ const createOne = async (data: PropertyAttributes, files: string[]) => {
    city,
    district,
    description,
+   promotionType,
+   parkingSpace,
+   hasElevator,
+   hasGarden,
+   hasTerrace,
+   level,
+   petFriendly,
   } = data;
   const computedAddress = `${data.address} ${data.city}`;
   const response = await fetchPropertyLocation(computedAddress);
@@ -73,6 +81,13 @@ const createOne = async (data: PropertyAttributes, files: string[]) => {
    type,
    listedByUserId,
    description,
+   promotionType,
+   parkingSpace,
+   hasTerrace,
+   hasElevator,
+   hasGarden,
+   petFriendly,
+   level,
    squarMeterPrice: price / size,
    locationId: location.id,
   });
@@ -141,6 +156,11 @@ const getOne = async (id: string) => {
     model: Location,
     as: "location",
     attributes: ["lat", "lon", "boundingbox"],
+   },
+   {
+    model: PropertyPriceHistory,
+    as: "priceHistory",
+    attributes: ["price", "changedAt"],
    },
   ],
  });
@@ -297,4 +317,4 @@ const getRelatedProperties = async (propertyId: string) => {
  });
  return relatedProperties;
 };
-export { createOne, deleteOne, getAll, getByUserId, getOne, getRelatedProperties,updateOne };
+export { createOne, deleteOne, getAll, getByUserId, getOne, getRelatedProperties, updateOne };

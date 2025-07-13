@@ -40,14 +40,14 @@ enum PropertyCategory {
   OTHER = "Other",
 }
 enum BuildingType {
-  APARTMENT = "apartment",
-  HOUSE = "house",
-  TOWNHOUSE = "townhouse",
-  VILLA = "villa",
-  APARTMENT_BLOCK = "apartment block",
-  HOUSE_BLOCK = "house block",
-  TOWNHOUSE_BLOCK = "townhouse block",
-  VILLA_BLOCK = "villa block",
+  APARTMENT = "Apartment",
+  HOUSE = "House",
+  TOWNHOUSE = "Townhouse",
+  VILLA = "Villa",
+  APARTMENT_BLOCK = "Apartment Block",
+  HOUSE_BLOCK = "House Block",
+  TOWNHOUSE_BLOCK = "Townhouse Block",
+  VILLA_BLOCK = "Villa Block",
 }
 enum HeatingType {
   GAS = "gas",

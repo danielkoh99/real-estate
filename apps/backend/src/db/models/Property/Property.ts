@@ -21,7 +21,9 @@ import db from "../../config_postgres";
 import PropertyImage from "../Image/Image";
 import PropertyPriceHistory from "../PropertyPriceHistory/PropertyPriceHistory";
 import { LocationData } from "./property.interface";
+
 export type PropertyAttributes = InferCreationAttributes<Property>;
+
 class Property extends Model<InferAttributes<Property>, InferCreationAttributes<Property>> {
  declare id: CreationOptional<string>;
  declare type: PropertyType;
@@ -38,7 +40,7 @@ class Property extends Model<InferAttributes<Property>, InferCreationAttributes<
  declare price: number;
  declare size: number;
  declare listedByUserId: number;
- declare dogFriendly: boolean;
+ declare petFriendly: boolean;
  declare level: number;
  declare buildingType: CreationOptional<BuildingType>;
  declare hasGarden: boolean;
@@ -47,21 +49,19 @@ class Property extends Model<InferAttributes<Property>, InferCreationAttributes<
  declare parkingSpace: boolean;
  declare hasElevator: boolean;
  declare promotionType: CreationOptional<PromotionType>;
-
  declare oldPrice: CreationOptional<number>;
  declare priceChange: CreationOptional<number>;
  declare createdAt: CreationOptional<Date>;
  declare updatedAt: CreationOptional<Date>;
  declare deletedAt: CreationOptional<Date>;
 
- // Non-database fields
  declare location?: NonAttribute<LocationData>;
  declare priceHistory?: NonAttribute<PropertyPriceHistory[]>;
- declare readonly images?: NonAttribute<PropertyImage[]>;
+ declare images?: NonAttribute<PropertyImage[]>;
 
- // Association mixins
  declare getImages: HasManyGetAssociationsMixin<PropertyImage>;
 }
+
 Property.init(
  {
   id: {
@@ -125,8 +125,8 @@ Property.init(
   },
   priceChange: {
    type: DataTypes.FLOAT,
-   defaultValue: 0,
    allowNull: true,
+   defaultValue: 0,
   },
   size: {
    type: DataTypes.INTEGER,
@@ -136,7 +136,7 @@ Property.init(
    type: DataTypes.INTEGER,
    allowNull: false,
   },
-  dogFriendly: {
+  petFriendly: {
    type: DataTypes.BOOLEAN,
    allowNull: false,
   },
@@ -187,8 +187,8 @@ Property.init(
   paranoid: true,
  }
 );
+
 Property.addHook("beforeCreate", async (property) => {
- console.log("beforeCreate property");
  property.dataValues.oldPrice = property.dataValues.price;
 });
 
@@ -197,10 +197,12 @@ Property.addHook("beforeUpdate", async (property) => {
  property.dataValues.priceChange = ((property.dataValues.price - oldPrice) / oldPrice) * 100;
  property.dataValues.promotionType =
   property.dataValues.price > oldPrice ? PromotionType.PriceIncrease : PromotionType.PriceDecrease;
+
  await PropertyPriceHistory.create({
   propertyId: property.getDataValue("id"),
   price: property.dataValues.price,
   changedAt: new Date(),
  });
 });
+
 export default Property;

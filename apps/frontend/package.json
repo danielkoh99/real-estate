@@ -10,11 +10,11 @@
 		"check-types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@real-estate/shared": "workspace:*",
 		"@heroicons/react": "^2.2.0",
 		"@heroui/react": "^2.7.10",
 		"@hookform/resolvers": "^3.9.0",
 		"@react-oauth/google": "^0.12.2",
+		"@real-estate/shared": "workspace:*",
 		"@tanstack/react-query": "^5.64.2",
 		"axios": "^1.7.7",
 		"clsx": "2.1.1",

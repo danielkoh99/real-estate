@@ -45,14 +45,23 @@ async function generateRandomImages(propertyId: string) {
 }
 async function generatePriceHistory(property: Property) {
  const priceHistory = [];
- for (let i = 0; i < randomInt(2, 5); i++) {
-  const newPrice = property.price * (1 + randomInt(-10, 10) / 100);
+
+ const now = new Date();
+ const numberOfChanges = randomInt(2, 5);
+
+ for (let i = numberOfChanges; i > 0; i--) {
+  const newPrice = Math.round(property.price * (1 + randomInt(-10, 10) / 100) * 100) / 100;
+
+  const daysBefore = i * randomInt(10, 30);
+  const changedAt = new Date(now.getTime() - daysBefore * 24 * 60 * 60 * 1000);
+
   priceHistory.push({
    propertyId: property.id,
    price: newPrice,
-   changedAt: new Date(),
+   changedAt,
   });
  }
+
  return await PropertyPriceHistory.bulkCreate(priceHistory);
 }
 const generateNearbyLocation = (baseLat: number, baseLon: number, offset = 0.01) => {
@@ -140,7 +149,12 @@ async function seed() {
    let promotionType;
    if (priceChange === 0) {
     promotionType = faker.helpers.arrayElement(
-     Object.values(PromotionType).filter((v): v is number => typeof v === "number")
+     Object.values(PromotionType).filter(
+      (v): v is number =>
+       typeof v === "number" &&
+       v !== PromotionType.PriceDecrease &&
+       v !== PromotionType.PriceIncrease
+     )
     );
    } else if (priceChange > 0) {
     promotionType = PromotionType.PriceIncrease;
@@ -171,7 +185,7 @@ async function seed() {
     hasTerrace: faker.datatype.boolean(),
     heatingType: faker.helpers.arrayElement(Object.values(HeatingType)),
     buildingType: faker.helpers.arrayElement(Object.values(BuildingType)),
-    dogFriendly: faker.datatype.boolean(),
+    petFriendly: faker.datatype.boolean(),
     promotionType: promotionType,
    };
 
