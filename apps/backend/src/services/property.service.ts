@@ -93,9 +93,10 @@ const createOne = async (data: PropertyAttributes, files: string[]) => {
   });
 
   const imageUploadPromises = files.map((file) => {
-   const imageUrl = `${process.env.SERVER_URL}/uploads/${listedByUserId}/${file}`;
+   // if image is uploaded to local storage
+   //    const imageUrl = `${process.env.SERVER_URL}/uploads/${listedByUserId}/${file}`;
    return PropertyImage.create({
-    url: imageUrl,
+    url: file,
     propertyId: property.id,
    });
   });

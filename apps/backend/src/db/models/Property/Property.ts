@@ -138,39 +138,39 @@ Property.init(
   },
   petFriendly: {
    type: DataTypes.BOOLEAN,
-   allowNull: false,
+   allowNull: true,
   },
   level: {
    type: DataTypes.INTEGER,
-   allowNull: false,
+   allowNull: true,
   },
   buildingType: {
    type: DataTypes.ENUM(...Object.values(BuildingType)),
-   allowNull: false,
+   allowNull: true,
   },
   hasGarden: {
    type: DataTypes.BOOLEAN,
-   allowNull: false,
+   allowNull: true,
   },
   hasTerrace: {
    type: DataTypes.BOOLEAN,
-   allowNull: false,
+   allowNull: true,
   },
   heatingType: {
    type: DataTypes.ENUM(...Object.values(HeatingType)),
-   allowNull: false,
+   allowNull: true,
   },
   parkingSpace: {
    type: DataTypes.BOOLEAN,
-   allowNull: false,
+   allowNull: true,
   },
   hasElevator: {
    type: DataTypes.BOOLEAN,
-   allowNull: false,
+   allowNull: true,
   },
   promotionType: {
    type: DataTypes.INTEGER,
-   allowNull: false,
+   allowNull: true,
    defaultValue: PromotionType.None,
    validate: {
     isIn: [[...Object.values(PromotionType).filter((v) => typeof v === "number")]],

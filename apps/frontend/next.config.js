@@ -28,6 +28,10 @@ const nextConfig = {
         port: "3000",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "kd-real-estate.s3.eu-north-1.amazonaws.com",
+      },
     ],
   },
 };
