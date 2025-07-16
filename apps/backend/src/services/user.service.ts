@@ -4,7 +4,7 @@ import Property from "../db/models/Property/Property";
 import User from "../db/models/User/User";
 import { UserAttributes } from "../db/models/User/user.interface";
 
-const createOne = async (data: UserAttributes) => {
+const createOne = async (data: User) => {
  try {
   const user = await User.create(data);
   return user;
@@ -65,4 +65,4 @@ const deleteOne = async (id: number) => {
  });
  return user;
 };
-export { createOne, deleteOne,getAll, getOne, updateOne };
+export { createOne, deleteOne, getAll, getOne, updateOne };

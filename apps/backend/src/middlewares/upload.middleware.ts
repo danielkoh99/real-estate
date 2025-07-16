@@ -1,28 +1,22 @@
 import { randomUUID } from "crypto";
 import { NextFunction, Request, Response } from "express";
-import fs from "fs";
 import multer from "multer";
-import path from "path";
 import sharp from "sharp";
 
 import logger from "../logger/logger";
-import { __dirname, createError } from "../utils";
-
-const uploadDirectory = path.join(__dirname, "../../uploads");
-
-if (!fs.existsSync(uploadDirectory)) {
- fs.mkdirSync(uploadDirectory, { recursive: true });
-}
+import { createError } from "../utils";
+import { uploadImageToS3 } from "@/aws/s3Upload";
+import { optimizeImage } from "@/utils/imageOptimizer";
 
 const allowedImageTypes = /jpeg|jpg|png/;
 
 const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
- const extName = allowedImageTypes.test(path.extname(file.originalname).toLowerCase());
+ const extName = allowedImageTypes.test(file.originalname.toLowerCase());
  const mimeType = allowedImageTypes.test(file.mimetype);
  if (extName && mimeType) {
   cb(null, true);
  } else {
-  cb(new Error("Only images are allowed"));
+  cb(new Error("Only images are allowed (jpeg, jpg, png)"));
  }
 };
 
@@ -30,7 +24,7 @@ const createUploader = (fieldName: string, maxCount: number, maxSizeMB: number) 
  multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: maxSizeMB * 1024 * 1024 },
-  fileFilter: fileFilter,
+  fileFilter,
  }).array(fieldName, maxCount);
 
 interface UploadOptions {
@@ -39,67 +33,70 @@ interface UploadOptions {
  maxFiles: number;
  maxFileSizeMB: number;
  minFiles: number;
+ fieldName?: string;
 }
 
+const uploadOptimizedImagesToS3 = async (
+ files: Express.Multer.File[],
+ options: UploadOptions,
+ userId: number
+): Promise<string[]> => {
+ return await Promise.all(
+  files.map(async (file) => {
+   const uniqueFilename = `${Date.now()}-${randomUUID()}.webp`;
+
+   const webpBuffer = await optimizeImage(file.buffer, options.resize.width, options.resize.height);
+
+   const imageUrl = await uploadImageToS3(
+    {
+     buffer: webpBuffer,
+     originalname: uniqueFilename,
+     mimetype: "image/webp",
+    },
+    userId.toString()
+   );
+
+   return imageUrl;
+  })
+ );
+};
+
 export const uploadAndOptimizeImages = (options: UploadOptions) => {
- const uploader = createUploader("images", options.maxFiles, options.maxFileSizeMB);
+ const uploader = createUploader(
+  options.fieldName || "images",
+  options.maxFiles,
+  options.maxFileSizeMB
+ );
 
  return (req: Request, res: Response, next: NextFunction) => {
   uploader(req, res, async (err) => {
    const files = req.files as Express.Multer.File[];
+
    if (err) {
     if (err instanceof multer.MulterError) {
      return next(createError(400, `Multer Error: ${err.message}`, { code: err.code }));
     }
     return next(createError(400, "File upload failed", { error: err.message }));
    }
-   if (!files || files.length === 0) {
-    return next();
-   }
-   if (files.length < options.minFiles) {
-    return next(createError(400, `At least ${options.minFiles} files are required`));
-   }
-   if (!req.files || !Array.isArray(req.files)) {
+
+   if (!files || !Array.isArray(files) || files.length === 0) {
     return next(createError(400, "No files uploaded"));
    }
 
+   if (files.length < options.minFiles) {
+    return next(createError(400, `At least ${options.minFiles} files are required`));
+   }
+
    try {
-    const userId = req.user.id;
+    const userId = req.user?.id;
     if (!userId) {
      return next(createError(401, "User ID is required for file upload"));
     }
 
-    const userFolder = path.join(uploadDirectory, options.targetFolder, userId.toString());
-    if (!fs.existsSync(userFolder)) {
-     fs.mkdirSync(userFolder, { recursive: true });
-    }
-
-    const processedImages = await Promise.all(
-     (files as Express.Multer.File[]).map(async (file) => {
-      const ext = path.extname(file.originalname).toLowerCase();
-      const uniqueFilename = `${Date.now()}-${randomUUID()}`;
-      const finalPath = path.join(userFolder, `${uniqueFilename}.webp`);
-      const tempPath = path.join(userFolder, `${uniqueFilename}${ext}`);
-
-      fs.writeFileSync(tempPath, file.buffer);
-
-      await sharp(tempPath)
-       .resize({
-        width: options.resize.width,
-        height: options.resize.height,
-        fit: "cover",
-       })
-       .webp({ quality: 80 })
-       .toFile(finalPath);
-
-      fs.unlinkSync(tempPath);
-
-      return `${uniqueFilename}.webp`;
-     })
-    );
-
+    const processedImages = await uploadOptimizedImagesToS3(files, options, userId);
     req.body.imagePaths = processedImages;
-    logger.info("Images processed successfully", processedImages);
+
+    logger.info("Images uploaded to S3", processedImages);
     next();
    } catch (error: any) {
     return next(createError(500, "Error processing images", { error: error.message }));
