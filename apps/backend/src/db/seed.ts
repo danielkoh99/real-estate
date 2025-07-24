@@ -45,13 +45,13 @@ async function generateRandomImages(propertyId: string) {
 }
 async function generatePriceHistory(property: Property) {
  const priceHistory = [];
-
  const now = new Date();
  const numberOfChanges = randomInt(2, 5);
 
- for (let i = numberOfChanges; i > 0; i--) {
-  const newPrice = Math.round(property.price * (1 + randomInt(-10, 10) / 100) * 100) / 100;
+ let lastPrice = Math.round(property.price * (1 + randomInt(-20, -5) / 100) * 100) / 100;
 
+ for (let i = numberOfChanges; i > 0; i--) {
+  const newPrice = Math.round(lastPrice * (1 + randomInt(-5, 5) / 100) * 100) / 100;
   const daysBefore = i * randomInt(10, 30);
   const changedAt = new Date(now.getTime() - daysBefore * 24 * 60 * 60 * 1000);
 
@@ -60,8 +60,13 @@ async function generatePriceHistory(property: Property) {
    price: newPrice,
    changedAt,
   });
+
+  lastPrice = newPrice;
  }
 
+ return priceHistory.sort((a, b) => a.changedAt.getTime() - b.changedAt.getTime());
+}
+async function createPropertyPriceHistory(priceHistory: any) {
  return await PropertyPriceHistory.bulkCreate(priceHistory);
 }
 const generateNearbyLocation = (baseLat: number, baseLon: number, offset = 0.01) => {
@@ -138,35 +143,19 @@ async function seed() {
   for (let i = 0; i < 100; i++) {
    const location = locations[i];
    const price = parseFloat(faker.commerce.price());
-   const oldPrice = i % 2 === 0 ? null : parseFloat(faker.commerce.price());
-   const priceChange = oldPrice === null ? 0 : ((price - oldPrice) / oldPrice) * 100;
    const size = randomInt(15, 200);
-   const squarMeterPrice = size > 0 ? parseFloat(((oldPrice ?? price) / size).toFixed(2)) : 0;
+   const squarMeterPrice = size > 0 ? parseFloat((price / size).toFixed(2)) : 0;
    const randomCity = getRandomCityOrBudapest();
 
    const district =
     randomCity === "Budapest" ? faker.helpers.arrayElement(Object.values(BPDistricts)) : null;
-   let promotionType;
-   if (priceChange === 0) {
-    promotionType = faker.helpers.arrayElement(
-     Object.values(PromotionType).filter(
-      (v): v is number =>
-       typeof v === "number" &&
-       v !== PromotionType.PriceDecrease &&
-       v !== PromotionType.PriceIncrease
-     )
-    );
-   } else if (priceChange > 0) {
-    promotionType = PromotionType.PriceIncrease;
-   } else if (priceChange < 0) {
-    promotionType = PromotionType.PriceDecrease;
-   }
+   const promotionType = faker.helpers.arrayElement(
+    Object.values(PromotionType).filter((v) => typeof v === "number")
+   );
    const property = {
     listedByUserId: faker.helpers.arrayElement(createdUsers).id,
     size,
     price,
-    oldPrice: oldPrice as number,
-    priceChange,
     city: randomCity,
     district: district as BPDistricts,
     address: faker.location.streetAddress({ useFullAddress: true }),
@@ -201,10 +190,18 @@ async function seed() {
   const createdProperties = await Property.bulkCreate(properties, {
    returning: true,
   });
-
   for (const property of createdProperties) {
    await generateRandomImages(property.id);
-   await generatePriceHistory(property);
+
+   const priceHistory = await generatePriceHistory(property);
+
+   if (priceHistory.length > 1) {
+    property.oldPrice = priceHistory[1].price;
+   }
+
+   await property.save({ hooks: false });
+
+   await createPropertyPriceHistory(priceHistory);
   }
   for (const user of createdUsers) {
    const userProperties = createdProperties.filter(

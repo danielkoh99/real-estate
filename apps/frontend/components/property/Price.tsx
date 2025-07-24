@@ -11,12 +11,12 @@ export default function Price({
     return (
       <>
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-bold text-gray-900">
             {price.toLocaleString()} M Ft
-            <sup className="text-sm font-medium text-gray-500 line-through">
-              {oldPrice.toLocaleString()} M Ft
-            </sup>
           </h2>
+          <span className="block text-sm text-gray-500 line-through mt-1">
+            {oldPrice.toLocaleString()} M Ft
+          </span>
         </div>
         {priceChange !== 0 && (
           <span

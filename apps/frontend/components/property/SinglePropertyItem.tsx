@@ -1,6 +1,5 @@
 import { Card, CardBody, CardHeader, Chip, Skeleton } from "@heroui/react";
 import "swiper/css/bundle";
-import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import {
   CalendarIcon,
@@ -9,8 +8,9 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
+import ImageSwiper from "../Image/Swiper";
+
 import SaveListingBtn from "./SaveListingBtn";
-import Banner from "./Banner";
 import Price from "./Price";
 
 import { PropertyResponse } from "@/types";
@@ -28,40 +28,38 @@ const SingleRealEstate: React.FC<{
 
   return (
     <Link
-      className="w-full text-white text-center rounded-lg h-full flex items-center"
+      className="w-full text-white text-center rounded-lg h-full flex "
       href={href}
     >
       <div
         className={twMerge(
-          "w-full h-full md:max-w-sm flex justify-center items-center",
+          "w-full h-full md:max-w-sm flex justify-center",
           classes,
         )}
       >
         <Card className="shadow-sm rounded-lg overflow-hidden border border-slate-200 transition-all duration-300 transform hover:shadow-lg w-full min-h-[400px] flex flex-col h-full">
-          <CardHeader className="p-0 relative h-[200px] ">
+          <CardHeader className="p-0 relative h-1/2 overflow-hidden rounded-t-lg ">
             {!loading && !canEdit && (
               <>
-                <div className="absolute top-0 right-0 bg-gray-800 text-white text-xs rounded-bl-lg px-2 py-1 flex items-center opacity-80">
+                <div className="absolute top-0 right-0 bg-gray-800 text-white text-xs rounded-bl-lg px-2 py-1 flex items-center opacity-80 z-10">
                   <CameraIcon className="h-8 w-8 mr-1" />
                   {property.images.length}
                 </div>
-                <div className="absolute top-0 left-0 bg-gray-800 text-white text-xs rounded-br-lg px-2 py-1 opacity-80 items-center">
+
+                <div className="absolute top-0 left-0 bg-gray-800 text-white text-xs rounded-br-lg px-2 py-1 opacity-80 z-10 flex items-center">
                   <SaveListingBtn propertyId={property.id} />
                 </div>
               </>
             )}
+
             {loading ? (
               <Skeleton className="rounded-lg h-full w-full" />
             ) : (
               <>
-                <Image
-                  alt={property.images[0].url}
-                  className="object-cover w-full h-full"
-                  height={400}
-                  src={property.images[0].url}
-                  width={400}
+                <ImageSwiper
+                  images={property.images}
+                  thumbsSwiper={undefined}
                 />
-                <Banner type={property.promotionType} />
               </>
             )}
           </CardHeader>
@@ -71,11 +69,7 @@ const SingleRealEstate: React.FC<{
               <Skeleton isLoaded={!loading}>
                 <div className="flex justify-between">
                   <div className="flex flex-col">
-                    <Price
-                      oldPrice={property.oldPrice}
-                      price={property.price}
-                      priceChange={property.priceChange}
-                    />
+                    <Price price={property.price} />
                     <p className="text-xs text-slate-500">
                       {property.squarMeterPrice.toFixed(2)} M Ft/m²
                     </p>
@@ -101,7 +95,7 @@ const SingleRealEstate: React.FC<{
 
               {!small && (
                 <Skeleton className="mt-auto" isLoaded={!loading}>
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 mt-auto">
+                  <div className="flex flex-wrap items-center gap-1 text-xs text-slate-600 mt-auto">
                     <Chip
                       className="min-h-[24px] flex items-center"
                       color="primary"

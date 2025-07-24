@@ -12,7 +12,7 @@ api.interceptors.response.use(
       signOut();
     }
 
-    return Promise.reject, error;
+    return Promise.reject(error);
   }
 );
 export default api;

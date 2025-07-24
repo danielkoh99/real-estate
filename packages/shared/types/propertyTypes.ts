@@ -57,11 +57,10 @@ enum HeatingType {
 }
 enum PromotionType {
   None = 0,
-  PriceIncrease = 1,
-  PriceDecrease = 2,
-  NewListing = 3,
-  Sold = 4,
-  LimitedOffer = 5,
+  NewPrice = 1,
+  NewListing = 2,
+  Sold = 3,
+  LimitedOffer = 4,
 }
 
 export {

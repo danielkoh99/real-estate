@@ -41,7 +41,6 @@ export default function ImageSwiperThumbnail({
             <div className="relative w-full aspect-[4/3] md:aspect-video lg:aspect-[3/2] max-h-[500px] rounded-md overflow-hidden bg-gray-100">
               <Image
                 fill
-                priority
                 alt={`Image ${index + 1}`}
                 className="object-cover md:object-contain rounded-md"
                 sizes="(max-width: 768px) 100vw, 700px"
@@ -69,7 +68,6 @@ export default function ImageSwiperThumbnail({
               {image.url}
               <Image
                 fill
-                priority
                 alt={`Thumbnail ${index + 1}`}
                 className="object-cover"
                 sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, (max-width: 1024px) 112px, 128px"

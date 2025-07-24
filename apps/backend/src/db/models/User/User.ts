@@ -30,7 +30,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
  declare phone: string;
  declare profileImage?: string;
  declare verified: boolean;
- declare numberOfListings: number;
+ declare numberOfListings?: number;
  declare createdAt: CreationOptional<Date>;
  declare updatedAt: CreationOptional<Date>;
  declare deletedAt: CreationOptional<Date>;

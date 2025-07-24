@@ -107,7 +107,6 @@ export interface BaseProperty {
   yearBuilt: number;
   description: string;
   oldPrice?: number;
-  priceChange?: number;
   petFriendly: boolean;
   level: number;
   buildingType: BuildingType;
@@ -134,8 +133,12 @@ export interface PropertyResponse extends BaseProperty {
   squarMeterPrice: number;
   listedByUser?: ListedByUser;
   location: LocationData;
+  priceHistory: PriceHistory[];
 }
-
+export interface PriceHistory {
+  price: number;
+  changedAt: string;
+}
 export interface PropertyRes {
   properties: PropertyResponse[];
   totalItems: number;
@@ -145,6 +148,7 @@ export interface PropertyRes {
 export type PropertyForDisplay = BaseProperty & {
   images: FileWithPreview[] | PropertyImageAttributes[];
   listedByUser?: ListedByUser;
+  priceHistory: PriceHistory[];
   location: LocationData;
   squarMeterPrice?: number;
 };

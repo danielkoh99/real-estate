@@ -3,15 +3,13 @@ interface BannerProps {
   type: PromotionType;
 }
 const promotionTypeLabels = {
-  [PromotionType.PriceIncrease]: "Price Increased",
-  [PromotionType.PriceDecrease]: "Price Decreased",
+  [PromotionType.NewPrice]: "New Price!",
   [PromotionType.NewListing]: "New Listing!",
   [PromotionType.Sold]: "Sold!",
   [PromotionType.LimitedOffer]: "Limited Offer!",
 } as const;
 const promotionTypeClasses = {
-  [PromotionType.PriceIncrease]: "bg-red-500",
-  [PromotionType.PriceDecrease]: "bg-green-500",
+  [PromotionType.NewPrice]: "bg-emerald-500",
   [PromotionType.NewListing]: "bg-blue-500",
   [PromotionType.Sold]: "bg-gray-500",
   [PromotionType.LimitedOffer]: "bg-yellow-500",
@@ -27,7 +25,7 @@ const Banner: React.FC<BannerProps> = ({ type }) => {
 
   return (
     <div
-      className={`absolute bottom-0 w-full ${bannerColor} opacity-80 text-center text-white p-1`}
+      className={`absolute bottom-0 w-full ${bannerColor} opacity-80 text-center text-white p-1 z-10`}
     >
       {renderContent()}
     </div>

@@ -1,14 +1,16 @@
-import { Card, CardBody, Divider } from "@heroui/react";
-import { CurrencyDollarIcon, CalendarIcon } from "@heroicons/react/24/outline";
+import { Card, CardBody } from "@heroui/react";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 
 import ContactUploader from "./ContactUploader";
 import SaveListingBtn from "./SaveListingBtn";
 import GoToMaps from "./GoToMaps";
-
 import Price from "./Price";
+import PHistory from "./PriceHistory";
+import Details from "./Details";
+
 import { AddProperty, MapLocationData, PropertyForDisplay } from "@/types";
+import { calculatePriceChange } from "@/utils";
 
 interface PropertyDetailsProps {
   property: PropertyForDisplay | AddProperty;
@@ -28,7 +30,7 @@ export default function PropertyDetailsView({
   );
   const ImageSwiper = useMemo(
     () =>
-      dynamic(() => import("../global/ImageSwiperThumbnail"), {
+      dynamic(() => import("../Image/SwiperThumbnail"), {
         loading: () => <p>Loading...</p>,
         ssr: false,
       }),
@@ -36,6 +38,7 @@ export default function PropertyDetailsView({
   );
   const title = `${property.type} for sale`;
   const hasListedByUser = "listedByUser" in property && property.listedByUser;
+  const hasPriceHistory = "priceHistory" in property && property.priceHistory;
   const locationObj = useMemo<MapLocationData | undefined>(() => {
     const p = property as PropertyForDisplay;
 
@@ -52,6 +55,11 @@ export default function PropertyDetailsView({
 
     return undefined;
   }, [property]);
+
+  const priceChange = useMemo(
+    () => calculatePriceChange(property.price, property.oldPrice),
+    [property.price, property.oldPrice],
+  );
 
   return (
     <div className="flex flex-col md:flex-row gap-8 w-full relative">
@@ -76,17 +84,13 @@ export default function PropertyDetailsView({
           <CardBody>
             <div className="flex flex-wrap gap-4 text-lg text-gray-800">
               <div className="flex items-center">
-                <CurrencyDollarIcon className="w-5 h-5 text-gray-500 mr-2" />
                 <Price
                   oldPrice={property.oldPrice}
                   price={property.price}
-                  priceChange={property.priceChange}
+                  priceChange={priceChange}
                 />
               </div>
-              <div className="flex items-center">
-                <CalendarIcon className="w-5 h-5 text-gray-500 mr-2" />
-                {property.size} m²
-              </div>
+              <div className="flex items-center">{property.size} m²</div>
             </div>
 
             <p className="text-gray-600 mt-4">{property.description}</p>
@@ -94,36 +98,19 @@ export default function PropertyDetailsView({
         </Card>
         <Card>
           <CardBody>
-            <div className="flex items-start gap-2 lg:gap-6 text-gray-800">
-              <div className="flex-1 space-y-2">
-                <DetailItem label="Address" value={property.address} />
-                <DetailItem label="City" value={property.city} />
-                {property.district && (
-                  <DetailItem label="District" value={property.district} />
-                )}
-                <DetailItem label="Year Built" value={property.yearBuilt} />
-                <DetailItem label="Type" value={property.type} />
-                <DetailItem label="Bedrooms" value={property.bedrooms} />
-                <DetailItem label="Pet Friendly" value={property.petFriendly} />
-                <DetailItem label="Level" value={property.level} />
-              </div>
-              <Divider orientation="vertical" />
-              <div className="flex-1 space-y-2">
-                <DetailItem label="Bathrooms" value={property.bathrooms} />
-                <DetailItem label="Size" value={`${property.size} m²`} />
-                <DetailItem label="Heating type" value={property.heatingType} />
-                <DetailItem label="Category" value={property.category} />
-                <DetailItem
-                  label="Building type"
-                  value={property.buildingType}
-                />
-                <DetailItem label="Elevator" value={property.hasElevator} />
-                <DetailItem label="Terrace" value={property.hasTerrace} />
-                <DetailItem label="Garden" value={property.hasGarden} />
-              </div>
-            </div>
+            <Details property={property as PropertyForDisplay} />
           </CardBody>
         </Card>
+        {hasPriceHistory && (
+          <Card>
+            <CardBody>
+              <PHistory
+                currentPrice={property.price}
+                priceHistory={property.priceHistory}
+              />
+            </CardBody>
+          </Card>
+        )}
       </div>
       {hasListedByUser && (
         <div className="w-full md:w-2/5">
@@ -137,27 +124,6 @@ export default function PropertyDetailsView({
           </div>
         </div>
       )}
-    </div>
-  );
-}
-function DetailItem({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | boolean | number;
-}) {
-  if (typeof value === "number") {
-    value = value.toString();
-  }
-  if (typeof value === "boolean") {
-    value = value ? "Yes" : "No";
-  }
-
-  return (
-    <div className="flex justify-between">
-      <span className="text-gray-600">{label}:</span>
-      <span className="font-medium text-right">{value}</span>
     </div>
   );
 }

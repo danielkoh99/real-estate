@@ -4,7 +4,7 @@ import User from "../db/models/User/User";
 import { Roles } from "../db/models/User/user.interface";
 import logger from "../logger/logger";
 import { signToken, verifyToken } from "../middlewares/auth.middleware";
-import { UResponseBody,UserRequestBody } from "../types/types";
+import { UResponseBody, UserRequestBody } from "../types/types";
 import { hashPassword, sendNewVerificationLink, verifyPassword } from "../utils/auth.utils";
 const verifyEmail = async (req: Request<{ token: string }>, res: Response, next: NextFunction) => {
  try {
@@ -47,7 +47,7 @@ const registerUser = async (
    where: { email },
   });
   if (userExists) {
-   return res.status(400).send({ message: "Email is already associated with an account" });
+   return res.status(409).send({ message: "Email is already associated with an account" });
   }
   const hashedPassword = hashPassword(password);
   await User.create({
@@ -132,4 +132,4 @@ const forgotPassword = async (
   return res.status(500).send(err);
  }
 };
-export { forgotPassword,registerUser, signInUser, signOutUser, verifyEmail };
+export { forgotPassword, registerUser, signInUser, signOutUser, verifyEmail };
