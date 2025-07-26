@@ -50,10 +50,10 @@ enum BuildingType {
   VILLA_BLOCK = "Villa Block",
 }
 enum HeatingType {
-  GAS = "gas",
-  ELECTRIC = "electric",
-  CENTRAL = "central",
-  OTHER = "other",
+  GAS = "Gas",
+  ELECTRIC = "Electric",
+  CENTRAL = "Central",
+  OTHER = "Other",
 }
 enum PromotionType {
   None = 0,

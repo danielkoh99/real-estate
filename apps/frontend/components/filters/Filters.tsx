@@ -2,6 +2,8 @@ import { Button, Card } from "@heroui/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { PropertyType } from "@real-estate/shared";
 
+import { SearchIcon } from "../icons";
+
 import Size from "./Size";
 import Advanced from "./Advanced";
 import Price from "./Price";
@@ -80,7 +82,12 @@ const SearchFilter = () => {
           setValue={setValue}
         />
         <div className="flex justify-end w-full">
-          <Button variant="ghost" onPress={() => updateFilters(query)}>
+          <Button
+            color="primary"
+            startContent={<SearchIcon className="h-4 w-4" />}
+            variant="solid"
+            onPress={() => updateFilters(query)}
+          >
             Search
           </Button>
         </div>

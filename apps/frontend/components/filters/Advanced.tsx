@@ -28,22 +28,29 @@ export default function Advanced({
     "use-advanced-filters",
     false,
   );
+  const itemClasses = {
+    base: "py-0 w-full",
+    title: "font-normal text-medium",
+    trigger: "py-0  h-14 flex items-center",
+    indicator: "text-medium",
+    content: "text-small",
+  };
 
   return (
     <Accordion
       className="w-full"
       defaultSelectedKeys={storedValue ? ["1"] : []}
+      itemClasses={itemClasses}
       onSelectionChange={() => {
         setStoredValue(!storedValue);
       }}
     >
       <AccordionItem
         key="1"
-        isCompact
         aria-label="Advanced filters"
         title="Advanced Filters"
       >
-        <div className="flex flex-col gap-6 p-4">
+        <div className="flex flex-col gap-6">
           <div>
             <h4 className="mb-2 font-medium text-gray-700">
               Property Features
