@@ -4,11 +4,17 @@ import {
   parseAsStringEnum,
   parseAsString,
   parseAsArrayOf,
+  parseAsBoolean,
 } from "nuqs";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import _ from "lodash";
-import { BPDistricts, PropertyType } from "@real-estate/shared";
+import {
+  BPDistricts,
+  BuildingType,
+  HeatingType,
+  PropertyType,
+} from "@real-estate/shared";
 
 import usePropertyStore from "@/stores/propertyStore";
 import { useQueryStore } from "@/stores/queryStore";
@@ -33,6 +39,7 @@ const useFilterParams = () => {
       priceMin: parseAsInteger,
       priceMax: parseAsInteger,
       sizeMax: parseAsInteger,
+      sizeMin: parseAsInteger,
       type: parseAsStringEnum<PropertyType>(Object.values(PropertyType)),
       sortBy: parseAsString,
       yearBuilt: parseAsInteger,
@@ -43,6 +50,14 @@ const useFilterParams = () => {
         parseAsStringEnum<BPDistricts>(Object.values(BPDistricts)),
         ","
       ),
+      level: parseAsArrayOf<string>(parseAsString, ","),
+      petFriendly: parseAsBoolean,
+      buildingType: parseAsStringEnum<string>(Object.values(BuildingType)),
+      hasGarden: parseAsBoolean,
+      hasTerrace: parseAsBoolean,
+      heatingType: parseAsStringEnum<string>(Object.values(HeatingType)),
+      parkingSpace: parseAsBoolean,
+      hasElevator: parseAsBoolean,
     },
     { history: "push" }
   );
@@ -98,6 +113,9 @@ const useFilterParams = () => {
         setQueryParams((prev) => ({
           ...prev,
           page: res.currentPage,
+          limit: queryParams.limit,
+          sortBy: queryParams.sortBy,
+          sortDirection: queryParams.sortDirection,
         }));
       }
     };

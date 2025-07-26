@@ -164,4 +164,12 @@ export interface PropertyFilters {
   sortBy: string;
   sortDirection: SortDirection;
   districts: BPDistricts[] | null;
+  petFriendly: boolean | null;
+  level: string[] | null;
+  buildingType: BuildingType | null | undefined;
+  hasGarden: boolean | null;
+  hasTerrace: boolean | null;
+  heatingType: HeatingType | null;
+  parkingSpace: boolean | null;
+  hasElevator: boolean | null;
 }

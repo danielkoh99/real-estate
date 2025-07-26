@@ -33,6 +33,7 @@ export default function Details({
           <DetailItem label="Elevator" value={property.hasElevator} />
           <DetailItem label="Terrace" value={property.hasTerrace} />
           <DetailItem label="Garden" value={property.hasGarden} />
+          <DetailItem label="Parking" value={property.parkingSpace} />
         </div>
       </div>
     </div>

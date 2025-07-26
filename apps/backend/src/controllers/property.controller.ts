@@ -1,4 +1,4 @@
-import { BPDistricts, PropertyType } from "@real-estate/shared";
+import { BPDistricts, BuildingType, HeatingType, PropertyType } from "@real-estate/shared";
 import { NextFunction, Request, Response } from "express";
 
 import { Location, PropertyImage } from "@/db/models";
@@ -48,6 +48,14 @@ const getProperties = async (req: Request<{}, {}, {}, PropertyParams>, res: Resp
    sortBy,
    sortDirection,
    districts,
+   petFriendly,
+   level,
+   buildingType,
+   hasGarden,
+   hasTerrace,
+   heatingType,
+   parkingSpace,
+   hasElevator,
   } = req.query;
 
   const properties = await getPropertiesByFilter({
@@ -57,11 +65,19 @@ const getProperties = async (req: Request<{}, {}, {}, PropertyParams>, res: Resp
    sizeMax: sizeMax ? Number(sizeMax) : undefined,
    type: type ? (type as PropertyType) : undefined,
    listedByUserId: listedByUserId ? Number(listedByUserId) : undefined,
-   page: page ? Number(page) : 1, // Page number
-   limit: limit ? Number(limit) : 10, // Number of items per page
+   page: page ? Number(page) : 1,
+   limit: limit ? Number(limit) : 10,
    sortBy: sortBy ? (sortBy as string) : undefined,
    sortDirection: sortDirection ? (sortDirection as string) : undefined,
    districts: typeof districts === "string" ? (districts.split(",") as BPDistricts[]) : undefined,
+   petFriendly: petFriendly ? Boolean(petFriendly) : undefined,
+   level: typeof level === "string" ? (level.split(",") as string[]) : undefined,
+   buildingType: buildingType ? (buildingType as BuildingType) : undefined,
+   hasGarden: hasGarden ? Boolean(hasGarden) : undefined,
+   hasTerrace: hasTerrace ? Boolean(hasTerrace) : undefined,
+   heatingType: heatingType ? (heatingType as HeatingType) : undefined,
+   parkingSpace: parkingSpace ? Boolean(parkingSpace) : undefined,
+   hasElevator: hasElevator ? Boolean(hasElevator) : undefined,
   });
   return res.status(200).send(properties);
  } catch (err) {

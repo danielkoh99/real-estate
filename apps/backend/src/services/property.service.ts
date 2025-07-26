@@ -212,12 +212,36 @@ export const getPropertiesByFilter = async (filters: PropertyParams) => {
  const offset = (page - 1) * limit;
  const whereClause: any = {};
  const order: any = [];
-
+ logger.info(JSON.stringify(filters));
  if (isFiltering(filters)) {
   if (filters.priceMin || filters.priceMax) {
    whereClause.price = {};
    if (filters.priceMin) whereClause.price[Op.gte] = filters.priceMin;
    if (filters.priceMax) whereClause.price[Op.lte] = filters.priceMax;
+  }
+  if (filters.hasElevator) {
+   whereClause.hasElevator = filters.hasElevator;
+  }
+  if (filters.hasGarden) {
+   whereClause.hasGarden = filters.hasGarden;
+  }
+  if (filters.hasTerrace) {
+   whereClause.hasTerrace = filters.hasTerrace;
+  }
+  if (filters.parkingSpace) {
+   whereClause.parkingSpace = filters.parkingSpace;
+  }
+  if (filters.petFriendly) {
+   whereClause.petFriendly = filters.petFriendly;
+  }
+  if (filters.level) {
+   whereClause.level = filters.level;
+  }
+  if (filters.buildingType) {
+   whereClause.buildingType = filters.buildingType;
+  }
+  if (filters.heatingType) {
+   whereClause.heatingType = filters.heatingType;
   }
 
   if (filters.sizeMin || filters.sizeMax) {

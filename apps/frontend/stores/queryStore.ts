@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { BuildingType, HeatingType } from "@real-estate/shared";
 
 import { PropertyFilters, SortDirection } from "@/types";
 
@@ -7,6 +8,7 @@ interface PropertyStore {
   resetFilters: () => void;
   filters: PropertyFilters;
 }
+
 export const useQueryStore = create<PropertyStore>((set) => ({
   filters: {
     page: 1,
@@ -19,7 +21,17 @@ export const useQueryStore = create<PropertyStore>((set) => ({
     type: null,
     sortBy: "",
     sortDirection: SortDirection.asc,
-    districts: [],
+    districts: null,
+    petFriendly: null,
+    level: null,
+    buildingType: null as BuildingType | null,
+    hasGarden: null,
+    hasTerrace: null,
+    heatingType: null as HeatingType | null,
+    parkingSpace: null,
+    hasElevator: null,
+    oldPriceMin: null,
+    oldPriceMax: null,
   },
 
   updateFilters: (newFilters: Partial<PropertyFilters>) => {
@@ -30,6 +42,7 @@ export const useQueryStore = create<PropertyStore>((set) => ({
       },
     }));
   },
+
   resetFilters: () => {
     const defaultFilters: PropertyFilters = {
       page: 1,
@@ -38,11 +51,19 @@ export const useQueryStore = create<PropertyStore>((set) => ({
       priceMax: null,
       sizeMin: null,
       sizeMax: null,
+      yearBuilt: null,
       type: null,
       sortBy: "",
       sortDirection: SortDirection.asc,
-      yearBuilt: null,
       districts: [],
+      petFriendly: null,
+      level: [],
+      buildingType: null,
+      hasGarden: null,
+      hasTerrace: null,
+      heatingType: null,
+      parkingSpace: null,
+      hasElevator: null,
     };
 
     set({ filters: defaultFilters });

@@ -60,6 +60,9 @@ const usePropertyStore = create<Store>()(
                 ...(filters.districts?.length
                   ? { districts: filters.districts.join(",") }
                   : {}),
+                ...(filters.level?.length
+                  ? { level: filters.level.join(",") }
+                  : {}),
               },
             },
           });

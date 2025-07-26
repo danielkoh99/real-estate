@@ -1,7 +1,7 @@
 import { Request } from "express";
 
 import { Roles } from "../db/models/User/user.interface";
-import { BPDistricts, PropertyType } from "@real-estate/shared";
+import { BPDistricts, BuildingType, HeatingType, PropertyType } from "@real-estate/shared";
 
 interface UserRequestBody {
  firstName: string;
@@ -44,6 +44,14 @@ interface PropertyParams {
  limit?: number;
  sortBy?: string;
  sortDirection?: string;
+ petFriendly?: boolean;
+ level?: string | string[];
+ buildingType?: BuildingType;
+ hasGarden?: boolean;
+ hasTerrace?: boolean;
+ heatingType?: HeatingType;
+ parkingSpace?: boolean;
+ hasElevator?: boolean;
 }
 interface JwtPayload {
  id: number;
