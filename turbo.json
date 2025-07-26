@@ -19,7 +19,9 @@
             "outputs": []
         },
         "dev": {
-            "dependsOn": [],
+            "dependsOn": [
+                "@real-estate/shared#build"
+            ],
             "cache": false
         }
     }
