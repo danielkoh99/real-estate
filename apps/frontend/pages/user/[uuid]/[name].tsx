@@ -15,7 +15,7 @@ const UserProfile: React.FC<{ user: UserInfoResponse }> = ({ user }) => {
 
   return (
     <div className="flex flex-col  gap-10 px-6 md:px-12 bg-gray-50 min-h-screen">
-      <div className="sticky top-10 space-y-6 w-full">
+      <div className="w-full">
         <PublicProfile user={user} />
       </div>
 

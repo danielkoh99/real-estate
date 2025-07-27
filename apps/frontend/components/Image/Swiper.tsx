@@ -42,7 +42,7 @@ export default function ImageSwiper({
             <Image
               fill
               alt={`Image ${index + 1}`}
-              className="h-full"
+              className="h-full hover:scale-110 transition duration-300 ease-in-out"
               sizes="(max-width: 768px) 100vw, 700px"
               src={image.url}
             />
