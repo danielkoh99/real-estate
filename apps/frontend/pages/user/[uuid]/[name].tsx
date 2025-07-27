@@ -9,7 +9,6 @@ import PropertiesView from "@/components/property/PropertiesView";
 const UserProfile: React.FC<{ user: UserInfoResponse }> = ({ user }) => {
   const router = useRouter();
 
-  console.log(user);
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
@@ -39,7 +38,7 @@ const UserProfile: React.FC<{ user: UserInfoResponse }> = ({ user }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { uuid } = context.params as { uuid: string };
+  const { uuid, name } = context.params as { uuid: string; name: string };
 
   const user = await fetchUserById(uuid);
 

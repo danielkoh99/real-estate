@@ -13,6 +13,7 @@ export default function SessionManager() {
       setCurrentUser({
         id: parseInt(session.user.id),
         firstName: session.user.firstName,
+        uuid: session.user.id,
         lastName: session.user.lastName,
         name: `${session.user.firstName} ${session.user.lastName}`,
         email: session.user.email ?? "",

@@ -1,6 +1,6 @@
 "use client";
-import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import { Thumbs, FreeMode, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
