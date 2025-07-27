@@ -61,6 +61,7 @@ enum PromotionType {
   NewListing = 2,
   Sold = 3,
   LimitedOffer = 4,
+  Promoted = 5,
 }
 
 export {

@@ -12,8 +12,8 @@ import ImageSwiper from "../Image/Swiper";
 
 import SaveListingBtn from "./SaveListingBtn";
 import Price from "./Price";
-
 import Banner from "./Banner";
+
 import { PropertyResponse } from "@/types";
 
 const SingleRealEstate: React.FC<{
