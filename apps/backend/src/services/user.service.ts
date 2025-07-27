@@ -1,8 +1,8 @@
-import { FindOptions, UniqueConstraintError } from "sequelize";
+import { FindOptions, Includeable, Op, UniqueConstraintError } from "sequelize";
 
 import Property from "../db/models/Property/Property";
 import User from "../db/models/User/User";
-import { UserAttributes } from "../db/models/User/user.interface";
+import { Roles, UserAttributes } from "../db/models/User/user.interface";
 
 const createOne = async (data: User) => {
  try {
@@ -29,19 +29,22 @@ const updateOne = async (id: number, data: Partial<UserAttributes>) => {
  return updatedUser;
 };
 
-const getOne = async <T extends keyof typeof User.prototype>(
- id: number,
- excludedAttributes: T[] = [],
- include: FindOptions["include"] = []
+const getOne = async (
+ uuid: number,
+ excludedAttributes: string[] = [],
+ include: Includeable[] = []
 ) => {
- const item = await User.findByPk(id, {
-  attributes: { exclude: excludedAttributes.length > 0 ? excludedAttributes : [] },
-  include: include || [],
+ const item = await User.findOne({
+  where: {
+   uuid,
+   role: { [Op.ne]: Roles.admin },
+  },
+  attributes: { exclude: excludedAttributes },
+  include,
  });
 
  return item;
 };
-
 const getAll = async () => {
  const users = await User.findAll({
   include: [

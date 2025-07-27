@@ -151,7 +151,7 @@ const getOne = async (id: string) => {
    {
     model: User,
     as: "listedByUser",
-    attributes: ["firstName", "lastName", "email", "phone", "id"],
+    attributes: ["firstName", "lastName", "email", "phone", "id", "uuid"],
    },
    {
     model: Location,

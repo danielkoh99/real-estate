@@ -13,6 +13,7 @@ import { uploadAndOptimizeImages } from "../../../middlewares/upload.middleware"
 
 const userRouter = Router();
 userRouter.get("/profile", [auth], getSessionUser);
+userRouter.get("/public/:id", getUserById);
 userRouter.get("/:id", getUserById);
 userRouter.get("/", [auth], getAllUsers);
 userRouter.post("/", createUser);

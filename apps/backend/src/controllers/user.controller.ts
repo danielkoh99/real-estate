@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import Property from "@/db/models/Property/Property";
 import logger from "@/logger/logger";
 import { createOne, deleteOne, getAll, getOne, updateOne } from "@/services/user.service";
+import { PropertyImage } from "@/db/models";
 const createUser = async (req: Request, res: Response) => {
  try {
   const user = await createOne(req.body);
@@ -31,6 +32,13 @@ const getUserById = async (req: Request<{ id: number }>, res: Response) => {
     {
      model: Property,
      as: "listedProperties",
+     include: [
+      {
+       model: PropertyImage,
+       as: "images",
+       attributes: ["id", "url"],
+      },
+     ],
     },
    ]
   );

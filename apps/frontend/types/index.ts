@@ -37,6 +37,7 @@ export interface CreateUser extends User {
 export interface User {
   id: number;
   email: string;
+  uuid: string;
   firstName: string;
   lastName: string;
   createdAt: string;
@@ -52,7 +53,7 @@ export interface UpdateUser extends User {
 }
 
 export interface UserInfoResponse extends User {
-  savedProperties: PropertyResponse[];
+  savedProperties?: PropertyResponse[];
   listedProperties: PropertyResponse[];
 }
 
@@ -80,14 +81,6 @@ export interface MapLocationData extends LocationData {
   display_name?: string;
   propertyId: string;
   image: string;
-}
-export interface ListedByUser {
-  id: number;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  profileImage?: string;
 }
 export interface AddProperty extends BaseProperty {
   images: FileWithPreview[];
@@ -131,7 +124,7 @@ export interface PropertyResponse extends BaseProperty {
   lastUpdated?: string;
   images: PropertyImageAttributes[];
   squarMeterPrice: number;
-  listedByUser?: ListedByUser;
+  listedByUser?: UserInfoResponse;
   location: LocationData;
   priceHistory: PriceHistory[];
 }
@@ -147,7 +140,7 @@ export interface PropertyRes {
 }
 export type PropertyForDisplay = BaseProperty & {
   images: FileWithPreview[] | PropertyImageAttributes[];
-  listedByUser?: ListedByUser;
+  listedByUser?: UserInfoResponse;
   priceHistory: PriceHistory[];
   location: LocationData;
   squarMeterPrice?: number;

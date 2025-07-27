@@ -19,6 +19,7 @@ import {
 import db from "../../config_postgres";
 import Property from "../Property/Property";
 import { Roles } from "./user.interface";
+import { nanoid } from "nanoid";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
  declare id: CreationOptional<number>;
@@ -30,6 +31,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
  declare phone: string;
  declare profileImage?: string;
  declare verified: boolean;
+ declare uuid: CreationOptional<string>;
  declare numberOfListings?: number;
  declare createdAt: CreationOptional<Date>;
  declare updatedAt: CreationOptional<Date>;
@@ -66,6 +68,12 @@ User.init(
    type: DataTypes.INTEGER,
    autoIncrement: true,
    primaryKey: true,
+  },
+  uuid: {
+   type: DataTypes.STRING(5),
+   unique: true,
+   allowNull: false,
+   defaultValue: () => nanoid(5),
   },
   firstName: {
    type: DataTypes.STRING,

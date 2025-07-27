@@ -17,6 +17,9 @@ export default function ContactUploader({
   const mailtoLink = `mailto:${listedByUser.email}`;
   const callPhoneLink = `tel:${listedByUser.phone}`;
   const name = `${listedByUser.firstName} ${listedByUser.lastName}`;
+  const nameSlug =
+    `${listedByUser.firstName}-${listedByUser.lastName}`.toLowerCase();
+  const slug = `/user/${listedByUser.uuid}/${nameSlug}`;
 
   return (
     <Card>
@@ -24,7 +27,7 @@ export default function ContactUploader({
         <h3 className="text-xl font-bold mb-4">Contact Uplader</h3>
         <Link
           className="flex items-center gap-4 mb-4 transition duration-300 hover:bg-gray-100 hover:shadow-md p-2 rounded-lg"
-          href={`/user/${listedByUser.id}`}
+          href={slug}
         >
           <User
             avatarProps={{
