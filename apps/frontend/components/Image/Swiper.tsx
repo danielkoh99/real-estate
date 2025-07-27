@@ -8,13 +8,16 @@ import "swiper/css/pagination";
 import "swiper/css/thumbs";
 
 import Image from "next/image";
+import { twMerge } from "tailwind-merge";
 
 import { FileWithPreview, PropertyImageAttributes } from "@/types";
 
 export default function ImageSwiper({
+  classes,
   images,
   thumbsSwiper,
 }: {
+  classes?: string;
   images: FileWithPreview[] | PropertyImageAttributes[];
   thumbsSwiper: SwiperClass | undefined;
 }) {
@@ -22,7 +25,10 @@ export default function ImageSwiper({
     <Swiper
       loop
       navigation
-      className={`w-full h-full relative max-w-[700px] md:max-w-[800px] lg:max-w-[900px] mx-auto rounded-md ${thumbsSwiper ? "mb-6" : "mb-0"}`}
+      className={twMerge(
+        `w-full relative max-w-[700px] md:max-w-[800px] lg:max-w-[900px] mx-auto rounded-md ${thumbsSwiper ? "mb-6" : "mb-0"}`,
+        classes,
+      )}
       modules={[FreeMode, Navigation, Thumbs, Pagination]}
       pagination={{ clickable: true, type: "bullets" }}
       spaceBetween={10}

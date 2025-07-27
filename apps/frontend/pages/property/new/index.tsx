@@ -44,7 +44,6 @@ export default function CreateListingPage() {
     promotionType: PromotionType.None,
   });
 
-
   useEffect(() => {
     setFormData((prev) => ({ ...prev, images: files }));
   }, [files]);

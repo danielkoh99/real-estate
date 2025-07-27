@@ -25,7 +25,7 @@ const Banner: React.FC<BannerProps> = ({ type }) => {
 
   return (
     <div
-      className={`absolute bottom-0 w-full ${bannerColor} opacity-80 text-center text-white p-1 z-10`}
+      className={`absolute top-10 w-1/2 ${bannerColor} opacity-80 text-center text-white p-1 z-10 rounded-r-xl text-xs`}
     >
       {renderContent()}
     </div>

@@ -13,6 +13,7 @@ import ImageSwiper from "../Image/Swiper";
 import SaveListingBtn from "./SaveListingBtn";
 import Price from "./Price";
 
+import Banner from "./Banner";
 import { PropertyResponse } from "@/types";
 
 const SingleRealEstate: React.FC<{
@@ -49,6 +50,7 @@ const SingleRealEstate: React.FC<{
                 <div className="absolute top-0 left-0 bg-gray-800 text-white text-xs rounded-br-lg px-2 py-1 opacity-80 z-10 flex items-center">
                   <SaveListingBtn propertyId={property.id} />
                 </div>
+                <Banner type={property.promotionType} />
               </>
             )}
 
@@ -57,6 +59,7 @@ const SingleRealEstate: React.FC<{
             ) : (
               <>
                 <ImageSwiper
+                  classes="h-full"
                   images={property.images}
                   thumbsSwiper={undefined}
                 />
