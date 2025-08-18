@@ -12,4 +12,4 @@ const createLocation = async (data: any) => {
  const location = await Location.create(data);
  return location;
 };
-export { createLocation,getAllLocations, getLocationById };
+export { createLocation, getAllLocations, getLocationById };

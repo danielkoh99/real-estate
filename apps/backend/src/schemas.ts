@@ -1,4 +1,4 @@
-import { NextFunction,Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Joi, { ObjectSchema } from "joi";
 
 const PASSWORD_REGEX = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!.@#$%^&*])(?=.{8,})");

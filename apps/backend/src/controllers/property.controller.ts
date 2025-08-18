@@ -20,7 +20,7 @@ const createProperty = async (
 ) => {
  try {
   const data = req.body;
-  const files = req.body.imagePaths as string[];
+  const files = req.body.imagePaths;
   const userId = req.user.id;
   data.listedByUserId = userId;
   const response = await createOne(data, files);
@@ -124,7 +124,7 @@ const relatedProperties = async (req: Request, res: Response, next: NextFunction
 const savePropertyListing = async (req: CustomRequest, res: Response, next: NextFunction) => {
  try {
   const { propertyId, userId } = req.body;
-  const user = await getUser(userId);
+  const user = await getUser({ id: userId }, ["password"]);
   if (!user) throw new Error("User not found");
   const isSaved = await user.hasSavedProperty(propertyId);
   const isListed = await user.hasListedProperty(propertyId);
@@ -148,7 +148,7 @@ const getSavedProperties = async (req: Request, res: Response) => {
  try {
   const userId = req.user.id;
   if (!userId) return res.status(404).json({ message: "User id found" });
-  const user = await getUser(userId);
+  const user = await getUser({ id: userId }, ["password"]);
   if (!user) return res.status(404).json({ message: "User not found" });
   const userSavedProperties = await user.getSavedProperties({
    attributes: [
@@ -186,8 +186,10 @@ const getSavedProperties = async (req: Request, res: Response) => {
 };
 const getListedProperties = async (req: Request, res: Response, next: NextFunction) => {
  const userId = req.user.id;
+ logger.info(userId);
  try {
-  const user = await getUser(userId);
+  const user = await getUser({ id: userId });
+  logger.info(user);
   if (!user) throw new Error("User not found");
   const listedProperties = await user?.getListedProperties({
    include: [
@@ -203,7 +205,7 @@ const getListedProperties = async (req: Request, res: Response, next: NextFuncti
    ],
   });
   if (!listedProperties) throw new Error("No listed properties found");
-  res.status(200).send(listedProperties);
+  res.status(200).json(listedProperties);
  } catch (err) {
   next(err);
  }

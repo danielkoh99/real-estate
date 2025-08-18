@@ -4,7 +4,9 @@ import { twMerge } from "tailwind-merge";
 import {
   CalendarIcon,
   CameraIcon,
+  PencilSquareIcon,
   Squares2X2Icon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
@@ -39,14 +41,15 @@ const SingleRealEstate: React.FC<{
         )}
       >
         <Card className="shadow-sm rounded-lg overflow-hidden border border-slate-200 transition-all duration-300 transform hover:shadow-lg w-full min-h-[400px] flex flex-col h-full">
-          <CardHeader className="p-0 relative h-1/2 overflow-hidden rounded-t-lg ">
+          <CardHeader className="p-0 relative h-1/2 overflow-hidden rounded-t-lg group">
+            {/* Hover icons */}
+
             {!loading && !canEdit && (
               <>
                 <div className="absolute top-0 right-0 bg-gray-800 text-white text-xs rounded-bl-lg px-2 py-1 flex items-center opacity-80 z-10">
                   <CameraIcon className="h-8 w-8 mr-1" />
                   {property.images.length}
                 </div>
-
                 <div className="absolute top-0 left-0 bg-gray-800 text-white text-xs rounded-br-lg px-2 py-1 opacity-80 z-10 flex items-center">
                   <SaveListingBtn propertyId={property.id} />
                 </div>
@@ -57,13 +60,11 @@ const SingleRealEstate: React.FC<{
             {loading ? (
               <Skeleton className="rounded-lg h-full w-full" />
             ) : (
-              <>
-                <ImageSwiper
-                  classes="h-full"
-                  images={property.images}
-                  thumbsSwiper={undefined}
-                />
-              </>
+              <ImageSwiper
+                classes="h-full"
+                images={property.images}
+                thumbsSwiper={undefined}
+              />
             )}
           </CardHeader>
 
@@ -124,6 +125,21 @@ const SingleRealEstate: React.FC<{
               )}
             </div>
           </CardBody>
+          {/* <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 z-10" />
+          <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+            <button
+              // onClick={() => handleEdit(property.id)}
+              className="p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700"
+            >
+              <PencilSquareIcon className="h-4 w-4" />
+            </button>
+            <button
+              // onClick={() => handleDelete(property.id)}
+              className="p-2 rounded-full bg-red-600 text-white hover:bg-red-500"
+            >
+              <TrashIcon className="h-4 w-4" />
+            </button>
+          </div> */}
         </Card>
       </div>
     </Link>

@@ -1,4 +1,4 @@
-import { DataTypes, InferAttributes,InferCreationAttributes, Model } from "sequelize";
+import { DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 
 import db from "../../config_postgres";
 

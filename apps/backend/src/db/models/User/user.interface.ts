@@ -19,4 +19,4 @@ enum Roles {
  admin = "admin",
 }
 
-export { Roles,UserAttributes };
+export { Roles, UserAttributes };

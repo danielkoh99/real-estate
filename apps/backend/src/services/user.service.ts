@@ -30,15 +30,23 @@ const updateOne = async (id: number, data: Partial<UserAttributes>) => {
 };
 
 const getOne = async (
- uuid: number,
+ { id, uuid }: { id?: number; uuid?: string },
  excludedAttributes: string[] = [],
  include: Includeable[] = []
 ) => {
+ if (!id && !uuid) {
+  throw new Error("Either id or uuid must be provided");
+ }
+
+ const where: any = {
+  role: { [Op.ne]: Roles.admin },
+ };
+
+ if (id) where.id = id;
+ if (uuid) where.uuid = uuid;
+
  const item = await User.findOne({
-  where: {
-   uuid,
-   role: { [Op.ne]: Roles.admin },
-  },
+  where,
   attributes: { exclude: excludedAttributes },
   include,
  });

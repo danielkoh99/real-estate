@@ -1,4 +1,4 @@
-import { Location,Property, PropertyImage, PropertyPriceHistory, User } from ".";
+import { Location, Property, PropertyImage, PropertyPriceHistory, User } from ".";
 User.hasMany(Property, {
  as: "listedProperties",
  foreignKey: "listedByUserId",

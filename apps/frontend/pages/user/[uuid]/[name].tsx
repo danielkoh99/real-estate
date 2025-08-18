@@ -5,6 +5,7 @@ import PublicProfile from "../profile/components/Profile";
 
 import { UserInfoResponse } from "@/types";
 import PropertiesView from "@/components/property/PropertiesView";
+import DefaultLayout from "@/layouts/default";
 
 const UserProfile: React.FC<{ user: UserInfoResponse }> = ({ user }) => {
   const router = useRouter();
@@ -14,26 +15,24 @@ const UserProfile: React.FC<{ user: UserInfoResponse }> = ({ user }) => {
   }
 
   return (
-    <div className="flex flex-col  gap-10 px-6 md:px-12 bg-gray-50 min-h-screen">
+    <DefaultLayout>
       <div className="w-full">
         <PublicProfile user={user} />
       </div>
 
-      <main className="w-full">
-        <div className="rounded-xl bg-white shadow-md p-6">
-          <h2 className="text-2xl font-semibold mb-4">Listed Properties</h2>
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <PropertiesView
-              canEdit={true}
-              error={false}
-              loading={false}
-              properties={user.listedProperties}
-              showMap={false}
-            />
-          </div>
+      <div className="rounded-xl bg-white shadow-md p-6">
+        <h2 className="text-2xl font-semibold mb-4">Listed Properties</h2>
+        <div className="flex-1 min-h-0 overflow-hidden">
+          <PropertiesView
+            canEdit={true}
+            error={false}
+            loading={false}
+            properties={user.listedProperties}
+            showMap={false}
+          />
         </div>
-      </main>
-    </div>
+      </div>
+    </DefaultLayout>
   );
 };
 

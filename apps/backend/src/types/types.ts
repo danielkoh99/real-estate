@@ -55,6 +55,7 @@ interface PropertyParams {
 }
 interface JwtPayload {
  id: number;
+ uuid: string;
  role: Roles;
 }
 export { CustomRequest, ErrorResponse, JwtPayload, PropertyParams, UResponseBody, UserRequestBody };

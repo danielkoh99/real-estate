@@ -26,7 +26,7 @@ const getUserById = async (req: Request<{ id: number }>, res: Response) => {
  const { id } = req.params;
  try {
   const user = await getOne(
-   id,
+   { id: id },
    ["password"],
    [
     {
@@ -50,10 +50,10 @@ const getUserById = async (req: Request<{ id: number }>, res: Response) => {
  }
 };
 const getSessionUser = async (req: Request, res: Response) => {
- const userId = req.user.id;
- if (!userId) return res.status(404).json({ message: "User not found" });
+ const id = req.user.id;
+ if (!id) return res.status(404).json({ message: "User not found" });
  try {
-  const user = await getOne(userId, ["password"]);
+  const user = await getOne({ id: id }, ["password"]);
   return res.status(200).send(user);
  } catch (err) {
   logger.error(err);
