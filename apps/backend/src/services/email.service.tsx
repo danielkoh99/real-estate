@@ -29,9 +29,11 @@ const sendEmail = async ({
    subject,
    html: html,
   });
- } catch (error) {
-  logger.error(error);
-  return error;
+ } catch (e: unknown) {
+  logger.error(e);
+  return Promise.reject(
+   new Error(`Failed to send email to ${to}. Please check the configuration or network.`)
+  );
  }
 };
 const sendVerificationEmail = async (email: string, username: string, verificationUrl: string) => {
@@ -40,7 +42,7 @@ const sendVerificationEmail = async (email: string, username: string, verificati
   from: process.env.GMAIL_USER as string,
   to: email,
   subject: "Verify your email",
-  react: <VerifyEmail userName={username} verificationUrl={verificationUrl} />,
+  react: VerifyEmail({ userName: username, verificationUrl }),
  });
 };
 export { sendVerificationEmail };

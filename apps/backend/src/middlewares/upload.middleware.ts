@@ -79,10 +79,6 @@ export const uploadAndOptimizeImages = (options: UploadOptions) => {
     return next(createError(400, "File upload failed", { error: err.message }));
    }
 
-   if (!files || !Array.isArray(files) || files.length === 0) {
-    return next(createError(400, "No files uploaded"));
-   }
-
    if (files.length < options.minFiles) {
     return next(createError(400, `At least ${options.minFiles} files are required`));
    }

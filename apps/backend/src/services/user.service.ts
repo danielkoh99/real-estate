@@ -1,8 +1,9 @@
-import { FindOptions, Includeable, Op, UniqueConstraintError } from "sequelize";
+import { Includeable, Op, UniqueConstraintError } from "sequelize";
 
 import Property from "../db/models/Property/Property";
 import User from "../db/models/User/User";
 import { Roles, UserAttributes } from "../db/models/User/user.interface";
+import { hashPassword, verifyPassword } from "@/utils";
 
 const createOne = async (data: User) => {
  try {
@@ -26,6 +27,33 @@ const updateOne = async (id: number, data: Partial<UserAttributes>) => {
    id: id,
   },
  });
+ return updatedUser;
+};
+const updateUserPassword = async (
+ id: number,
+ data: { newPassword: string; currentPassword: string }
+) => {
+ const user = await User.findByPk(id);
+ if (!user) {
+  throw new Error("User not found");
+ }
+ // Verify current password;
+ const valid = verifyPassword(data.currentPassword, user.password);
+
+ if (!valid) {
+  throw new Error("Current password is incorrect");
+ }
+
+ const hashedPassword = hashPassword(data.newPassword);
+
+ const updatedUser = await User.update(
+  { password: hashedPassword },
+  {
+   where: {
+    id: id,
+   },
+  }
+ );
  return updatedUser;
 };
 
@@ -76,4 +104,4 @@ const deleteOne = async (id: number) => {
  });
  return user;
 };
-export { createOne, deleteOne, getAll, getOne, updateOne };
+export { createOne, deleteOne, getAll, getOne, updateOne, updateUserPassword };
