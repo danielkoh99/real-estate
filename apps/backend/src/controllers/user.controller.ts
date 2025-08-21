@@ -2,7 +2,14 @@ import { Request, Response } from "express";
 
 import Property from "@/db/models/Property/Property";
 import logger from "@/logger/logger";
-import { createOne, deleteOne, getAll, getOne, updateOne } from "@/services/user.service";
+import {
+ createOne,
+ deleteOne,
+ getAll,
+ getOne,
+ updateOne,
+ updateUserPassword,
+} from "@/services/user.service";
 import { PropertyImage } from "@/db/models";
 const createUser = async (req: Request, res: Response) => {
  try {
@@ -97,7 +104,17 @@ const deleteUserById = async (req: Request<{ id: number }>, res: Response) => {
   return res.status(500).send(err);
  }
 };
-
+const updatePassword = async (req: Request<{ id: number }>, res: Response) => {
+ const { id } = req.params;
+ try {
+  const user = await updateUserPassword(Number(id), req.body);
+  if (!user) return res.status(404).json({ message: "User not found" });
+  return res.status(200).send({ message: "Password updated successfully" });
+ } catch (err) {
+  logger.error(err);
+  return res.status(500).send(err);
+ }
+};
 export {
  createUser,
  deleteProfile,
@@ -106,4 +123,5 @@ export {
  getSessionUser,
  getUserById,
  updateUserById,
+ updatePassword,
 };

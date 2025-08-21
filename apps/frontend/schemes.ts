@@ -52,10 +52,11 @@ export const propertySchema = z.object({
 
 export const passwordResetScheme = z
   .object({
-    password: passwordSchema,
-    confirmPassword: z.string(),
+    currentPassword: z.string(),
+    newPassword: passwordSchema,
+    confirmPassword: passwordSchema,
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     path: ["confirmPassword"],
     message: "Passwords do not match",
   });

@@ -59,7 +59,6 @@ function PriceHistoryItem({
         <span className="font-medium text-gray-800">
           {priceHistory.price.toLocaleString()} Ft
         </span>
-        {prevPrice}
         <PriceChangeBadge priceChange={priceChange} />
       </div>
     </div>

@@ -29,6 +29,21 @@ const deleteUserProfile = async (userId: string) => {
 
   return response;
 };
+const updatePassword = async ({
+  userId,
+  data,
+}: {
+  userId: string;
+  data: { newPassword: string; currentPassword: string };
+}) => {
+  const response = await apiRequest({
+    url: `/user/${userId}/update-password`,
+    method: "PATCH",
+    data: data,
+  });
+
+  return response;
+};
 const signUpUser = async (data: Partial<CreateUser>) => {
   const response = await apiRequest<Partial<CreateUser>>({
     url: "/auth/signup",
@@ -39,4 +54,4 @@ const signUpUser = async (data: Partial<CreateUser>) => {
   return response;
 };
 
-export { updateUserProfile, deleteUserProfile, signUpUser };
+export { updateUserProfile, deleteUserProfile, signUpUser, updatePassword };

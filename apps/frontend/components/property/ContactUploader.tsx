@@ -1,8 +1,3 @@
-import {
-  AtSymbolIcon,
-  ChatBubbleBottomCenterTextIcon,
-  PhoneIcon,
-} from "@heroicons/react/24/outline";
 import { Card, CardBody, Button, User } from "@heroui/react";
 import Link from "next/link";
 
@@ -23,10 +18,10 @@ export default function ContactUploader({
 
   return (
     <Card>
-      <CardBody>
-        <h3 className="text-xl font-bold mb-4">Contact Uplader</h3>
+      <CardBody className="space-y-6">
+        <h3 className="text-xl font-semibold">Contact Information</h3>
         <Link
-          className="flex items-center gap-4 mb-4 transition duration-300 hover:bg-gray-100 hover:shadow-md p-2 rounded-lg"
+          className="flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-gray-50 hover:shadow-sm"
           href={slug}
         >
           <User
@@ -39,27 +34,29 @@ export default function ContactUploader({
           />
         </Link>
 
-        <Button className="w-full mb-4 text-white" color="primary">
-          <a
-            className="flex items-center justify-center w-full h-full"
-            href={callPhoneLink}
-          >
-            {listedByUser.phone}
-            <PhoneIcon className="w-5 h-5 mx-2" />
-          </a>
+        <Button
+          as="a"
+          className="w-full flex items-center justify-center gap-2 text-white font-medium"
+          color="primary"
+          href={callPhoneLink}
+        >
+          {listedByUser.phone}
         </Button>
-        <Button className="w-full mb-4 text-white" color="primary">
-          <a
-            className="flex items-center justify-center w-full h-full"
-            href={mailtoLink}
-          >
-            {listedByUser.email}
-            <AtSymbolIcon className="w-5 h-5 mx-2" />
-          </a>
+
+        <Button
+          as="a"
+          className="w-full flex items-center justify-center gap-2 text-white font-medium"
+          color="primary"
+          href={mailtoLink}
+        >
+          {listedByUser.email}
         </Button>
-        <Button className="w-full mb-4" variant="ghost">
+
+        <Button
+          className="w-full flex items-center justify-center gap-2 font-medium hover:bg-gray-50"
+          variant="ghost"
+        >
           Send a message
-          <ChatBubbleBottomCenterTextIcon className="w-5 h-5 mx-2" />
         </Button>
       </CardBody>
     </Card>

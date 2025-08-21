@@ -1,9 +1,13 @@
-import { Card, Form, Input, Button } from "@heroui/react";
+import { Card, Input, Button } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+
+import useUserMutations from "../profileMutations";
 
 import { passwordResetScheme } from "@/schemes";
+import toast from "@/utils/toast";
 
 type PasswordFormData = z.infer<typeof passwordResetScheme>;
 
@@ -14,10 +18,28 @@ export default function PasswordChange() {
     formState: { errors, isSubmitting },
   } = useForm<PasswordFormData>({
     resolver: zodResolver(passwordResetScheme),
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
     mode: "onChange",
   });
+  const { updatePasswordMutation } = useUserMutations();
+  const { data: session } = useSession();
+  const onSubmit = async (data: PasswordFormData) => {
+    const userId = session?.user?.id;
 
-  const onSubmit = async (_data: PasswordFormData) => {};
+    if (!userId) {
+      toast.error("Error", "User ID not found in session.");
+
+      return;
+    }
+    updatePasswordMutation.mutate({
+      userId: session?.user.id,
+      data,
+    });
+  };
 
   return (
     <Card className="w-full mx-auto p-6 shadow-xl rounded-2xl space-y-6">
@@ -28,21 +50,32 @@ export default function PasswordChange() {
         </p>
       </div>
 
-      <Form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <div className="w-full">
+          <Input
+            label="Current password"
+            type="password"
+            {...register("currentPassword")}
+            errorMessage={errors.currentPassword?.message}
+            isInvalid={!!errors.currentPassword}
+          />
+        </div>
         <div className="w-full">
           <Input
             label="New password"
             type="password"
-            {...register("password")}
-            errorMessage={errors.password?.message}
+            {...register("newPassword")}
+            errorMessage={errors.newPassword?.message}
+            isInvalid={!!errors.newPassword}
           />
         </div>
-        <div className="w-full">
+        <div>
           <Input
             label="Confirm password"
             type="password"
             {...register("confirmPassword")}
             errorMessage={errors.confirmPassword?.message}
+            isInvalid={!!errors.confirmPassword}
           />
         </div>
         <Button
@@ -53,7 +86,7 @@ export default function PasswordChange() {
         >
           Update Password
         </Button>
-      </Form>
+      </form>
     </Card>
   );
 }

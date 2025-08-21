@@ -24,9 +24,8 @@ export default function PersonalData({
   const { updateMutation } = useUserMutations();
   const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  let originalData = { email, phone };
   const [formData, setFormData] = useState<Partial<UpdateUser>>({
-    firstName,
-    lastName,
     email,
     phone,
   });
@@ -41,7 +40,19 @@ export default function PersonalData({
       return;
     }
 
-    updateMutation.mutate({ userId, data });
+    const changes: Partial<UpdateUser> = {};
+
+    for (const [key, value] of Object.entries(data)) {
+      if (originalData[key] !== value) {
+        changes[key] = value;
+      }
+    }
+
+    if (Object.keys(changes).length === 0) {
+      return;
+    }
+    originalData = { email: String(data.email), phone: data.phone };
+    updateMutation.mutate({ userId, data: changes });
   };
 
   return (
@@ -95,15 +106,6 @@ export default function PersonalData({
           onPress={onOpen}
         >
           Delete
-        </Button>
-        <Button
-          className="w-full sm:w-auto"
-          color="warning"
-          isDisabled={!isEditing}
-          variant="light"
-          onPress={() => setIsEditing(false)}
-        >
-          Cancel
         </Button>
         <Button
           className="w-full sm:w-auto"

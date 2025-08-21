@@ -1,6 +1,5 @@
-import { Card, Switch } from "@heroui/react";
+import { Card } from "@heroui/react";
 import { useRef } from "react";
-import { MapIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import PropertiesView from "@/components/property/PropertiesView";
 import Filters from "@/components/filters/Filters";
@@ -10,6 +9,7 @@ import PaginationComponent from "@/components/property/Pagination";
 import SortFilters from "@/components/filters/Sort";
 import TotalPropertiesCount from "@/components/property/TotalPropertiesCount";
 import useFilterParams from "@/hooks/useFilterParams";
+import ShowMap from "@/components/property/ShowMap";
 
 export default function IndexPage() {
   useFilterParams();
@@ -30,19 +30,9 @@ export default function IndexPage() {
           <SortFilters />
           <div className="w-full flex flex-row justify-between">
             <TotalPropertiesCount />
-            <Switch
-              isSelected={showMap}
-              thumbIcon={({ isSelected, className }) =>
-                isSelected ? (
-                  <XMarkIcon className={className} />
-                ) : (
-                  <MapIcon className={className} />
-                )
-              }
-              onValueChange={setShowMap}
-            >
-              {showMap ? "Hide Map" : "Show Map"}
-            </Switch>
+            {properties.length > 0 && (
+              <ShowMap setShowMap={setShowMap} showMap={showMap} />
+            )}
           </div>
 
           <div className="flex-1 min-h-0">

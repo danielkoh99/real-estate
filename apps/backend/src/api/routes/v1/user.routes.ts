@@ -7,6 +7,7 @@ import {
  getSessionUser,
  getUserById,
  updateUserById,
+ updatePassword,
 } from "../../../controllers/user.controller";
 import { auth } from "../../../middlewares/auth.middleware";
 import { uploadAndOptimizeImages } from "../../../middlewares/upload.middleware";
@@ -17,6 +18,7 @@ userRouter.get("/public/:id", getUserById);
 userRouter.get("/:id", getUserById);
 userRouter.get("/", [auth], getAllUsers);
 userRouter.post("/", createUser);
+userRouter.patch("/:id/update-password", [auth], updatePassword);
 userRouter.patch(
  "/:id",
  [
