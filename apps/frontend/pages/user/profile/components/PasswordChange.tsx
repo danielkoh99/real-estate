@@ -1,4 +1,4 @@
-import { Card, Input, Button } from "@heroui/react";
+import { Card, Button } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +8,7 @@ import useUserMutations from "../profileMutations";
 
 import { passwordResetScheme } from "@/schemes";
 import toast from "@/utils/toast";
+import { PasswordInput } from "@/components/auth/PasswordInput";
 
 type PasswordFormData = z.infer<typeof passwordResetScheme>;
 
@@ -52,30 +53,24 @@ export default function PasswordChange() {
 
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full">
-          <Input
-            label="Current password"
-            type="password"
-            {...register("currentPassword")}
-            errorMessage={errors.currentPassword?.message}
-            isInvalid={!!errors.currentPassword}
+          <PasswordInput
+            errors={errors}
+            register={register}
+            registerKey="currentPassword"
           />
         </div>
         <div className="w-full">
-          <Input
-            label="New password"
-            type="password"
-            {...register("newPassword")}
-            errorMessage={errors.newPassword?.message}
-            isInvalid={!!errors.newPassword}
+          <PasswordInput
+            errors={errors}
+            register={register}
+            registerKey="newPassword"
           />
         </div>
         <div>
-          <Input
-            label="Confirm password"
-            type="password"
-            {...register("confirmPassword")}
-            errorMessage={errors.confirmPassword?.message}
-            isInvalid={!!errors.confirmPassword}
+          <PasswordInput
+            errors={errors}
+            register={register}
+            registerKey="confirmPassword"
           />
         </div>
         <Button

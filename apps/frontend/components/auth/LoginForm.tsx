@@ -51,7 +51,7 @@ const LoginForm: React.FC<{
         {...register("email")}
         fullWidth
         errorMessage={errors.email?.message}
-        isInvalid={errors.email ? true : false}
+        isInvalid={!!errors.email}
         placeholder="Email"
       />
 
@@ -60,7 +60,7 @@ const LoginForm: React.FC<{
         type="password"
         {...register("password")}
         errorMessage={errors.password?.message}
-        isInvalid={errors.password ? true : false}
+        isInvalid={!!errors.password}
       />
       <p className="text-center text-small">
         Need to create an account?{" "}
