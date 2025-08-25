@@ -62,6 +62,7 @@ export default function PasswordChange() {
         <div className="w-full">
           <PasswordInput
             errors={errors}
+            label="New Password"
             register={register}
             registerKey="newPassword"
           />
@@ -69,6 +70,7 @@ export default function PasswordChange() {
         <div>
           <PasswordInput
             errors={errors}
+            label="Confirm new Password"
             register={register}
             registerKey="confirmPassword"
           />
