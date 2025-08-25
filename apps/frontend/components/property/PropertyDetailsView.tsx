@@ -2,15 +2,15 @@ import { Card, CardBody } from "@heroui/react";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 
-import ContactUploader from "./ContactUploader";
 import SaveListingBtn from "./SaveListingBtn";
-import GoToMaps from "./GoToMaps";
 import Price from "./Price";
-import PHistory from "./PriceHistory";
 import Details from "./Details";
+import ContactUploader from "./ListItem/ContactUploader";
+import GoToMaps from "./ListItem/GoToMaps";
+import PHistory from "./ListItem/PriceHistory";
 
-import { AddProperty, MapLocationData, PropertyForDisplay } from "@/types";
 import { calculatePriceChange } from "@/utils";
+import { AddProperty, MapLocationData, PropertyForDisplay } from "@/types";
 
 interface PropertyDetailsProps {
   property: PropertyForDisplay | AddProperty;
@@ -26,7 +26,7 @@ export default function PropertyDetailsView({
         loading: () => <p>Map is loading...</p>,
         ssr: false,
       }),
-    [],
+    []
   );
   const ImageSwiper = useMemo(
     () =>
@@ -34,7 +34,7 @@ export default function PropertyDetailsView({
         loading: () => <p>Loading...</p>,
         ssr: false,
       }),
-    [],
+    []
   );
   const title = `${property.type} for sale`;
   const hasListedByUser = "listedByUser" in property && property.listedByUser;
@@ -58,7 +58,7 @@ export default function PropertyDetailsView({
 
   const priceChange = useMemo(
     () => calculatePriceChange(property.price, property.oldPrice),
-    [property.price, property.oldPrice],
+    [property.price, property.oldPrice]
   );
 
   return (
