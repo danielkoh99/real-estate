@@ -2,9 +2,9 @@ import { GetServerSideProps } from "next/types";
 import "swiper/css/bundle";
 
 import { PropertyResponse } from "@/types";
-import SimilarProperties from "@/components/property/SimilarProperties";
 import DefaultLayout from "@/layouts/default";
 import PropertyDetails from "@/components/property/PropertyDetailsView";
+import SimilarProperties from "@/components/property/SimilarPropertiesList";
 const PropertyPage: React.FC<{
   property: PropertyResponse;
   relatedProperties: PropertyResponse[];
