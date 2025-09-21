@@ -5,6 +5,7 @@ const nextConfig = {
     turbopackTreeShaking: true,
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -12,9 +13,9 @@ const nextConfig = {
         pathname: "/400/400/*",
       },
       {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "picsum.photos",
+        pathname: "/**"
       },
       {
         protocol: "http",
