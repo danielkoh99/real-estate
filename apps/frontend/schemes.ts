@@ -11,7 +11,7 @@ const passwordSchema = z
   .regex(/[0-9]/, "Password must include at least one number.")
   .regex(
     /[!@#$%^&*(),.?":{}|<>]/,
-    "Password must contain at least one special character"
+    "Password must contain at least one special character",
   );
 
 export const signinScheme = z.object({

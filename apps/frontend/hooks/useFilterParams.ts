@@ -44,11 +44,11 @@ const useFilterParams = () => {
       sortBy: parseAsString,
       yearBuilt: parseAsInteger,
       sortDirection: parseAsStringEnum<SortDirection>(
-        Object.values(SortDirection)
+        Object.values(SortDirection),
       ),
       districts: parseAsArrayOf<BPDistricts>(
         parseAsStringEnum<BPDistricts>(Object.values(BPDistricts)),
-        ","
+        ",",
       ),
       level: parseAsArrayOf<string>(parseAsString, ","),
       petFriendly: parseAsBoolean,
@@ -59,7 +59,7 @@ const useFilterParams = () => {
       parkingSpace: parseAsBoolean,
       hasElevator: parseAsBoolean,
     },
-    { history: "push" }
+    { history: "push" },
   );
 
   const prevQueryParams = useRef(queryParams);
@@ -77,7 +77,7 @@ const useFilterParams = () => {
 
         return acc;
       },
-      {} as Record<string, any>
+      {} as Record<string, any>,
     );
 
     if (Object.keys(missingParams).length > 0) {
@@ -87,7 +87,7 @@ const useFilterParams = () => {
           query: { ...urlQuery, ...missingParams },
         },
         undefined,
-        { shallow: true }
+        { shallow: true },
       );
     }
   }, [router.isReady]);

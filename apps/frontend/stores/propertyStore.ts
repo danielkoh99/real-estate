@@ -130,8 +130,8 @@ const usePropertyStore = create<Store>()(
     {
       name: "property-store",
       partialize: (state) => ({ showMap: state.showMap }),
-    }
-  )
+    },
+  ),
 );
 
 export default usePropertyStore;

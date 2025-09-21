@@ -15,14 +15,14 @@ export default NextAuth({
         password: {},
       },
       authorize: async (
-        credentials: Record<"email" | "password", string> | undefined
+        credentials: Record<"email" | "password", string> | undefined,
       ) => {
         if (!credentials) return null;
 
         try {
           const response = await axios.post(
             `${process.env.API_URL}/auth/login`,
-            credentials
+            credentials,
           );
 
           if (response.status !== 200 || !response.data) {
@@ -32,7 +32,7 @@ export default NextAuth({
           return { ...response.data };
         } catch (error: any) {
           throw new Error(
-            error.response.data?.message || "An unknown error occurred"
+            error.response.data?.message || "An unknown error occurred",
           );
         }
       },

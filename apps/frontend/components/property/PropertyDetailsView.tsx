@@ -26,7 +26,7 @@ export default function PropertyDetailsView({
         loading: () => <p>Map is loading...</p>,
         ssr: false,
       }),
-    []
+    [],
   );
   const ImageSwiper = useMemo(
     () =>
@@ -34,7 +34,7 @@ export default function PropertyDetailsView({
         loading: () => <p>Loading...</p>,
         ssr: false,
       }),
-    []
+    [],
   );
   const title = `${property.type} for sale`;
   const hasListedByUser = "listedByUser" in property && property.listedByUser;
@@ -58,7 +58,7 @@ export default function PropertyDetailsView({
 
   const priceChange = useMemo(
     () => calculatePriceChange(property.price, property.oldPrice),
-    [property.price, property.oldPrice]
+    [property.price, property.oldPrice],
   );
 
   return (

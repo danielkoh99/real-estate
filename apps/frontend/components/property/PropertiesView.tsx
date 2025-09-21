@@ -42,7 +42,7 @@ const PropertiesView = forwardRef<
           </div>
         ),
       }),
-    []
+    [],
   );
 
   useEffect(() => {

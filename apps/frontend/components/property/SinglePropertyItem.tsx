@@ -5,8 +5,8 @@ import Link from "next/link";
 
 import { ItemHeader } from "./ListItem/ItemHeader";
 import { ItemBody } from "./ListItem/ItemBody";
-
 import { ItemActions } from "./ListItem/ItemActions";
+
 import { PropertyResponse } from "@/types";
 
 const SingleRealEstate: React.FC<{
@@ -28,7 +28,7 @@ const SingleRealEstate: React.FC<{
       <div
         className={twMerge(
           "w-full h-full md:max-w-sm flex justify-center",
-          classes
+          classes,
         )}
       >
         <Card className="shadow-sm rounded-lg overflow-hidden border border-slate-200 transition-all duration-300 transform hover:shadow-lg w-full min-h-[400px] flex flex-col h-full">

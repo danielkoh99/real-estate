@@ -33,10 +33,10 @@ export function useFilteredNavItems() {
 
   return {
     navItems: siteConfig.navItems.filter(
-      (item) => !item.protected || isAuthenticated
+      (item) => !item.protected || isAuthenticated,
     ),
     navMenuItems: siteConfig.navMenuItems.filter(
-      (item) => !item.protected || isAuthenticated
+      (item) => !item.protected || isAuthenticated,
     ),
   };
 }

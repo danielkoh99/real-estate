@@ -24,7 +24,6 @@ export default function ForgotPassword() {
 
   const onSubmit = async (_data: ForgotPasswordForm) => {
     try {
-      // Simulate API call
       await new Promise((res) => setTimeout(res, 1000));
       setSubmitted(true);
     } catch (err) {}

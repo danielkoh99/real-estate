@@ -14,7 +14,7 @@ const useUserMutations = () => {
     onSuccess: (response) => {
       toast.success(
         "Success",
-        response.message ?? "Profile updated successfully"
+        response.message ?? "Profile updated successfully",
       );
     },
     onError: (error: any) => {
@@ -38,7 +38,7 @@ const useUserMutations = () => {
     onSuccess: (response) => {
       toast.success(
         "Success",
-        response.message ?? "Password updated successfully"
+        response.message ?? "Password updated successfully",
       );
     },
     onError: (error: any) => {
