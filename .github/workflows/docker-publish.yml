@@ -41,6 +41,9 @@ jobs:
           push: true
           tags: |
             danielkohari/real-estate-frontend:${{ env.TAG }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_ANALYTICS_ID=${{ secrets.NEXT_PUBLIC_ANALYTICS_ID }}
 
       - name: Build & Push Backend Docker Image
         uses: docker/build-push-action@v5
