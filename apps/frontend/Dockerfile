@@ -32,6 +32,7 @@ COPY --from=deps /app/out/full/ .
 # Set environment variables
 ARG NEXT_PUBLIC_API_URL=https://daningatlanapi.duckdns.org/api/v1
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_ANALYTICS_ID=$NEXT_PUBLIC_ANALYTICS_ID
 ENV NEXT_PRIVATE_STANDALONE=true
 RUN pnpm turbo run build --filter=frontend \
   && chown -R 1001:1001 /app/apps/frontend/.next

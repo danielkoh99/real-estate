@@ -6,6 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import Script from "next/script";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import { ModalProvider } from "@/contexts/ModalContext";
@@ -50,6 +51,11 @@ export default function App({
           </NuqsAdapter>
         </SessionProvider>
       </UIProviders>
+      <Script
+        data-website-id={process.env.NEXT_PUBLIC_ANALYTICS_ID}
+        src="https://daniumami.duckdns.org/script.js"
+        strategy="afterInteractive"
+      />
     </QueryClientProvider>
   );
 }
