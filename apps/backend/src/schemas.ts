@@ -1,37 +1,63 @@
-import { NextFunction, Request, Response } from "express";
-import Joi, { ObjectSchema } from "joi";
+import { z } from "zod";
+import { BPDistricts, PropertyCategory, PropertyType } from "@real-estate/shared";
 
-const PASSWORD_REGEX = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!.@#$%^&*])(?=.{8,})");
+const PASSWORD_REGEX = new RegExp(
+    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!.@#$%^&*])(?=.{8,})"
+);
 
-const authSignup = Joi.object().keys({
- firstname: Joi.string().required(),
- lastname: Joi.string().required(),
- email: Joi.string().email().required(),
- password: Joi.string().pattern(PASSWORD_REGEX).min(8).required(),
+const stringOrNumber = z.union([z.string(), z.number()]);
+const optionalStringOrNumber = stringOrNumber.optional();
+
+const authSignup = z.object({
+    firstname: z.string(),
+    lastname: z.string(),
+    email: z.string().email(),
+    password: z.string().regex(PASSWORD_REGEX).min(8),
 });
 
-const authSignin = Joi.object().keys({
- email: Joi.string().required(),
- password: Joi.string().required(),
+const authSignin = z.object({
+    email: z.string(),
+    password: z.string(),
 });
 
-const propertySchema = Joi.object({
- price: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
- size: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
- address: Joi.string().required(),
- bedrooms: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
- bathrooms: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
- type: Joi.string().valid("apartment", "house").required(),
- category: Joi.string().required(),
- city: Joi.string().required(),
- district: Joi.string().optional(),
- yearBuilt: Joi.alternatives().try(Joi.string(), Joi.number()).optional(),
- description: Joi.string().optional(),
- images: Joi.array().items(Joi.object()).optional(),
+const propertySchema = z.object({
+    price: stringOrNumber,
+    size: stringOrNumber,
+    address: z.string(),
+    bedrooms: stringOrNumber,
+    bathrooms: stringOrNumber,
+    type: z.nativeEnum(PropertyType),
+    category: z.nativeEnum(PropertyCategory),
+    city: z.string(),
+    district: z.nativeEnum(BPDistricts).optional(),
+    yearBuilt: optionalStringOrNumber,
+    description: z.string().optional(),
+    images: z.array(z.object({})).optional(),
 });
 
-export default {
- signin: authSignin,
- signup: authSignup,
- createProperty: propertySchema,
-} as { [key: string]: ObjectSchema };
+const propertyFiltersSchema = z.object({
+    bedrooms: z.number().optional(),
+    bathrooms: z.number().optional(),
+    city: z.string().optional(),
+    type: z.nativeEnum(PropertyType),
+    category: z.nativeEnum(PropertyCategory).optional(),
+    districts: z.array(z.nativeEnum(BPDistricts)).optional(),
+    priceMin: z.number().optional(),
+    priceMax: z.number().optional(),
+    sizeMin: z.number().optional(),
+    sizeMax: z.number().optional(),
+    petFriendly: z.boolean().optional(),
+    hasElevator: z.boolean().optional(),
+    hasGarden: z.boolean().optional(),
+    hasTerrace: z.boolean().optional(),
+    parkingSpace: z.boolean().optional(),
+    yearBuilt: z.number().optional(),
+    level: z.array(z.string()).optional(),
+});
+
+export {
+    authSignin,
+    authSignup,
+    propertySchema,
+    propertyFiltersSchema,
+};
